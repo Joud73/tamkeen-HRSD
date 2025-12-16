@@ -1,59 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, HelpCircle, FileText, Video, Headphones } from "lucide-react";
+import hrsdWhiteLogo from "@/assets/logos/hrsd-white.png";
+import hrsdColoredLogo from "@/assets/logos/hrsd-colored.png";
 
-// Placeholder logos - will be replaced with actual logos from ZIP file
-const HRSDLogo = () => (
-  <div className="flex items-center gap-3">
-    <div className="w-16 h-16 flex items-center justify-center">
-      {/* Ministry Logo - Star shape placeholder */}
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <polygon 
-          points="50,5 61,35 95,35 68,57 79,90 50,70 21,90 32,57 5,35 39,35" 
-          fill="#148287"
-        />
-        <polygon 
-          points="50,20 56,38 75,38 60,50 66,68 50,56 34,68 40,50 25,38 44,38" 
-          fill="#f5961e"
-        />
-        <polygon 
-          points="50,30 53,40 62,40 55,47 58,57 50,50 42,57 45,47 38,40 47,40" 
-          fill="#2db473"
-        />
-      </svg>
-    </div>
-    <div className="text-right leading-tight">
-      <div className="text-lg font-hrsd-bold text-primary">الموارد البشرية</div>
-      <div className="text-sm font-hrsd text-primary">والتنمية الاجتماعية</div>
-    </div>
-  </div>
-);
-
-const Vision2030Logo = () => (
+const Vision2030Logo = ({ isScrolled }: { isScrolled: boolean }) => (
   <div className="flex items-center gap-2 text-right">
     <div className="leading-tight">
-      <div className="text-xs text-muted-foreground">VISION</div>
-      <div className="text-2xl font-hrsd-bold text-primary">2030</div>
-      <div className="text-[8px] text-muted-foreground leading-none">
+      <div className={`text-xs ${isScrolled ? 'text-muted-foreground' : 'text-white/70'}`}>VISION</div>
+      <div className={`text-2xl font-hrsd-bold ${isScrolled ? 'text-primary' : 'text-white'}`}>2030</div>
+      <div className={`text-[8px] leading-none ${isScrolled ? 'text-muted-foreground' : 'text-white/70'}`}>
         <div>المملكة العربية السعودية</div>
         <div>KINGDOM OF SAUDI ARABIA</div>
       </div>
     </div>
-    <div className="text-xs text-muted-foreground">رؤيـــــة</div>
+    <div className={`text-xs ${isScrolled ? 'text-muted-foreground' : 'text-white/70'}`}>رؤيـــــة</div>
   </div>
 );
 
 const Header = () => {
   const [isGuideDropdownOpen, setIsGuideDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Consider scrolled after passing the hero section (roughly 100px)
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white shadow-sm' 
+          : 'bg-transparent'
+      }`}
+    >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Right side - Logos */}
           <div className="flex items-center gap-6">
-            <HRSDLogo />
-            <div className="h-12 w-px bg-border" />
-            <Vision2030Logo />
+            {/* HRSD Logo - switches based on scroll */}
+            <img 
+              src={isScrolled ? hrsdColoredLogo : hrsdWhiteLogo} 
+              alt="وزارة الموارد البشرية والتنمية الاجتماعية" 
+              className="h-14 w-auto"
+            />
+            <div className={`h-12 w-px ${isScrolled ? 'bg-border' : 'bg-white/30'}`} />
+            <Vision2030Logo isScrolled={isScrolled} />
           </div>
 
           {/* Left side - Navigation */}
@@ -61,7 +58,11 @@ const Header = () => {
             {/* Technical Guide Link */}
             <a 
               href="#" 
-              className="flex items-center gap-2 text-sm font-hrsd-medium text-foreground hover:text-primary transition-colors"
+              className={`flex items-center gap-2 text-sm font-hrsd-medium transition-colors ${
+                isScrolled 
+                  ? 'text-foreground hover:text-primary' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               <FileText className="w-5 h-5" />
               دليل الكفاءة الفنية
@@ -71,9 +72,13 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setIsGuideDropdownOpen(!isGuideDropdownOpen)}
-                className="flex items-center gap-2 text-sm font-hrsd-medium text-foreground hover:text-primary transition-colors"
+                className={`flex items-center gap-2 text-sm font-hrsd-medium transition-colors ${
+                  isScrolled 
+                    ? 'text-foreground hover:text-primary' 
+                    : 'text-white hover:text-white/80'
+                }`}
               >
-                <HelpCircle className="w-5 h-5 text-primary" />
+                <HelpCircle className={`w-5 h-5 ${isScrolled ? 'text-primary' : 'text-white'}`} />
                 دليل استخدام الأداة
                 <ChevronDown className={`w-4 h-4 transition-transform ${isGuideDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
