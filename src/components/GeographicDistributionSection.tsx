@@ -189,7 +189,7 @@ const GeographicDistributionSection = () => {
           </div>
           <div className="stats-card-teal">
             <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
-              {foundationCount}
+              {foundationCount}+
             </div>
             <div className="text-lg font-hrsd-medium">
               {summaryStats[1].label}
