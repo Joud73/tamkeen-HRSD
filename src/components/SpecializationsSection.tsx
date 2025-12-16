@@ -47,7 +47,7 @@ const SpecializationsSection = () => {
               key={index}
               className={`feature-card animate-fade-in ${item.delay}`}
             >
-              <div className="flex flex-col items-end">
+              <div className="flex flex-col items-start">
                 <img 
                   src={item.icon} 
                   alt="feature icon" 
