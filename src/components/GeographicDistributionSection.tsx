@@ -82,8 +82,9 @@ const RegionCard = ({ region, startCounting }: { region: typeof regions[0]; star
   return (
     <div className="region-card min-h-32">
       <OrbitGraphic />
-      <div className="relative z-10 flex items-center justify-end gap-3">
-        <div className="text-right">
+      <div className="relative z-10 flex items-center justify-between w-full">
+        <div className="flex-1" />
+        <div className="text-center flex-1">
           <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
             {count}
           </div>
@@ -91,7 +92,9 @@ const RegionCard = ({ region, startCounting }: { region: typeof regions[0]; star
             {region.name}
           </div>
         </div>
-        <StarIcon />
+        <div className="flex-1 flex justify-end">
+          <StarIcon />
+        </div>
       </div>
     </div>
   );
@@ -104,8 +107,9 @@ const FullWidthRegionCard = ({ region, startCounting }: { region: typeof regions
   return (
     <div className="region-card min-h-32 col-span-full">
       <OrbitGraphic />
-      <div className="relative z-10 flex items-center justify-end gap-3">
-        <div className="text-right">
+      <div className="relative z-10 flex items-center justify-between w-full">
+        <div className="flex-1" />
+        <div className="text-center flex-1">
           <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
             {count}
           </div>
@@ -113,7 +117,9 @@ const FullWidthRegionCard = ({ region, startCounting }: { region: typeof regions
             {region.name}
           </div>
         </div>
-        <StarIcon />
+        <div className="flex-1 flex justify-end">
+          <StarIcon />
+        </div>
       </div>
     </div>
   );
