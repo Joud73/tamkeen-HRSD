@@ -12,9 +12,9 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-hrsd-title mb-6 animate-fade-in" style={{
+        <h1 style={{
         color: '#f5961e'
-      }}>
+      }} className="text-4xl md:text-5xl lg:text-6xl mb-6 animate-fade-in text-center font-sans text-[#f49b1f]">
           أداة التقييم الفني
         </h1>
 
