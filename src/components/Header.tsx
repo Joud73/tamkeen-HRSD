@@ -2,21 +2,8 @@ import { useState, useEffect } from "react";
 import { ChevronDown, HelpCircle, FileText, Video, Headphones } from "lucide-react";
 import hrsdWhiteLogo from "@/assets/logos/hrsd-white.png";
 import hrsdColoredLogo from "@/assets/logos/hrsd-colored.png";
-const Vision2030Logo = ({
-  isScrolled
-}: {
-  isScrolled: boolean;
-}) => <div className="flex items-center gap-2 text-right">
-    <div className="leading-tight">
-      
-      
-      <div className={`text-[8px] leading-none ${isScrolled ? 'text-muted-foreground' : 'text-white/70'}`}>
-        
-        <div>KINGDOM OF SAUDI ARABIA</div>
-      </div>
-    </div>
-    
-  </div>;
+import vision2030White from "@/assets/logos/vision-2030-white.webp";
+import vision2030Colored from "@/assets/logos/vision-2030-colored.png";
 const Header = () => {
   const [isGuideDropdownOpen, setIsGuideDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,7 +23,11 @@ const Header = () => {
             {/* HRSD Logo - switches based on scroll */}
             <img src={isScrolled ? hrsdColoredLogo : hrsdWhiteLogo} alt="وزارة الموارد البشرية والتنمية الاجتماعية" className="h-14 w-auto" />
             <div className={`h-12 w-px ${isScrolled ? 'bg-border' : 'bg-white/30'}`} />
-            <Vision2030Logo isScrolled={isScrolled} />
+            <img 
+              src={isScrolled ? vision2030Colored : vision2030White} 
+              alt="رؤية 2030" 
+              className="h-12 w-auto" 
+            />
           </div>
 
           {/* Left side - Navigation */}
