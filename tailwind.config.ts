@@ -36,8 +36,8 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent-orange))",
+          foreground: "hsl(var(--accent-orange-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -46,6 +46,14 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        section: {
+          light: "hsl(var(--section-light))",
+          tealLight: "hsl(var(--section-teal-light))",
+        },
+        dark: {
+          teal: "hsl(var(--dark-teal))",
+          navy: "hsl(var(--dark-navy))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -58,6 +66,13 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      fontFamily: {
+        hrsd: ["HRSDGov-Regular", "Segoe UI", "Tahoma", "sans-serif"],
+        "hrsd-title": ["HRSDGov-Title", "HRSDGov-Bold", "Segoe UI", "Tahoma", "sans-serif"],
+        "hrsd-bold": ["HRSDGov-Bold", "Segoe UI", "Tahoma", "sans-serif"],
+        "hrsd-semibold": ["HRSDGov-SemiBold", "Segoe UI", "Tahoma", "sans-serif"],
+        "hrsd-medium": ["HRSDGov-Medium", "Segoe UI", "Tahoma", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -65,25 +80,27 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "fade-in": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "count-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.5s ease-out forwards",
+        "count-up": "count-up 0.6s ease-out forwards",
       },
     },
   },
