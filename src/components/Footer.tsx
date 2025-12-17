@@ -1,21 +1,11 @@
-// Placeholder logo for footer - will be replaced with actual white logo
+import hrsdWhiteLogo from '@/assets/logos/hrsd-white.png';
+
 const FooterLogo = () => (
   <div className="flex items-center justify-center gap-3">
     <span className="text-lg font-hrsd-medium text-white/90">
       وزارة الموارد البشرية والتنمية الإجتماعية
     </span>
-    <div className="w-10 h-10 flex items-center justify-center">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <polygon 
-          points="50,5 61,35 95,35 68,57 79,90 50,70 21,90 32,57 5,35 39,35" 
-          fill="rgba(255,255,255,0.8)"
-        />
-        <polygon 
-          points="50,20 56,38 75,38 60,50 66,68 50,56 34,68 40,50 25,38 44,38" 
-          fill="rgba(255,255,255,0.6)"
-        />
-      </svg>
-    </div>
+    <img src={hrsdWhiteLogo} alt="HRSD Logo" className="h-10 w-auto" />
   </div>
 );
 
