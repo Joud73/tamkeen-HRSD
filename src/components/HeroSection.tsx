@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.png";
 const HeroSection = () => {
   return <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4" style={{
@@ -34,9 +35,9 @@ const HeroSection = () => {
         </p>
 
         {/* CTA Button */}
-        <a href="#" className="hero-button inline-block animate-fade-in animation-delay-400">
+        <Link to="/login" className="hero-button inline-block animate-fade-in animation-delay-400">
           ابدأ الآن
-        </a>
+        </Link>
       </div>
 
       {/* Side Badge */}
