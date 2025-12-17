@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ChevronDown, Headphones } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronDown, Headphones, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import loginBg from "@/assets/login-bg.jpg";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [organizationName, setOrganizationName] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("1000");
@@ -33,22 +34,21 @@ const Register = () => {
 
   const handleStep3Submit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registration complete:", { 
-      organizationName, 
-      registrationNumber, 
-      verificationCode,
-      fullName,
-      idNumber,
-      mobile,
-      email,
-      loginName,
-      password 
-    });
+    setCurrentStep(4); // Go to success screen
   };
 
   // Step indicator component
   const StepIndicator = () => {
     const getStepStyle = (step: number) => {
+      // On success screen (step 4), all steps are completed (grey)
+      if (currentStep === 4) {
+        return {
+          bg: "#e5e7eb",
+          text: "#6b7280",
+          labelColor: "#6b7280"
+        };
+      }
+      
       if (step === currentStep) {
         // Active step - strong orange
         return {
@@ -78,30 +78,30 @@ const Register = () => {
         {/* Background line */}
         <div className="absolute top-1/2 left-0 right-0 h-px bg-gray-200 -translate-y-1/2" />
         
-        {/* Steps */}
-        <div className="relative flex items-center justify-between">
-          {/* Step 3 - بيانات المفوض (leftmost in RTL) */}
+        {/* Steps - RTL order: Step 1 on right, Step 3 on left */}
+        <div className="relative flex items-center justify-between flex-row-reverse">
+          {/* Step 1 - بيانات المنظمة (rightmost in RTL) */}
           <div className="flex flex-col items-center">
             <div
               className="px-6 py-3 rounded-lg flex flex-col items-center min-w-[120px]"
-              style={{ backgroundColor: getStepStyle(3).bg }}
+              style={{ backgroundColor: getStepStyle(1).bg }}
             >
               <span 
                 className="font-hrsd-bold text-lg"
-                style={{ color: getStepStyle(3).text }}
+                style={{ color: getStepStyle(1).text }}
               >
-                3
+                1
               </span>
               <span 
                 className="font-hrsd-medium text-sm"
-                style={{ color: getStepStyle(3).labelColor }}
+                style={{ color: getStepStyle(1).labelColor }}
               >
-                بيانات المفوض
+                بيانات المنظمة
               </span>
             </div>
           </div>
 
-          {/* Step 2 - بيانات التحقق */}
+          {/* Step 2 - بيانات التحقق (middle) */}
           <div className="flex flex-col items-center">
             <div
               className="px-6 py-3 rounded-lg flex flex-col items-center min-w-[120px]"
@@ -122,23 +122,23 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Step 1 - بيانات المنظمة (rightmost in RTL) */}
+          {/* Step 3 - بيانات المفوض (leftmost in RTL) */}
           <div className="flex flex-col items-center">
             <div
               className="px-6 py-3 rounded-lg flex flex-col items-center min-w-[120px]"
-              style={{ backgroundColor: getStepStyle(1).bg }}
+              style={{ backgroundColor: getStepStyle(3).bg }}
             >
               <span 
                 className="font-hrsd-bold text-lg"
-                style={{ color: getStepStyle(1).text }}
+                style={{ color: getStepStyle(3).text }}
               >
-                1
+                3
               </span>
               <span 
                 className="font-hrsd-medium text-sm"
-                style={{ color: getStepStyle(1).labelColor }}
+                style={{ color: getStepStyle(3).labelColor }}
               >
-                بيانات المنظمة
+                بيانات المفوض
               </span>
             </div>
           </div>
@@ -372,6 +372,40 @@ const Register = () => {
     </form>
   );
 
+  // Success Screen
+  const SuccessScreen = () => (
+    <div className="flex flex-col items-center py-8">
+      {/* Success Icon */}
+      <div 
+        className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
+        style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
+      >
+        <Check className="w-10 h-10 text-white" strokeWidth={3} />
+      </div>
+
+      {/* Success Message */}
+      <h2 className="font-hrsd-bold text-2xl text-gray-800 mb-4 text-center">
+        تم تفعيل حسابك بنجاح
+      </h2>
+      
+      <p className="font-hrsd text-gray-600 text-center mb-8 leading-relaxed max-w-md">
+        لقد قمت بإنشاء حساب ضمن أداة التقييم الفني. يمكنك الآن تسجيل الدخول باستخدام رقم الهوية وكلمة المرور.
+      </p>
+
+      {/* Login Button */}
+      <button
+        type="button"
+        onClick={() => navigate("/login")}
+        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
+        style={{
+          backgroundColor: "hsl(175, 75%, 30%)",
+        }}
+      >
+        تسجيل الدخول
+      </button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header - reused from homepage */}
@@ -437,28 +471,31 @@ const Register = () => {
               {currentStep === 1 && <Step1Form />}
               {currentStep === 2 && <Step2Form />}
               {currentStep === 3 && <Step3Form />}
+              {currentStep === 4 && <SuccessScreen />}
             </div>
 
-            {/* Contact Info Bar */}
-            <div
-              className="mt-6 rounded-xl p-4 flex items-center justify-between"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-            >
-              <button
-                type="button"
-                className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-hrsd-semibold transition-colors hover:opacity-90"
-                style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
+            {/* Contact Info Bar - hide on success screen */}
+            {currentStep !== 4 && (
+              <div
+                className="mt-6 rounded-xl p-4 flex items-center justify-between"
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
               >
-                <Headphones className="w-5 h-5" />
-                <span>تواصل معنا</span>
-              </button>
-              <p
-                className="font-hrsd text-sm"
-                style={{ color: "hsl(175, 75%, 35%)" }}
-              >
-                اذا كان لديكم أي استفسار او ملاحظة نسعد بتواصلكم معنا . . .
-              </p>
-            </div>
+                <button
+                  type="button"
+                  className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-hrsd-semibold transition-colors hover:opacity-90"
+                  style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
+                >
+                  <Headphones className="w-5 h-5" />
+                  <span>تواصل معنا</span>
+                </button>
+                <p
+                  className="font-hrsd text-sm"
+                  style={{ color: "hsl(175, 75%, 35%)" }}
+                >
+                  اذا كان لديكم أي استفسار او ملاحظة نسعد بتواصلكم معنا . . .
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>
