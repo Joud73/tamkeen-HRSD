@@ -197,13 +197,13 @@ const Login = () => {
                     نسيت بيانات الدخول؟
                   </a>
                   <span className="text-gray-300">|</span>
-                  <a
-                    href="#"
+                  <Link
+                    to="/register"
                     className="text-sm font-hrsd-medium hover:underline"
                     style={{ color: "hsl(175, 75%, 30%)" }}
                   >
                     تسجيل جديد
-                  </a>
+                  </Link>
                 </div>
               </form>
             </div>
