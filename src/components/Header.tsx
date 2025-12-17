@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown, HelpCircle, FileText, Video, Headphones } from "lucide-react";
 import hrsdWhiteLogo from "@/assets/logos/hrsd-white.png";
 import hrsdColoredLogo from "@/assets/logos/hrsd-colored.png";
@@ -63,9 +64,9 @@ const Header = () => {
             </div>
 
             {/* Login Button */}
-            <a href="#" className="login-button">
+            <Link to="/login" className="login-button">
               تسجيل الدخول
-            </a>
+            </Link>
           </nav>
         </div>
       </div>
