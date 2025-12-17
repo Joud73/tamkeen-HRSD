@@ -186,8 +186,8 @@ const GeographicDistributionSection = () => {
         {/* Summary Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="stats-card-teal">
-            <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
-              {orgCount}
+          <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
+              {orgCount}+
             </div>
             <div className="text-lg font-hrsd-medium">
               {summaryStats[0].label}
