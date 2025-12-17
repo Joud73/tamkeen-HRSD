@@ -49,38 +49,30 @@ const useCountUp = (end: number, duration: number = 2000, startCounting: boolean
   return count;
 };
 
-// Curved lines graphic matching the reference image
-const CurvedLinesGraphic = () => (
-  <svg 
-    viewBox="0 0 200 150" 
-    className="absolute left-0 bottom-0 h-full w-auto opacity-80"
-    preserveAspectRatio="xMinYMax meet"
-  >
-    {/* Multiple curved lines with gradient colors from orange to green */}
-    {[...Array(16)].map((_, i) => {
-      const colors = [
-        "#f5961e", "#f5961e", "#e8a030", "#d4a040",
-        "#b0a050", "#8ab060", "#60b070", "#45b080",
-        "#30b58a", "#2db495", "#2bb39f", "#28b2a8",
-        "#25b1b0", "#22b0b5", "#20afb8", "#1eaebb"
-      ];
-      return (
-        <path
-          key={i}
-          d={`M ${-10 + i * 3} 160 Q ${40 + i * 4} ${80 - i * 2}, ${60 + i * 5} ${-10 + i * 3}`}
-          fill="none"
-          stroke={colors[i]}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      );
-    })}
+// Orbit graphic SVG component
+const OrbitGraphic = () => (
+  <svg viewBox="0 0 100 100" className="w-24 h-24 absolute left-4 bottom-4 opacity-60">
+    {/* Multiple curved lines forming orbit pattern */}
+    {[...Array(8)].map((_, i) => (
+      <ellipse
+        key={i}
+        cx="20"
+        cy="50"
+        rx={15 + i * 5}
+        ry={30 + i * 3}
+        fill="none"
+        stroke={i % 2 === 0 ? "#f5961e" : "#2db473"}
+        strokeWidth="1"
+        transform={`rotate(-30 20 50)`}
+        opacity={0.5 + (i * 0.05)}
+      />
+    ))}
   </svg>
 );
 
 // Star icon component (representing palm/star from the site)
 const StarIcon = () => (
-  <img src={favIcon} alt="icon" className="w-10 h-10" />
+  <img src={favIcon} alt="icon" className="w-8 h-8" />
 );
 
 // Region Card Component
@@ -88,15 +80,15 @@ const RegionCard = ({ region, startCounting }: { region: typeof regions[0]; star
   const count = useCountUp(region.count, 1500, startCounting);
   
   return (
-    <div className="region-card min-h-36 overflow-hidden">
-      <CurvedLinesGraphic />
-      <div className="relative z-10 flex items-center justify-between w-full px-4">
+    <div className="region-card min-h-32">
+      <OrbitGraphic />
+      <div className="relative z-10 flex items-center justify-between w-full">
         <div className="flex-1" />
         <div className="text-center flex-1">
-          <div className="text-3xl md:text-4xl font-hrsd-bold text-[#1a9b8e]">
+          <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
             {count}
           </div>
-          <div className="text-lg font-hrsd-medium text-[#f5961e] italic">
+          <div className="text-lg font-hrsd-medium text-accent">
             {region.name}
           </div>
         </div>
@@ -113,15 +105,15 @@ const FullWidthRegionCard = ({ region, startCounting }: { region: typeof regions
   const count = useCountUp(region.count, 1500, startCounting);
   
   return (
-    <div className="region-card min-h-36 col-span-full overflow-hidden">
-      <CurvedLinesGraphic />
-      <div className="relative z-10 flex items-center justify-between w-full px-4">
+    <div className="region-card min-h-32 col-span-full">
+      <OrbitGraphic />
+      <div className="relative z-10 flex items-center justify-between w-full">
         <div className="flex-1" />
         <div className="text-center flex-1">
-          <div className="text-3xl md:text-4xl font-hrsd-bold text-[#1a9b8e]">
+          <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
             {count}
           </div>
-          <div className="text-lg font-hrsd-medium text-[#f5961e] italic">
+          <div className="text-lg font-hrsd-medium text-accent">
             {region.name}
           </div>
         </div>
