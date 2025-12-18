@@ -4,41 +4,12 @@ import SettingsHeader from "@/components/SettingsHeader";
 import Footer from "@/components/Footer";
 import { Building2, UserCircle } from "lucide-react";
 
-// Inline SVG for hexagon pattern
-const HexagonPattern = () => (
-  <svg width="120" height="800" viewBox="0 0 120 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {[...Array(12)].map((_, row) => (
-      [...Array(2)].map((_, col) => {
-        const offsetX = col * 52 + (row % 2 === 0 ? 0 : 26);
-        const offsetY = row * 60;
-        return (
-          <polygon
-            key={`${row}-${col}`}
-            points={`${offsetX + 30},${offsetY} ${offsetX + 52},${offsetY + 13} ${offsetX + 52},${offsetY + 39} ${offsetX + 30},${offsetY + 52} ${offsetX + 8},${offsetY + 39} ${offsetX + 8},${offsetY + 13}`}
-            fill="none"
-            stroke="#5fbfbf"
-            strokeWidth="1.5"
-          />
-        );
-      })
-    )).flat()}
-  </svg>
-);
-
 const Settings = () => {
   const [activeTab, setActiveTab] = useState<"organization" | "representative">("organization");
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <SettingsHeader />
-
-      {/* Side Hexagon Patterns - Fixed on sides */}
-      <div className="fixed right-0 top-0 bottom-0 w-[120px] flex items-center justify-end overflow-hidden opacity-60 z-0 pointer-events-none">
-        <HexagonPattern />
-      </div>
-      <div className="fixed left-0 top-0 bottom-0 w-[120px] flex items-center justify-start overflow-hidden opacity-60 z-0 pointer-events-none">
-        <HexagonPattern />
-      </div>
 
       {/* Main Content */}
       <main className="flex-1 pt-24 pb-12 relative z-10">
