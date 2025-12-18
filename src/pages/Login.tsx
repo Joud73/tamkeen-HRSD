@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { RefreshCw } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [nationalId, setNationalId] = useState("");
   const [password, setPassword] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
@@ -23,8 +24,8 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", { nationalId, captchaInput });
+    // Navigate to dashboard after login
+    navigate("/dashboard");
   };
 
   return (
