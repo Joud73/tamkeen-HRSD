@@ -3,7 +3,7 @@ import { RefreshCw } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import loginBg from "@/assets/login-bg.jpg";
+import loginBg from "@/assets/hero-bg.png";
 
 const Login = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.png";
+import heroBg from "@/assets/login-bg.jpg";
 const HeroSection = () => {
   return <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4" style={{
     backgroundImage: `url(${heroBg})`,
