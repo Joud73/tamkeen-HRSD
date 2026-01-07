@@ -17,7 +17,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/tamkeen-HRSD">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
