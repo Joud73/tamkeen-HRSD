@@ -3,14 +3,18 @@ import { RefreshCw } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
 import loginBg from "@/assets/hero-bg.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [nationalId, setNationalId] = useState("");
+  const { signIn } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
   const [captchaCode, setCaptchaCode] = useState("NT394J");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const refreshCaptcha = () => {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -22,10 +26,32 @@ const Login = () => {
     setCaptchaInput("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Navigate to dashboard after login
+    setError("");
+    setIsLoading(true);
+
+    // Validate captcha
+    if (captchaInput.toUpperCase() !== captchaCode) {
+      setError("رمز التحقق غير صحيح");
+      refreshCaptcha();
+      setIsLoading(false);
+      return;
+    }
+
+    const { error: signInError } = await signIn(email, password);
+
+    if (signInError) {
+      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      refreshCaptcha();
+      setIsLoading(false);
+      return;
+    }
+
+    // After successful login, navigate to dashboard
+    // The AuthContext will handle profile status check
     navigate("/dashboard");
+    setIsLoading(false);
   };
 
   return (
@@ -86,20 +112,28 @@ const Login = () => {
                 بيانات دخول مفوض المنظمة
               </h1>
 
+              {/* Error Message */}
+              {error && (
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-right">
+                  <p className="text-red-600 text-sm font-hrsd">{error}</p>
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* National ID Field */}
+                {/* Email Field */}
                 <div>
                   <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
-                    رقم الهوية
+                    البريد الإلكتروني
                   </label>
                   <input
-                    type="text"
-                    value={nationalId}
-                    onChange={(e) => setNationalId(e.target.value)}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    placeholder="2581215168"
+                    placeholder="example@domain.com"
                     dir="ltr"
                     style={{ textAlign: "right" }}
+                    required
                   />
                 </div>
 
@@ -115,6 +149,7 @@ const Login = () => {
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
                     dir="ltr"
                     style={{ textAlign: "right" }}
+                    required
                   />
                 </div>
 
@@ -174,18 +209,20 @@ const Login = () => {
                     placeholder="رمز الصورة"
                     dir="ltr"
                     style={{ textAlign: "right" }}
+                    required
                   />
                 </div>
 
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors"
+                  disabled={isLoading}
+                  className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors disabled:opacity-50"
                   style={{
                     backgroundColor: "hsl(175, 75%, 30%)",
                   }}
                 >
-                  تسجيل الدخول
+                  {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
                 </button>
 
                 {/* Links */}

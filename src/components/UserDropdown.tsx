@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LayoutGrid, Settings, LogOut, User } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface UserDropdownProps {
   isScrolled?: boolean;
@@ -10,6 +11,7 @@ const UserDropdown = ({ isScrolled = false }: UserDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -22,9 +24,9 @@ const UserDropdown = ({ isScrolled = false }: UserDropdownProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    // Mock logout - clear any auth state if needed
-    navigate("/login");
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
   };
 
   return (

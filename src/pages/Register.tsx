@@ -3,37 +3,146 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Headphones, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import loginBg from "@/assets/login-bg.jpg";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { signUp, updateProfileStatus, user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [organizationName, setOrganizationName] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("1000");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Step 1 additional fields for signup
+  const [email, setEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
   
   // Step 3 fields
   const [fullName, setFullName] = useState("");
   const [idNumber, setIdNumber] = useState("");
   const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
+  const [delegateEmail, setDelegateEmail] = useState("");
   const [loginName, setLoginName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleStep1Submit = (e: React.FormEvent) => {
+  const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    if (!organizationName) {
+      setError("يرجى اختيار اسم المنظمة");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!email || !signupPassword) {
+      setError("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+      setIsLoading(false);
+      return;
+    }
+
+    if (signupPassword.length < 6) {
+      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      setIsLoading(false);
+      return;
+    }
+
+    const { error: signUpError } = await signUp(
+      email,
+      signupPassword,
+      organizationName,
+      registrationNumber
+    );
+
+    if (signUpError) {
+      setError(signUpError);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
     setCurrentStep(2);
   };
 
-  const handleStep2Submit = (e: React.FormEvent) => {
+  const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    // Since we have auto-confirm enabled, we simulate verification
+    // In production, you would verify the OTP code here
+    if (!verificationCode || verificationCode.length < 4) {
+      setError("يرجى إدخال كود التحقق الصحيح");
+      setIsLoading(false);
+      return;
+    }
+
+    // Update profile status to profile_incomplete
+    const { error: updateError } = await updateProfileStatus("profile_incomplete");
+
+    if (updateError) {
+      setError(updateError);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
     setCurrentStep(3);
   };
 
-  const handleStep3Submit = (e: React.FormEvent) => {
+  const handleStep3Submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    if (!fullName || !idNumber || !mobile || !delegateEmail) {
+      setError("يرجى ملء جميع الحقول المطلوبة");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("كلمتا المرور غير متطابقتين");
+      setIsLoading(false);
+      return;
+    }
+
+    // Save delegate information
+    if (user) {
+      const { error: delegateError } = await supabase.from("delegates").insert({
+        user_id: user.id,
+        full_name: fullName,
+        id_number: idNumber,
+        mobile: mobile,
+        email: delegateEmail,
+        login_name: loginName,
+      });
+
+      if (delegateError) {
+        console.error("Error saving delegate:", delegateError);
+        setError("حدث خطأ أثناء حفظ البيانات");
+        setIsLoading(false);
+        return;
+      }
+
+      // Update profile status to active
+      const { error: updateError } = await updateProfileStatus("active");
+
+      if (updateError) {
+        setError(updateError);
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    setIsLoading(false);
     setCurrentStep(4); // Go to success screen
   };
 
@@ -150,6 +259,13 @@ const Register = () => {
   // Step 1 Form
   const Step1Form = () => (
     <form onSubmit={handleStep1Submit} className="space-y-6">
+      {/* Error Message */}
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-right">
+          <p className="text-red-600 text-sm font-hrsd">{error}</p>
+        </div>
+      )}
+
       {/* Organization Name Field (Dropdown) */}
       <div>
         <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
@@ -209,15 +325,49 @@ const Register = () => {
         />
       </div>
 
+      {/* Email Field */}
+      <div>
+        <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
+          البريد الإلكتروني
+        </label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          placeholder="example@domain.com"
+          dir="ltr"
+          style={{ textAlign: "right" }}
+          required
+        />
+      </div>
+
+      {/* Password Field */}
+      <div>
+        <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
+          كلمة المرور
+        </label>
+        <input
+          type="password"
+          value={signupPassword}
+          onChange={(e) => setSignupPassword(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          dir="ltr"
+          style={{ textAlign: "right" }}
+          required
+        />
+      </div>
+
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
+        disabled={isLoading}
+        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90 disabled:opacity-50"
         style={{
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        التالي
+        {isLoading ? "جاري التسجيل..." : "التالي"}
       </button>
     </form>
   );
@@ -225,9 +375,16 @@ const Register = () => {
   // Step 2 Form - Verification
   const Step2Form = () => (
     <form onSubmit={handleStep2Submit} className="space-y-6">
+      {/* Error Message */}
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-right">
+          <p className="text-red-600 text-sm font-hrsd">{error}</p>
+        </div>
+      )}
+
       {/* Info message */}
       <p className="text-right font-hrsd text-gray-600 text-sm">
-        تم ارسال كود التحقق الى البريد <span dir="ltr" className="inline-block">aq****@ngotamkeen.com</span>
+        تم ارسال كود التحقق الى البريد <span dir="ltr" className="inline-block">{email ? email.replace(/(.{2}).*(@.*)/, "$1****$2") : "****@****.com"}</span>
       </p>
 
       {/* Verification Code Field */}
@@ -247,12 +404,13 @@ const Register = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
+        disabled={isLoading}
+        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90 disabled:opacity-50"
         style={{
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        التالي
+        {isLoading ? "جاري التحقق..." : "التالي"}
       </button>
     </form>
   );
@@ -260,6 +418,13 @@ const Register = () => {
   // Step 3 Form - Authorized Person Details
   const Step3Form = () => (
     <form onSubmit={handleStep3Submit} className="space-y-5">
+      {/* Error Message */}
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-right">
+          <p className="text-red-600 text-sm font-hrsd">{error}</p>
+        </div>
+      )}
+
       {/* Full Name */}
       <div>
         <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
@@ -311,8 +476,8 @@ const Register = () => {
         </label>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={delegateEmail}
+          onChange={(e) => setDelegateEmail(e.target.value)}
           placeholder="example@domain.com"
           className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-gray-400 bg-gray-50"
           dir="ltr"
@@ -362,12 +527,13 @@ const Register = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
+        disabled={isLoading}
+        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90 disabled:opacity-50"
         style={{
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        حفظ
+        {isLoading ? "جاري الحفظ..." : "حفظ"}
       </button>
     </form>
   );
@@ -389,19 +555,19 @@ const Register = () => {
       </h2>
       
       <p className="font-hrsd text-gray-600 text-center mb-8 leading-relaxed max-w-md">
-        لقد قمت بإنشاء حساب ضمن أداة التقييم الفني. يمكنك الآن تسجيل الدخول باستخدام رقم الهوية وكلمة المرور.
+        لقد قمت بإنشاء حساب ضمن أداة التقييم الفني. يمكنك الآن تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور.
       </p>
 
-      {/* Login Button */}
+      {/* Dashboard Button */}
       <button
         type="button"
-        onClick={() => navigate("/login")}
+        onClick={() => navigate("/dashboard")}
         className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
         style={{
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        تسجيل الدخول
+        الذهاب إلى لوحة التحكم
       </button>
     </div>
   );
@@ -482,18 +648,15 @@ const Register = () => {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-hrsd-semibold transition-colors hover:opacity-90"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg font-hrsd-medium text-white text-sm transition-colors hover:opacity-90"
                   style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
                 >
-                  <Headphones className="w-5 h-5" />
-                  <span>تواصل معنا</span>
+                  <Headphones className="w-4 h-4" />
+                  تواصل معنا
                 </button>
-                <p
-                  className="font-hrsd text-sm"
-                  style={{ color: "hsl(175, 75%, 35%)" }}
-                >
-                  اذا كان لديكم أي استفسار او ملاحظة نسعد بتواصلكم معنا . . .
-                </p>
+                <span className="font-hrsd text-gray-600 text-sm">
+                  للاستفسارات والدعم الفني، يرجى التواصل معنا
+                </span>
               </div>
             )}
           </div>
