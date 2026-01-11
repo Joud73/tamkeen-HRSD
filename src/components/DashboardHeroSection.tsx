@@ -146,195 +146,198 @@ const DashboardHeroSection = () => {
           <Info className="w-5 h-5 text-primary flex-shrink-0" />
         </div>
 
-        {/* إجمالي التقييم Summary Block */}
-        <div 
-          className="rounded-lg p-6 mb-8"
-          style={{ backgroundColor: "#fef9e7" }}
-        >
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Left side - Status list */}
-            <div className="flex-1 order-2 md:order-1">
-              {/* Status rows */}
-              <div className="space-y-3">
-                {/* غير مكتمل */}
-                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
-                  <Circle className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-sm font-hrsd-medium text-foreground w-32">غير مكتمل</span>
-                  <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${(summaryData.incomplete / totalItems) * 100}%`,
-                        backgroundColor: "#9ca3af",
-                      }}
-                    />
+        {/* Constrained width container for main content */}
+        <div className="max-w-5xl mx-auto">
+          {/* إجمالي التقييم Summary Block */}
+          <div 
+            className="rounded-lg p-6 mb-8"
+            style={{ backgroundColor: "#fef9e7" }}
+          >
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Left side - Status list */}
+              <div className="flex-1 order-2 md:order-1">
+                {/* Status rows */}
+                <div className="space-y-3">
+                  {/* غير مكتمل */}
+                  <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
+                    <Circle className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span className="text-sm font-hrsd-medium text-foreground w-32">غير مكتمل</span>
+                    <div className="flex-1 h-5 bg-white rounded overflow-hidden">
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${(summaryData.incomplete / totalItems) * 100}%`,
+                          backgroundColor: "#9ca3af",
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.incomplete}</span>
                   </div>
-                  <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.incomplete}</span>
-                </div>
 
-                {/* بحاجة إلى تحسين كبير */}
-                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#f5961e" }} />
-                  <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين كبير</span>
-                  <div className="flex-1 h-5 bg-white rounded overflow-hidden">
+                  {/* بحاجة إلى تحسين كبير */}
+                  <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#f5961e" }} />
+                    <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين كبير</span>
+                    <div className="flex-1 h-5 bg-white rounded overflow-hidden">
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${(summaryData.needsMajorImprovement / totalItems) * 100}%`,
+                          backgroundColor: "#f5961e",
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMajorImprovement}</span>
+                  </div>
+
+                  {/* بحاجة إلى تحسين بسيط */}
+                  <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#22c55e" }} />
+                    <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين بسيط</span>
+                    <div className="flex-1 h-5 bg-white rounded overflow-hidden">
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${(summaryData.needsMinorImprovement / totalItems) * 100}%`,
+                          backgroundColor: "#22c55e",
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMinorImprovement}</span>
+                  </div>
+
+                  {/* مكتمل */}
+                  <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#148287" }} />
+                    <span className="text-sm font-hrsd-medium text-foreground w-32">مكتمل</span>
+                    <div className="flex-1 h-5 bg-white rounded overflow-hidden">
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${(summaryData.complete / totalItems) * 100}%`,
+                          backgroundColor: "#148287",
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.complete}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right side - Title and total percentage */}
+              <div className="flex flex-col items-end order-1 md:order-2 md:w-56">
+                <h2 className="text-xl font-hrsd-bold mb-3" style={{ color: "#f5961e" }}>
+                  إجمالي التقييم
+                </h2>
+                <div className="flex items-center gap-3 w-full">
+                  <div className="flex-1 h-6 bg-white rounded overflow-hidden">
                     <div
                       className="h-full rounded"
                       style={{
-                        width: `${(summaryData.needsMajorImprovement / totalItems) * 100}%`,
+                        width: `${summaryData.totalPercentage}%`,
                         backgroundColor: "#f5961e",
                       }}
                     />
                   </div>
-                  <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMajorImprovement}</span>
+                  <span className="text-2xl font-hrsd-bold" style={{ color: "#148287" }}>
+                    %{summaryData.totalPercentage}
+                  </span>
                 </div>
-
-                {/* بحاجة إلى تحسين بسيط */}
-                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#22c55e" }} />
-                  <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين بسيط</span>
-                  <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${(summaryData.needsMinorImprovement / totalItems) * 100}%`,
-                        backgroundColor: "#22c55e",
-                      }}
-                    />
-                  </div>
-                  <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMinorImprovement}</span>
-                </div>
-
-                {/* مكتمل */}
-                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#148287" }} />
-                  <span className="text-sm font-hrsd-medium text-foreground w-32">مكتمل</span>
-                  <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${(summaryData.complete / totalItems) * 100}%`,
-                        backgroundColor: "#148287",
-                      }}
-                    />
-                  </div>
-                  <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.complete}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Title and total percentage */}
-            <div className="flex flex-col items-end order-1 md:order-2 md:w-56">
-              <h2 className="text-xl font-hrsd-bold mb-3" style={{ color: "#f5961e" }}>
-                إجمالي التقييم
-              </h2>
-              <div className="flex items-center gap-3 w-full">
-                <div className="flex-1 h-6 bg-white rounded overflow-hidden">
-                  <div
-                    className="h-full rounded"
-                    style={{
-                      width: `${summaryData.totalPercentage}%`,
-                      backgroundColor: "#f5961e",
-                    }}
-                  />
-                </div>
-                <span className="text-2xl font-hrsd-bold" style={{ color: "#148287" }}>
-                  %{summaryData.totalPercentage}
-                </span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {courseCards.map((card, index) => (
-            <div
-              key={index}
-              className="rounded-lg p-5 transition-all duration-300 hover:shadow-md cursor-pointer"
-              style={{ backgroundColor: "#e8f5f3" }}
-            >
-              {/* Card Title */}
-              <h3 
-                className="text-lg font-hrsd-bold text-right mb-4"
-                style={{ color: "#148287" }}
+          {/* Course Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {courseCards.map((card, index) => (
+              <div
+                key={index}
+                className="rounded-lg p-5 transition-all duration-300 hover:shadow-md cursor-pointer"
+                style={{ backgroundColor: "#e8f5f3" }}
               >
-                {card.title}
-              </h3>
-
-              {/* Chart and Status Section */}
-              <div className="flex items-start gap-4 mb-4">
-                {/* Status Lines - Right side */}
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
-                    <span className="text-sm font-hrsd-semibold w-4">{card.statuses.incomplete}</span>
-                    <div className="flex items-center gap-2 flex-1 justify-end">
-                      <span className="text-xs font-hrsd text-muted-foreground">غير مكتمل</span>
-                      <Circle className="w-3 h-3 text-gray-400" />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
-                    <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMajorImprovement}</span>
-                    <div className="flex items-center gap-2 flex-1 justify-end">
-                      <span className="text-xs font-hrsd" style={{ color: "#f5961e" }}>بحاجة لتحسين كبير</span>
-                      <AlertCircle className="w-3 h-3" style={{ color: "#f5961e" }} />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
-                    <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMinorImprovement}</span>
-                    <div className="flex items-center gap-2 flex-1 justify-end">
-                      <span className="text-xs font-hrsd" style={{ color: "#22c55e" }}>بحاجة لتحسين بسيط</span>
-                      <CheckCircle2 className="w-3 h-3" style={{ color: "#22c55e" }} />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
-                    <span className="text-sm font-hrsd-semibold w-4">{card.statuses.complete}</span>
-                    <div className="flex items-center gap-2 flex-1 justify-end">
-                      <span className="text-xs font-hrsd" style={{ color: "#148287" }}>مكتمل</span>
-                      <CheckCircle2 className="w-3 h-3" style={{ color: "#148287" }} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Donut Chart - Left side */}
-                <DonutChart percentage={card.percentage} size={100} strokeWidth={10} />
-              </div>
-
-              {/* Divider */}
-              <div className="h-px bg-primary/30 mb-4" />
-
-              {/* Footer: Button and Notes */}
-              <div className="flex items-center justify-between">
-                {/* Notes on left */}
-                <div className="flex items-center gap-2">
-                  <span
-                    className="px-2 py-0.5 rounded-full text-xs font-hrsd-bold text-white"
-                    style={{ backgroundColor: "#22c55e" }}
-                  >
-                    {card.newNotes}
-                  </span>
-                  <span
-                    className="text-sm font-hrsd-medium"
-                    style={{ color: "#22c55e" }}
-                  >
-                    ملاحظات جديدة
-                  </span>
-                </div>
-
-                {/* Button on right */}
-                <button
-                  onClick={() => console.log(`Navigate to course: ${card.title}`)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110 cursor-pointer"
-                  style={{ backgroundColor: "#148287" }}
+                {/* Card Title */}
+                <h3 
+                  className="text-lg font-hrsd-bold text-right mb-4"
+                  style={{ color: "#148287" }}
                 >
-                  <ClipboardCheck className="w-4 h-4" />
-                  تقييم المساق
-                </button>
+                  {card.title}
+                </h3>
+
+                {/* Chart and Status Section */}
+                <div className="flex items-start gap-4 mb-4">
+                  {/* Status Lines - Right side */}
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
+                      <span className="text-sm font-hrsd-semibold w-4">{card.statuses.incomplete}</span>
+                      <div className="flex items-center gap-2 flex-1 justify-end">
+                        <span className="text-xs font-hrsd text-muted-foreground">غير مكتمل</span>
+                        <Circle className="w-3 h-3 text-gray-400" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
+                      <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMajorImprovement}</span>
+                      <div className="flex items-center gap-2 flex-1 justify-end">
+                        <span className="text-xs font-hrsd" style={{ color: "#f5961e" }}>بحاجة لتحسين كبير</span>
+                        <AlertCircle className="w-3 h-3" style={{ color: "#f5961e" }} />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
+                      <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMinorImprovement}</span>
+                      <div className="flex items-center gap-2 flex-1 justify-end">
+                        <span className="text-xs font-hrsd" style={{ color: "#22c55e" }}>بحاجة لتحسين بسيط</span>
+                        <CheckCircle2 className="w-3 h-3" style={{ color: "#22c55e" }} />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
+                      <span className="text-sm font-hrsd-semibold w-4">{card.statuses.complete}</span>
+                      <div className="flex items-center gap-2 flex-1 justify-end">
+                        <span className="text-xs font-hrsd" style={{ color: "#148287" }}>مكتمل</span>
+                        <CheckCircle2 className="w-3 h-3" style={{ color: "#148287" }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Donut Chart - Left side */}
+                  <DonutChart percentage={card.percentage} size={100} strokeWidth={10} />
+                </div>
+
+                {/* Divider */}
+                <div className="h-px bg-primary/30 mb-4" />
+
+                {/* Footer: Button and Notes */}
+                <div className="flex items-center justify-between">
+                  {/* Notes on left */}
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="px-2 py-0.5 rounded-full text-xs font-hrsd-bold text-white"
+                      style={{ backgroundColor: "#22c55e" }}
+                    >
+                      {card.newNotes}
+                    </span>
+                    <span
+                      className="text-sm font-hrsd-medium"
+                      style={{ color: "#22c55e" }}
+                    >
+                      ملاحظات جديدة
+                    </span>
+                  </div>
+
+                  {/* Button on right */}
+                  <button
+                    onClick={() => console.log(`Navigate to course: ${card.title}`)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110 cursor-pointer"
+                    style={{ backgroundColor: "#148287" }}
+                  >
+                    <ClipboardCheck className="w-4 h-4" />
+                    تقييم المساق
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
