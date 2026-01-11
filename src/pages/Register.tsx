@@ -14,7 +14,7 @@ const Register = () => {
   const [organizationName, setOrganizationName] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("1000");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
+  // verificationCode state removed - auto-confirm enabled
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
@@ -67,24 +67,8 @@ const Register = () => {
       return;
     }
 
-    setIsLoading(false);
-    setCurrentStep(2);
-  };
-
-  const handleStep2Submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    // Since we have auto-confirm enabled, we simulate verification
-    // In production, you would verify the OTP code here
-    if (!verificationCode || verificationCode.length < 4) {
-      setError("يرجى إدخال كود التحقق الصحيح");
-      setIsLoading(false);
-      return;
-    }
-
-    // Update profile status to profile_incomplete
+    // Since auto-confirm is enabled, skip verification step and proceed to step 3
+    // Update profile status to profile_incomplete and go directly to delegate info
     const { error: updateError } = await updateProfileStatus("profile_incomplete");
 
     if (updateError) {
@@ -146,8 +130,11 @@ const Register = () => {
     setCurrentStep(4); // Go to success screen
   };
 
-  // Step indicator component
+  // Step indicator component - now shows 2 steps (organization data and delegate data)
   const StepIndicator = () => {
+    // Map currentStep: 1 = step 1, 3 = step 2 (visual), 4 = success
+    const visualStep = currentStep === 1 ? 1 : currentStep >= 3 ? 2 : 1;
+    
     const getStepStyle = (step: number) => {
       // On success screen (step 4), all steps are completed (grey)
       if (currentStep === 4) {
@@ -158,14 +145,14 @@ const Register = () => {
         };
       }
       
-      if (step === currentStep) {
+      if (step === visualStep) {
         // Active step - strong orange
         return {
           bg: "hsl(35, 91%, 54%)",
           text: "white",
           labelColor: "white"
         };
-      } else if (step < currentStep) {
+      } else if (step < visualStep) {
         // Completed step - lighter orange
         return {
           bg: "hsl(35, 91%, 70%)",
@@ -187,7 +174,7 @@ const Register = () => {
         {/* Background line */}
         <div className="absolute top-1/2 left-0 right-0 h-px bg-gray-200 -translate-y-1/2" />
         
-        {/* Steps - RTL order: Step 1 on right, Step 3 on left */}
+        {/* Steps - RTL order: Step 1 on right, Step 2 on left */}
         <div className="relative flex items-center justify-between flex-row-reverse">
           {/* Step 1 - بيانات المنظمة (rightmost in RTL) */}
           <div className="flex flex-col items-center">
@@ -210,7 +197,7 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Step 2 - بيانات التحقق (middle) */}
+          {/* Step 2 - بيانات المفوض (leftmost in RTL) */}
           <div className="flex flex-col items-center">
             <div
               className="px-6 py-3 rounded-lg flex flex-col items-center min-w-[120px]"
@@ -225,27 +212,6 @@ const Register = () => {
               <span 
                 className="font-hrsd-medium text-sm"
                 style={{ color: getStepStyle(2).labelColor }}
-              >
-                بيانات التحقق
-              </span>
-            </div>
-          </div>
-
-          {/* Step 3 - بيانات المفوض (leftmost in RTL) */}
-          <div className="flex flex-col items-center">
-            <div
-              className="px-6 py-3 rounded-lg flex flex-col items-center min-w-[120px]"
-              style={{ backgroundColor: getStepStyle(3).bg }}
-            >
-              <span 
-                className="font-hrsd-bold text-lg"
-                style={{ color: getStepStyle(3).text }}
-              >
-                3
-              </span>
-              <span 
-                className="font-hrsd-medium text-sm"
-                style={{ color: getStepStyle(3).labelColor }}
               >
                 بيانات المفوض
               </span>
@@ -372,48 +338,7 @@ const Register = () => {
     </form>
   );
 
-  // Step 2 Form - Verification
-  const Step2Form = () => (
-    <form onSubmit={handleStep2Submit} className="space-y-6">
-      {/* Error Message */}
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-right">
-          <p className="text-red-600 text-sm font-hrsd">{error}</p>
-        </div>
-      )}
-
-      {/* Info message */}
-      <p className="text-right font-hrsd text-gray-600 text-sm">
-        تم ارسال كود التحقق الى البريد <span dir="ltr" className="inline-block">{email ? email.replace(/(.{2}).*(@.*)/, "$1****$2") : "****@****.com"}</span>
-      </p>
-
-      {/* Verification Code Field */}
-      <div>
-        <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
-          كود التحقق
-        </label>
-        <input
-          type="text"
-          value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
-          placeholder="يرجى إدخال كود التحقق الذي تم إرساله إلى بريد المفوض عن المنظمة"
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-gray-400 placeholder:text-sm"
-        />
-      </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90 disabled:opacity-50"
-        style={{
-          backgroundColor: "hsl(175, 75%, 30%)",
-        }}
-      >
-        {isLoading ? "جاري التحقق..." : "التالي"}
-      </button>
-    </form>
-  );
+  // Step 2 is removed - auto-confirm is enabled, no fake verification
 
   // Step 3 Form - Authorized Person Details
   const Step3Form = () => (
@@ -635,7 +560,6 @@ const Register = () => {
 
               {/* Form Content based on current step */}
               {currentStep === 1 && <Step1Form />}
-              {currentStep === 2 && <Step2Form />}
               {currentStep === 3 && <Step3Form />}
               {currentStep === 4 && <SuccessScreen />}
             </div>
