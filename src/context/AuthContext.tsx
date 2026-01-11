@@ -44,7 +44,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .maybeSingle();
 
     if (error) {
-      console.error("Error fetching profile status:", error);
+      // Error logged without sensitive details for security
+      console.error("Profile status fetch failed");
       return null;
     }
     return data?.status as ProfileStatus | null;
@@ -134,7 +135,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (profileError) {
-        console.error("Error creating profile:", profileError);
+        // Error logged without sensitive details for security
+        console.error("Profile creation failed");
         return { error: "حدث خطأ أثناء إنشاء الحساب" };
       }
     }
@@ -160,7 +162,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .eq("id", user.id);
 
     if (error) {
-      console.error("Error updating profile status:", error);
+      // Error logged without sensitive details for security
+      console.error("Profile status update failed");
       return { error: "حدث خطأ أثناء تحديث حالة الحساب" };
     }
 
