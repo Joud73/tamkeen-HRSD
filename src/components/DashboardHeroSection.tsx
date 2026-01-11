@@ -152,12 +152,12 @@ const DashboardHeroSection = () => {
           style={{ backgroundColor: "#fef9e7" }}
         >
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Right side - Title and status list */}
+            {/* Left side - Status list */}
             <div className="flex-1 order-2 md:order-1">
               {/* Status rows */}
               <div className="space-y-3">
                 {/* غير مكتمل */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
                   <Circle className="w-4 h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-sm font-hrsd-medium text-foreground w-32">غير مكتمل</span>
                   <div className="flex-1 h-5 bg-white rounded overflow-hidden">
@@ -173,7 +173,7 @@ const DashboardHeroSection = () => {
                 </div>
 
                 {/* بحاجة إلى تحسين كبير */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#f5961e" }} />
                   <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين كبير</span>
                   <div className="flex-1 h-5 bg-white rounded overflow-hidden">
@@ -189,7 +189,7 @@ const DashboardHeroSection = () => {
                 </div>
 
                 {/* بحاجة إلى تحسين بسيط */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#22c55e" }} />
                   <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين بسيط</span>
                   <div className="flex-1 h-5 bg-white rounded overflow-hidden">
@@ -205,7 +205,7 @@ const DashboardHeroSection = () => {
                 </div>
 
                 {/* مكتمل */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-all duration-200 hover:bg-white/50 rounded px-2 py-1 cursor-default">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#148287" }} />
                   <span className="text-sm font-hrsd-medium text-foreground w-32">مكتمل</span>
                   <div className="flex-1 h-5 bg-white rounded overflow-hidden">
@@ -222,16 +222,13 @@ const DashboardHeroSection = () => {
               </div>
             </div>
 
-            {/* Left side - Title and total percentage */}
-            <div className="flex flex-col items-end order-1 md:order-2 md:w-48">
+            {/* Right side - Title and total percentage */}
+            <div className="flex flex-col items-end order-1 md:order-2 md:w-56">
               <h2 className="text-xl font-hrsd-bold mb-3" style={{ color: "#f5961e" }}>
                 إجمالي التقييم
               </h2>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl font-hrsd-bold" style={{ color: "#148287" }}>
-                  %{summaryData.totalPercentage}
-                </span>
-                <div className="flex-1 h-6 bg-white rounded overflow-hidden w-32">
+              <div className="flex items-center gap-3 w-full">
+                <div className="flex-1 h-6 bg-white rounded overflow-hidden">
                   <div
                     className="h-full rounded"
                     style={{
@@ -240,6 +237,9 @@ const DashboardHeroSection = () => {
                     }}
                   />
                 </div>
+                <span className="text-2xl font-hrsd-bold" style={{ color: "#148287" }}>
+                  %{summaryData.totalPercentage}
+                </span>
               </div>
             </div>
           </div>
@@ -250,7 +250,7 @@ const DashboardHeroSection = () => {
           {courseCards.map((card, index) => (
             <div
               key={index}
-              className="rounded-lg p-5"
+              className="rounded-lg p-5 transition-all duration-300 hover:shadow-md cursor-pointer"
               style={{ backgroundColor: "#e8f5f3" }}
             >
               {/* Card Title */}
@@ -265,7 +265,7 @@ const DashboardHeroSection = () => {
               <div className="flex items-start gap-4 mb-4">
                 {/* Status Lines - Right side */}
                 <div className="flex-1 space-y-2">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
                     <span className="text-sm font-hrsd-semibold w-4">{card.statuses.incomplete}</span>
                     <div className="flex items-center gap-2 flex-1 justify-end">
                       <span className="text-xs font-hrsd text-muted-foreground">غير مكتمل</span>
@@ -273,7 +273,7 @@ const DashboardHeroSection = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
                     <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMajorImprovement}</span>
                     <div className="flex items-center gap-2 flex-1 justify-end">
                       <span className="text-xs font-hrsd" style={{ color: "#f5961e" }}>بحاجة لتحسين كبير</span>
@@ -281,7 +281,7 @@ const DashboardHeroSection = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
                     <span className="text-sm font-hrsd-semibold w-4">{card.statuses.needsMinorImprovement}</span>
                     <div className="flex items-center gap-2 flex-1 justify-end">
                       <span className="text-xs font-hrsd" style={{ color: "#22c55e" }}>بحاجة لتحسين بسيط</span>
@@ -289,7 +289,7 @@ const DashboardHeroSection = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 transition-all duration-200 hover:bg-white/40 rounded px-1 py-0.5">
                     <span className="text-sm font-hrsd-semibold w-4">{card.statuses.complete}</span>
                     <div className="flex items-center gap-2 flex-1 justify-end">
                       <span className="text-xs font-hrsd" style={{ color: "#148287" }}>مكتمل</span>
@@ -326,7 +326,7 @@ const DashboardHeroSection = () => {
                 {/* Button on right */}
                 <button
                   onClick={() => console.log(`Navigate to course: ${card.title}`)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-colors hover:opacity-90"
+                  className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110 cursor-pointer"
                   style={{ backgroundColor: "#148287" }}
                 >
                   <ClipboardCheck className="w-4 h-4" />
