@@ -18,18 +18,22 @@ const Login = () => {
     setError("");
     setIsLoading(true);
 
-    const { error: signInError } = await signIn(email, password);
+    try {
+      const { error: signInError } = await signIn(email, password);
 
-    if (signInError) {
-      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      if (signInError) {
+        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+        setIsLoading(false);
+        return;
+      }
+
+      // Navigate immediately after successful login - don't wait for profileStatus
+      navigate("/dashboard", { replace: true });
+    } catch {
+      setError("حدث خطأ أثناء تسجيل الدخول");
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    // After successful login, navigate to dashboard
-    // The AuthContext will handle profile status check
-    navigate("/dashboard");
-    setIsLoading(false);
   };
 
   return (
