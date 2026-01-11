@@ -110,7 +110,8 @@ const Register = () => {
       });
 
       if (delegateError) {
-        console.error("Error saving delegate:", delegateError);
+        // Error logged without sensitive details for security
+        console.error("Delegate save failed");
         setError("حدث خطأ أثناء حفظ البيانات");
         setIsLoading(false);
         return;
