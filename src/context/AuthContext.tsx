@@ -100,7 +100,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     if (error) {
-      return { error: error.message };
+      // Log error for debugging without exposing to client
+      console.error("Sign in failed");
+      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
     }
 
     return { error: null };
@@ -121,7 +123,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     if (error) {
-      return { error: error.message };
+      // Log error for debugging without exposing to client
+      console.error("Sign up failed");
+      return { error: "حدث خطأ أثناء إنشاء الحساب" };
     }
 
     // Create profile with pending_verification status
