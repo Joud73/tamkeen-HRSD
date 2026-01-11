@@ -23,7 +23,7 @@ const HeroSection = () => {
           }}
           className="text-4xl md:text-5xl lg:text-6xl mb-6 animate-fade-in text-center font-sans text-[#f49b1f]"
         >
-          أداة التقييم الفني
+          مركز التأهيل والتدريب للمنظمات
         </h1>
 
         {/* Decorative Lines */}
