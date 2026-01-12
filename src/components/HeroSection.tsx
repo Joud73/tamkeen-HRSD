@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import heroBg from "@/assets/login-bg.jpg";
+import heroBg from "@/assets/hero-bg.png";
 const HeroSection = () => {
   return (
     <section
