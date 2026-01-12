@@ -45,7 +45,7 @@ const Login = () => {
       <main
         className="flex-1 relative pt-20"
         style={{
-          backgroundImage: `url(${loginBg})`,
+          backgroundImage: `url(${heroBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -75,22 +75,13 @@ const Login = () => {
           </div>
 
           {/* Orange line under breadcrumb */}
-          <div
-            className="w-full h-0.5 mb-8"
-            style={{ backgroundColor: "hsl(35, 91%, 54%)" }}
-          />
+          <div className="w-full h-0.5 mb-8" style={{ backgroundColor: "hsl(35, 91%, 54%)" }} />
 
           {/* Login Card */}
           <div className="max-w-md mx-auto">
-            <div
-              className="rounded-xl p-8 shadow-lg"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
-            >
+            <div className="rounded-xl p-8 shadow-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}>
               {/* Card Title */}
-              <h1
-                className="text-xl font-hrsd-title text-center mb-8"
-                style={{ color: "hsl(35, 91%, 54%)" }}
-              >
+              <h1 className="text-xl font-hrsd-title text-center mb-8" style={{ color: "hsl(35, 91%, 54%)" }}>
                 بيانات دخول مفوض المنظمة
               </h1>
 
@@ -121,9 +112,7 @@ const Login = () => {
 
                 {/* Password Field */}
                 <div>
-                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
-                    كلمة المرور
-                  </label>
+                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">كلمة المرور</label>
                   <input
                     type="password"
                     value={password}
@@ -134,7 +123,6 @@ const Login = () => {
                     required
                   />
                 </div>
-
 
                 {/* Submit Button */}
                 <button
