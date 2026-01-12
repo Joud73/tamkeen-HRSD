@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Upload, Check, FileText, Eye, MessageSquare } from "lucide-react";
+import { Upload, Check, FileText, Eye, MessageSquare, Trash2, EyeOff } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,6 +28,18 @@ interface Course {
   slug: string;
   name: string;
   criteria: Criterion[];
+}
+
+// Evidence record type
+interface EvidenceRecord {
+  id: string;
+  indicatorId: string;
+  itemId: string;
+  itemLabel: string;
+  fileName: string;
+  uploadedAt: string;
+  status: string;
+  hidden: boolean;
 }
 
 // Course data with placeholders
@@ -261,8 +273,46 @@ const TechnicalEvaluationIndicators = () => {
   // State for active button per indicator: { [indicatorId]: "plan" | "evidence" | "notes" | null }
   const [activeButtons, setActiveButtons] = useState<Record<string, "plan" | "evidence" | "notes" | null>>({});
   
+  // Evidence records state with localStorage persistence
+  const [evidenceRecords, setEvidenceRecords] = useState<EvidenceRecord[]>(() => {
+    const saved = localStorage.getItem(`evidence-${courseSlug}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Persist evidence to localStorage
+  useEffect(() => {
+    localStorage.setItem(`evidence-${courseSlug}`, JSON.stringify(evidenceRecords));
+  }, [evidenceRecords, courseSlug]);
+  
   // File input refs
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  
+  // General evidence upload ref
+  const generalEvidenceInputRef = useRef<Record<string, HTMLInputElement | null>>({});
+
+  // Helper to get item label from item index
+  const getItemLabel = (index: number): string => {
+    const labels = ["الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر"];
+    return `البند ${labels[index] || (index + 1)}`;
+  };
+
+  // Helper to format date as DD-MM
+  const formatDate = (): string => {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    return `${day}-${month}`;
+  };
+
+  // Check if item has evidence
+  const hasEvidence = (itemId: string): boolean => {
+    return evidenceRecords.some((e) => e.itemId === itemId && !e.hidden);
+  };
+
+  // Get evidence count for an indicator
+  const getEvidenceCount = (indicatorId: string): number => {
+    return evidenceRecords.filter((e) => e.indicatorId === indicatorId && !e.hidden).length;
+  };
   
   const handleButtonClick = (indicatorId: string, button: "plan" | "evidence" | "notes") => {
     setActiveButtons((prev) => ({
@@ -279,9 +329,53 @@ const TechnicalEvaluationIndicators = () => {
     fileInputRefs.current[itemId]?.click();
   };
 
-  const handleFileChange = (itemId: string, event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
+  const handleFileChange = (itemId: string, indicatorId: string, itemIndex: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
     setUploadedFiles((prev) => ({ ...prev, [itemId]: file }));
+    
+    // Create evidence record
+    const newEvidence: EvidenceRecord = {
+      id: `${itemId}-${Date.now()}`,
+      indicatorId,
+      itemId,
+      itemLabel: getItemLabel(itemIndex),
+      fileName: file.name,
+      uploadedAt: formatDate(),
+      status: "غير معتمد",
+      hidden: false,
+    };
+    
+    setEvidenceRecords((prev) => [...prev, newEvidence]);
+  };
+
+  const handleGeneralEvidenceUpload = (indicatorId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const newEvidence: EvidenceRecord = {
+      id: `general-${indicatorId}-${Date.now()}`,
+      indicatorId,
+      itemId: `general-${indicatorId}`,
+      itemLabel: "بند غير محدد",
+      fileName: file.name,
+      uploadedAt: formatDate(),
+      status: "غير معتمد",
+      hidden: false,
+    };
+    
+    setEvidenceRecords((prev) => [...prev, newEvidence]);
+  };
+
+  const toggleEvidenceVisibility = (evidenceId: string) => {
+    setEvidenceRecords((prev) =>
+      prev.map((e) => (e.id === evidenceId ? { ...e, hidden: !e.hidden } : e))
+    );
+  };
+
+  const deleteEvidence = (evidenceId: string) => {
+    setEvidenceRecords((prev) => prev.filter((e) => e.id !== evidenceId));
   };
 
   const calculateIndicatorResult = (indicator: Indicator) => {
@@ -301,6 +395,107 @@ const TechnicalEvaluationIndicators = () => {
     }
 
     setIndicatorResults((prev) => ({ ...prev, [indicator.id]: result }));
+  };
+
+  // Render evidence panel for an indicator
+  const renderEvidencePanel = (indicatorId: string) => {
+    const indicatorEvidence = evidenceRecords.filter((e) => e.indicatorId === indicatorId);
+    
+    return (
+      <div className="mt-4 rounded-lg overflow-hidden" style={{ backgroundColor: "#e8f5f3" }}>
+        <div className="p-4">
+          {/* Panel Title */}
+          <h4 className="text-lg font-hrsd-semibold mb-2" style={{ color: "#f5961e" }}>
+            الشواهد
+          </h4>
+          <div className="h-px bg-gray-300 mb-4" />
+          
+          {indicatorEvidence.length === 0 ? (
+            <p className="text-sm font-hrsd text-gray-500 text-center py-6">
+              لا توجد شواهد مضافة
+            </p>
+          ) : (
+            <div className="rounded-lg overflow-hidden border border-gray-200 bg-white">
+              {/* Table Header */}
+              <div 
+                className="flex items-center text-sm font-hrsd-semibold text-white"
+                style={{ backgroundColor: "#148287" }}
+              >
+                <div className="flex-1 py-3 px-4 border-l border-white/20">
+                  الشاهد
+                </div>
+                <div className="w-24 py-3 text-center border-l border-white/20">
+                  التاريخ
+                </div>
+                <div className="w-28 py-3 text-center border-l border-white/20">
+                  الحالة
+                </div>
+                <div className="w-24 py-3 text-center">
+                  العمليات
+                </div>
+              </div>
+              
+              {/* Table Rows */}
+              {indicatorEvidence.map((evidence, index) => (
+                <div 
+                  key={evidence.id}
+                  className={`flex items-center text-sm ${
+                    evidence.hidden ? "opacity-50" : ""
+                  } ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
+                >
+                  <div className="flex-1 py-3 px-4 font-hrsd text-foreground border-l border-gray-100">
+                    {evidence.itemLabel} - {evidence.fileName}
+                  </div>
+                  <div className="w-24 py-3 text-center font-hrsd text-gray-600 border-l border-gray-100">
+                    {evidence.uploadedAt}
+                  </div>
+                  <div className="w-28 py-3 text-center font-hrsd text-gray-600 border-l border-gray-100">
+                    {evidence.status}
+                  </div>
+                  <div className="w-24 py-3 flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => toggleEvidenceVisibility(evidence.id)}
+                      className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+                      title={evidence.hidden ? "إظهار" : "إخفاء"}
+                    >
+                      {evidence.hidden ? (
+                        <EyeOff className="w-4 h-4" style={{ color: "#148287" }} />
+                      ) : (
+                        <Eye className="w-4 h-4" style={{ color: "#148287" }} />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => deleteEvidence(evidence.id)}
+                      className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+                      title="حذف"
+                    >
+                      <Trash2 className="w-4 h-4" style={{ color: "#148287" }} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Add Evidence Button */}
+          <div className="mt-4 flex justify-start">
+            <button
+              onClick={() => generalEvidenceInputRef.current[indicatorId]?.click()}
+              className="px-6 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+              style={{ backgroundColor: "#148287" }}
+            >
+              إضافة شاهد
+            </button>
+            <input
+              type="file"
+              ref={(el) => (generalEvidenceInputRef.current[indicatorId] = el)}
+              onChange={(e) => handleGeneralEvidenceUpload(indicatorId, e)}
+              className="hidden"
+            />
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -449,7 +644,7 @@ const TechnicalEvaluationIndicators = () => {
                               <input
                                 type="file"
                                 ref={(el) => (fileInputRefs.current[item.id] = el)}
-                                onChange={(e) => handleFileChange(item.id, e)}
+                                onChange={(e) => handleFileChange(item.id, indicator.id, itemIndex, e)}
                                 className="hidden"
                               />
                             </div>
@@ -503,6 +698,11 @@ const TechnicalEvaluationIndicators = () => {
                         >
                           <Eye className="w-4 h-4" />
                           الشواهد
+                          {getEvidenceCount(indicator.id) > 0 && (
+                            <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs">
+                              {getEvidenceCount(indicator.id)}
+                            </span>
+                          )}
                         </button>
                         <button
                           onClick={() => handleButtonClick(indicator.id, "notes")}
@@ -515,6 +715,9 @@ const TechnicalEvaluationIndicators = () => {
                           الملاحظات
                         </button>
                       </div>
+
+                      {/* Tab Content: الشواهد panel */}
+                      {activeButtons[indicator.id] === "evidence" && renderEvidencePanel(indicator.id)}
                     </div>
                   ))}
                 </div>
