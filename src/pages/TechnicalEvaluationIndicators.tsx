@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Upload, Check, FileText, Eye, MessageSquare, Trash2, EyeOff } from "lucide-react";
+import { Upload, Check, FileText, Eye, MessageSquare, Trash2, EyeOff, Pencil, Plus, X, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 // Types for the data structure
 interface VerificationItem {
@@ -40,6 +42,18 @@ interface EvidenceRecord {
   uploadedAt: string;
   status: string;
   hidden: boolean;
+}
+
+// Improvement task type
+interface ImprovementTask {
+  id: string;
+  indicatorId: string;
+  type: "آلي" | "يدوي";
+  taskText: string;
+  date: string;
+  assignee: string;
+  status: "تحت التنفيذ" | "تم";
+  isAuto: boolean;
 }
 
 // Course data with placeholders
@@ -257,6 +271,7 @@ const getResultColor = (result: ResultType): string => {
 
 const TechnicalEvaluationIndicators = () => {
   const { courseSlug } = useParams<{ courseSlug: string }>();
+  const { toast } = useToast();
   
   // Find the current course
   const currentCourse = coursesData.find((c) => c.slug === courseSlug) || coursesData[0];
@@ -279,10 +294,41 @@ const TechnicalEvaluationIndicators = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Improvement tasks state with localStorage persistence
+  const [improvementTasks, setImprovementTasks] = useState<ImprovementTask[]>(() => {
+    const saved = localStorage.getItem(`improvement-tasks-${courseSlug}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Team members state with localStorage persistence
+  const [teamMembers, setTeamMembers] = useState<string[]>(() => {
+    const saved = localStorage.getItem(`team-members-${courseSlug}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Modal states
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
+  const [activeIndicatorForTask, setActiveIndicatorForTask] = useState<string | null>(null);
+  const [editingTask, setEditingTask] = useState<ImprovementTask | null>(null);
+  const [newTaskText, setNewTaskText] = useState("");
+  const [newTaskAssignee, setNewTaskAssignee] = useState("");
+  const [newMemberName, setNewMemberName] = useState("");
+
   // Persist evidence to localStorage
   useEffect(() => {
     localStorage.setItem(`evidence-${courseSlug}`, JSON.stringify(evidenceRecords));
   }, [evidenceRecords, courseSlug]);
+
+  // Persist improvement tasks to localStorage
+  useEffect(() => {
+    localStorage.setItem(`improvement-tasks-${courseSlug}`, JSON.stringify(improvementTasks));
+  }, [improvementTasks, courseSlug]);
+
+  // Persist team members to localStorage
+  useEffect(() => {
+    localStorage.setItem(`team-members-${courseSlug}`, JSON.stringify(teamMembers));
+  }, [teamMembers, courseSlug]);
   
   // File input refs
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -395,6 +441,244 @@ const TechnicalEvaluationIndicators = () => {
     }
 
     setIndicatorResults((prev) => ({ ...prev, [indicator.id]: result }));
+
+    // Regenerate auto tasks based on result
+    regenerateAutoTasks(indicator.id, result, indicator.items.filter((item) => !checkedItems[item.id]));
+  };
+
+  // Generate/regenerate auto tasks for an indicator
+  const regenerateAutoTasks = (indicatorId: string, result: ResultType, uncheckedItems: VerificationItem[]) => {
+    // Remove existing auto tasks for this indicator
+    setImprovementTasks((prev) => {
+      const filtered = prev.filter((t) => !(t.indicatorId === indicatorId && t.isAuto));
+      
+      // If result is "complete", no auto tasks needed
+      if (result === "complete") {
+        return filtered;
+      }
+
+      // Generate auto tasks for unchecked items (max 2)
+      const autoTasks: ImprovementTask[] = uncheckedItems.slice(0, 2).map((item, index) => ({
+        id: `auto-${indicatorId}-${item.id}-${Date.now()}-${index}`,
+        indicatorId,
+        type: "آلي",
+        taskText: `يتطلب استكمال: ${item.text.substring(0, 80)}...`,
+        date: formatDate(),
+        assignee: "",
+        status: "تحت التنفيذ",
+        isAuto: true,
+      }));
+
+      return [...filtered, ...autoTasks];
+    });
+  };
+
+  // Get improvement tasks count for an indicator
+  const getImprovementTasksCount = (indicatorId: string): number => {
+    return improvementTasks.filter((t) => t.indicatorId === indicatorId).length;
+  };
+
+  // Open add task modal
+  const openAddTaskModal = (indicatorId: string) => {
+    setActiveIndicatorForTask(indicatorId);
+    setNewTaskText("");
+    setNewTaskAssignee("");
+    setIsAddTaskModalOpen(true);
+  };
+
+  // Add new manual task
+  const handleAddTask = () => {
+    if (!newTaskText.trim() || !activeIndicatorForTask) return;
+
+    const newTask: ImprovementTask = {
+      id: `manual-${activeIndicatorForTask}-${Date.now()}`,
+      indicatorId: activeIndicatorForTask,
+      type: "يدوي",
+      taskText: newTaskText.trim(),
+      date: formatDate(),
+      assignee: newTaskAssignee,
+      status: "تحت التنفيذ",
+      isAuto: false,
+    };
+
+    setImprovementTasks((prev) => [...prev, newTask]);
+    setIsAddTaskModalOpen(false);
+    setNewTaskText("");
+    setNewTaskAssignee("");
+    setActiveIndicatorForTask(null);
+  };
+
+  // Open edit task modal
+  const openEditTaskModal = (task: ImprovementTask) => {
+    setEditingTask(task);
+    setNewTaskAssignee(task.assignee);
+    setNewTaskText(task.taskText);
+    setIsEditTaskModalOpen(true);
+  };
+
+  // Save edited task
+  const handleSaveEditTask = () => {
+    if (!editingTask) return;
+
+    setImprovementTasks((prev) =>
+      prev.map((t) =>
+        t.id === editingTask.id
+          ? {
+              ...t,
+              assignee: newTaskAssignee,
+              taskText: !editingTask.isAuto ? newTaskText : t.taskText,
+            }
+          : t
+      )
+    );
+    setIsEditTaskModalOpen(false);
+    setEditingTask(null);
+    setNewTaskAssignee("");
+    setNewTaskText("");
+  };
+
+  // Delete task (only manual)
+  const handleDeleteTask = (task: ImprovementTask) => {
+    if (task.isAuto) {
+      toast({
+        title: "غير مسموح",
+        description: "لا يمكن حذف البنود التلقائية",
+        variant: "destructive",
+      });
+      return;
+    }
+    setImprovementTasks((prev) => prev.filter((t) => t.id !== task.id));
+  };
+
+  // Update task status
+  const handleStatusChange = (taskId: string, newStatus: "تحت التنفيذ" | "تم") => {
+    setImprovementTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
+    );
+  };
+
+  // Add team member
+  const handleAddTeamMember = () => {
+    if (!newMemberName.trim()) return;
+    if (!teamMembers.includes(newMemberName.trim())) {
+      setTeamMembers((prev) => [...prev, newMemberName.trim()]);
+    }
+    setNewMemberName("");
+  };
+
+  // Render improvement plan panel for an indicator
+  const renderImprovementPanel = (indicatorId: string) => {
+    const indicatorTasks = improvementTasks.filter((t) => t.indicatorId === indicatorId);
+
+    return (
+      <div className="mt-4 rounded-lg overflow-hidden" style={{ backgroundColor: "#e8f5f3" }}>
+        <div className="p-4">
+          {/* Panel Title */}
+          <h4 className="text-lg font-hrsd-semibold mb-2" style={{ color: "#f5961e" }}>
+            بنود التحسين
+          </h4>
+          <div className="h-px bg-gray-300 mb-4" />
+
+          {indicatorTasks.length === 0 ? (
+            <p className="text-sm font-hrsd text-gray-500 text-center py-6">
+              لا توجد مهام تحسين مضافة
+            </p>
+          ) : (
+            <div className="rounded-lg overflow-hidden border border-gray-200 bg-white">
+              {/* Table Header */}
+              <div
+                className="flex items-center text-sm font-hrsd-semibold text-white"
+                style={{ backgroundColor: "#148287" }}
+              >
+                <div className="w-16 py-3 text-center border-l border-white/20">النوع</div>
+                <div className="flex-1 py-3 px-4 border-l border-white/20">المهمة</div>
+                <div className="w-20 py-3 text-center border-l border-white/20">التاريخ</div>
+                <div className="w-24 py-3 text-center border-l border-white/20">المسؤول</div>
+                <div className="w-36 py-3 text-center">العمليات</div>
+              </div>
+
+              {/* Table Rows */}
+              {indicatorTasks.map((task, index) => (
+                <div
+                  key={task.id}
+                  className={`flex items-center text-sm ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                  } hover:bg-gray-50 transition-colors`}
+                >
+                  <div className="w-16 py-3 text-center font-hrsd text-foreground border-l border-gray-100">
+                    {task.type}
+                  </div>
+                  <div className="flex-1 py-3 px-4 font-hrsd text-foreground border-l border-gray-100 truncate">
+                    {task.taskText}
+                  </div>
+                  <div className="w-20 py-3 text-center font-hrsd text-gray-600 border-l border-gray-100">
+                    {task.date}
+                  </div>
+                  <div className="w-24 py-3 text-center font-hrsd text-gray-600 border-l border-gray-100">
+                    {task.assignee || "—"}
+                  </div>
+                  <div className="w-36 py-3 flex items-center justify-center gap-1">
+                    {/* Status dropdown */}
+                    <div className="relative">
+                      <select
+                        value={task.status}
+                        onChange={(e) =>
+                          handleStatusChange(task.id, e.target.value as "تحت التنفيذ" | "تم")
+                        }
+                        className="appearance-none text-xs font-hrsd px-2 py-1 rounded border border-gray-200 bg-white pr-6"
+                        style={{ color: "#148287" }}
+                      >
+                        <option value="تحت التنفيذ">تحت التنفيذ</option>
+                        <option value="تم">تم</option>
+                      </select>
+                      <ChevronDown
+                        className="absolute left-1 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none"
+                        style={{ color: "#148287" }}
+                      />
+                    </div>
+                    {/* Edit button */}
+                    <button
+                      onClick={() => openEditTaskModal(task)}
+                      className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+                      title="تعديل"
+                    >
+                      <Pencil className="w-4 h-4" style={{ color: "#148287" }} />
+                    </button>
+                    {/* Delete button (only for manual) */}
+                    <button
+                      onClick={() => handleDeleteTask(task)}
+                      className={`p-1.5 rounded hover:bg-gray-100 transition-colors ${
+                        task.isAuto ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                      title={task.isAuto ? "لا يمكن حذف البنود التلقائية" : "حذف"}
+                    >
+                      <Trash2 className="w-4 h-4" style={{ color: "#148287" }} />
+                    </button>
+                    {/* Plus icon for auto tasks */}
+                    {task.isAuto && (
+                      <span className="p-1.5">
+                        <Plus className="w-4 h-4" style={{ color: "#148287" }} />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Add Task Button */}
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => openAddTaskModal(indicatorId)}
+              className="px-6 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+              style={{ backgroundColor: "#148287" }}
+            >
+              إضافة مهمة رئيسية
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // Render evidence panel for an indicator
@@ -688,6 +972,11 @@ const TechnicalEvaluationIndicators = () => {
                         >
                           <FileText className="w-4 h-4" />
                           خطة التحسين
+                          {getImprovementTasksCount(indicator.id) > 0 && (
+                            <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs">
+                              {getImprovementTasksCount(indicator.id)}
+                            </span>
+                          )}
                         </button>
                         <button
                           onClick={() => handleButtonClick(indicator.id, "evidence")}
@@ -716,6 +1005,9 @@ const TechnicalEvaluationIndicators = () => {
                         </button>
                       </div>
 
+                      {/* Tab Content: خطة التحسين panel */}
+                      {activeButtons[indicator.id] === "plan" && renderImprovementPanel(indicator.id)}
+
                       {/* Tab Content: الشواهد panel */}
                       {activeButtons[indicator.id] === "evidence" && renderEvidencePanel(indicator.id)}
                     </div>
@@ -726,6 +1018,182 @@ const TechnicalEvaluationIndicators = () => {
           </div>
         </div>
       </main>
+
+      {/* Add Task Modal */}
+      <Dialog open={isAddTaskModalOpen} onOpenChange={setIsAddTaskModalOpen}>
+        <DialogContent className="sm:max-w-md bg-white" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="font-hrsd-semibold" style={{ color: "#148287" }}>
+              إضافة مهمة رئيسية
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            {/* Task text */}
+            <div>
+              <label className="text-sm font-hrsd-medium text-foreground mb-1 block">
+                المهمة
+              </label>
+              <textarea
+                value={newTaskText}
+                onChange={(e) => setNewTaskText(e.target.value)}
+                placeholder="أدخل وصف المهمة..."
+                className="w-full border border-border rounded-md p-3 text-sm font-hrsd min-h-[100px] focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+
+            {/* Assignee */}
+            <div>
+              <label className="text-sm font-hrsd-medium text-foreground mb-1 block">
+                المسؤول
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={newTaskAssignee}
+                  onChange={(e) => setNewTaskAssignee(e.target.value)}
+                  className="flex-1 border border-border rounded-md p-2 text-sm font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                >
+                  <option value="">— اختر المسؤول —</option>
+                  {teamMembers.map((member) => (
+                    <option key={member} value={member}>
+                      {member}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Add new member */}
+              <div className="flex gap-2 mt-2">
+                <input
+                  type="text"
+                  value={newMemberName}
+                  onChange={(e) => setNewMemberName(e.target.value)}
+                  placeholder="إضافة عضو جديد..."
+                  className="flex-1 border border-border rounded-md p-2 text-sm font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <button
+                  onClick={handleAddTeamMember}
+                  className="px-3 py-2 rounded-md text-sm font-hrsd-medium text-white"
+                  style={{ backgroundColor: "#148287" }}
+                >
+                  إضافة
+                </button>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 pt-4">
+              <button
+                onClick={handleAddTask}
+                className="flex-1 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                style={{ backgroundColor: "#148287" }}
+              >
+                حفظ المهمة
+              </button>
+              <button
+                onClick={() => setIsAddTaskModalOpen(false)}
+                className="flex-1 px-4 py-2 rounded-md text-sm font-hrsd-medium border border-border text-foreground hover:bg-gray-50 transition-colors"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Task Modal */}
+      <Dialog open={isEditTaskModalOpen} onOpenChange={setIsEditTaskModalOpen}>
+        <DialogContent className="sm:max-w-md bg-white" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="font-hrsd-semibold" style={{ color: "#148287" }}>
+              تعديل المهمة
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            {/* Task text (only editable for manual) */}
+            {!editingTask?.isAuto && (
+              <div>
+                <label className="text-sm font-hrsd-medium text-foreground mb-1 block">
+                  المهمة
+                </label>
+                <textarea
+                  value={newTaskText}
+                  onChange={(e) => setNewTaskText(e.target.value)}
+                  className="w-full border border-border rounded-md p-3 text-sm font-hrsd min-h-[100px] focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+            )}
+
+            {/* Show task text for auto (read-only) */}
+            {editingTask?.isAuto && (
+              <div>
+                <label className="text-sm font-hrsd-medium text-foreground mb-1 block">
+                  المهمة (تلقائية)
+                </label>
+                <div className="w-full border border-border rounded-md p-3 text-sm font-hrsd bg-gray-50 text-gray-600">
+                  {editingTask.taskText}
+                </div>
+              </div>
+            )}
+
+            {/* Assignee */}
+            <div>
+              <label className="text-sm font-hrsd-medium text-foreground mb-1 block">
+                المسؤول
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={newTaskAssignee}
+                  onChange={(e) => setNewTaskAssignee(e.target.value)}
+                  className="flex-1 border border-border rounded-md p-2 text-sm font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                >
+                  <option value="">— اختر المسؤول —</option>
+                  {teamMembers.map((member) => (
+                    <option key={member} value={member}>
+                      {member}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Add new member */}
+              <div className="flex gap-2 mt-2">
+                <input
+                  type="text"
+                  value={newMemberName}
+                  onChange={(e) => setNewMemberName(e.target.value)}
+                  placeholder="إضافة عضو جديد..."
+                  className="flex-1 border border-border rounded-md p-2 text-sm font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <button
+                  onClick={handleAddTeamMember}
+                  className="px-3 py-2 rounded-md text-sm font-hrsd-medium text-white"
+                  style={{ backgroundColor: "#148287" }}
+                >
+                  إضافة
+                </button>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 pt-4">
+              <button
+                onClick={handleSaveEditTask}
+                className="flex-1 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                style={{ backgroundColor: "#148287" }}
+              >
+                حفظ التعديلات
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditTaskModalOpen(false);
+                  setEditingTask(null);
+                }}
+                className="flex-1 px-4 py-2 rounded-md text-sm font-hrsd-medium border border-border text-foreground hover:bg-gray-50 transition-colors"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
