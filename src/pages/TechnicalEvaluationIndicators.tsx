@@ -258,8 +258,18 @@ const TechnicalEvaluationIndicators = () => {
   // State for indicator results: { [indicatorId]: ResultType }
   const [indicatorResults, setIndicatorResults] = useState<Record<string, ResultType>>({});
   
+  // State for active button per indicator: { [indicatorId]: "plan" | "evidence" | "notes" | null }
+  const [activeButtons, setActiveButtons] = useState<Record<string, "plan" | "evidence" | "notes" | null>>({});
+  
   // File input refs
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  
+  const handleButtonClick = (indicatorId: string, button: "plan" | "evidence" | "notes") => {
+    setActiveButtons((prev) => ({
+      ...prev,
+      [indicatorId]: prev[indicatorId] === button ? null : button,
+    }));
+  };
 
   const handleCheckChange = (itemId: string, checked: boolean) => {
     setCheckedItems((prev) => ({ ...prev, [itemId]: checked }));
@@ -368,7 +378,10 @@ const TechnicalEvaluationIndicators = () => {
 
                   {/* Indicators Loop */}
                   {criterion.indicators.map((indicator) => (
-                    <div key={indicator.id} className="mb-8 last:mb-0">
+                    <div 
+                      key={indicator.id} 
+                      className="mb-6 last:mb-0 bg-white rounded-lg shadow-md border border-border p-5"
+                    >
                       {/* Indicator Title (Blue) */}
                       <h3 
                         className="text-base font-hrsd-medium mb-4"
@@ -387,8 +400,11 @@ const TechnicalEvaluationIndicators = () => {
                           <div className="w-16 py-3 text-center border-l border-white/20">
                             اختر
                           </div>
-                          <div className="flex-1 py-3 px-4">
+                          <div className="flex-1 py-3 px-4 border-l border-white/20">
                             بنود التحقق
+                          </div>
+                          <div className="w-20 py-3 text-center">
+                            الشواهد
                           </div>
                         </div>
 
@@ -415,8 +431,8 @@ const TechnicalEvaluationIndicators = () => {
                               {item.text}
                             </div>
 
-                            {/* Upload button cell (far left) */}
-                            <div className="w-12 py-3 flex justify-center">
+                            {/* Upload button cell (الشواهد column) */}
+                            <div className="w-20 py-3 flex justify-center">
                               <button
                                 onClick={() => handleUploadClick(item.id)}
                                 className={`w-8 h-8 rounded flex items-center justify-center transition-all duration-200 hover:bg-gray-200 ${
@@ -443,11 +459,11 @@ const TechnicalEvaluationIndicators = () => {
 
                       {/* Indicator Actions Row */}
                       <div className="flex items-center justify-between mb-4">
-                        {/* Right side - Calculate button */}
+                        {/* Right side - Calculate button (GREEN) */}
                         <button
                           onClick={() => calculateIndicatorResult(indicator)}
                           className="flex items-center gap-2 px-6 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
-                          style={{ backgroundColor: "#148287" }}
+                          style={{ backgroundColor: "#22c55e" }}
                         >
                           احتساب نتيجة المؤشر
                         </button>
@@ -466,28 +482,34 @@ const TechnicalEvaluationIndicators = () => {
                       {/* Thin grey divider line */}
                       <div className="h-px bg-gray-200 mb-4" />
 
-                      {/* Bottom Action Buttons (3 blue buttons) */}
+                      {/* Bottom Action Buttons (3 buttons with active state) */}
                       <div className="flex items-center gap-4">
                         <button
-                          onClick={() => console.log("خطة التحسين clicked")}
+                          onClick={() => handleButtonClick(indicator.id, "plan")}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
-                          style={{ backgroundColor: "#148287" }}
+                          style={{ 
+                            backgroundColor: activeButtons[indicator.id] === "plan" ? "#f5961e" : "#148287" 
+                          }}
                         >
                           <FileText className="w-4 h-4" />
                           خطة التحسين
                         </button>
                         <button
-                          onClick={() => console.log("الشواهد clicked")}
+                          onClick={() => handleButtonClick(indicator.id, "evidence")}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
-                          style={{ backgroundColor: "#148287" }}
+                          style={{ 
+                            backgroundColor: activeButtons[indicator.id] === "evidence" ? "#f5961e" : "#148287" 
+                          }}
                         >
                           <Eye className="w-4 h-4" />
                           الشواهد
                         </button>
                         <button
-                          onClick={() => console.log("الملاحظات clicked")}
+                          onClick={() => handleButtonClick(indicator.id, "notes")}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
-                          style={{ backgroundColor: "#148287" }}
+                          style={{ 
+                            backgroundColor: activeButtons[indicator.id] === "notes" ? "#f5961e" : "#148287" 
+                          }}
                         >
                           <MessageSquare className="w-4 h-4" />
                           الملاحظات
