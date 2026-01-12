@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Info, CheckCircle2, Circle, AlertCircle, XCircle, ClipboardCheck } from "lucide-react";
+import { Info, CheckCircle2, Circle, AlertCircle, XCircle, ClipboardCheck, Send, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 // Animated Donut Chart Component
 interface DonutChartProps {
@@ -152,10 +155,67 @@ const courseSlugMap: Record<string, string> = {
 
 const DashboardHeroSection = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isSending, setIsSending] = useState(false);
   
   const handleCourseClick = (courseTitle: string) => {
     const slug = courseSlugMap[courseTitle] || "altawajuh";
     navigate(`/technical-indicators/${slug}`);
+  };
+
+  const handleSendEvaluation = async () => {
+    if (!user?.email) {
+      toast({
+        title: "خطأ",
+        description: "لم يتم العثور على بريدك الإلكتروني. يرجى تسجيل الدخول.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSending(true);
+    
+    try {
+      const submittedAt = new Date().toLocaleDateString('ar-SA');
+      
+      const { data, error } = await supabase.functions.invoke('send-evaluation-email', {
+        body: {
+          toEmail: user.email,
+          submittedAt,
+        },
+      });
+
+      if (error || data?.fallback) {
+        // Fallback to mailto if edge function not configured
+        const subject = encodeURIComponent("تم استلام التقييم الذاتي");
+        const body = encodeURIComponent(`تم إرسال تقييمك الذاتي للمراجعة، وسيتم إشعارك بالنتيجة.\n\nتاريخ الإرسال: ${submittedAt}`);
+        window.open(`mailto:${user.email}?subject=${subject}&body=${body}`, '_blank');
+        
+        toast({
+          title: "تنبيه",
+          description: "سيتم فتح برنامج البريد لإرسال الطلب",
+        });
+      } else {
+        toast({
+          title: "تم بنجاح",
+          description: "تم إرسال التقييم بنجاح",
+        });
+      }
+    } catch (err) {
+      // Fallback to mailto on any error
+      const submittedAt = new Date().toLocaleDateString('ar-SA');
+      const subject = encodeURIComponent("تم استلام التقييم الذاتي");
+      const body = encodeURIComponent(`تم إرسال تقييمك الذاتي للمراجعة، وسيتم إشعارك بالنتيجة.\n\nتاريخ الإرسال: ${submittedAt}`);
+      window.open(`mailto:${user.email}?subject=${subject}&body=${body}`, '_blank');
+      
+      toast({
+        title: "تنبيه",
+        description: "سيتم فتح برنامج البريد لإرسال الطلب",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -381,6 +441,56 @@ const DashboardHeroSection = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Send Evaluation Block - Beige Info Box */}
+          <div 
+            className="rounded-lg p-6 mt-8 shadow-sm"
+            style={{ backgroundColor: "#f5f0e1" }}
+          >
+            {/* Top sentence - Blue text */}
+            <p className="text-sm font-hrsd-semibold text-right mb-3" style={{ color: "#148287" }}>
+              حتى تتمكن من ارسال تقييمك الذاتي للمراجعة بواسطة مقيم الوزارة :
+            </p>
+            
+            {/* Thin green line */}
+            <div className="h-0.5 mb-4" style={{ backgroundColor: "#148287" }} />
+            
+            {/* Transparent white text area */}
+            <div 
+              className="rounded-lg p-5 mb-5"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.7)" }}
+            >
+              <div className="space-y-2 text-right" style={{ color: "#148287" }}>
+                <p className="text-sm font-hrsd-medium">
+                  اولا: ضرورة احتساب نتيجة تقييم كافة المؤشرات لجميع المساقات
+                </p>
+                <p className="text-sm font-hrsd-medium">
+                  ثانيا: التحقق من صحة بيانات المنظمة في صفحة الاعدادات
+                </p>
+                <p className="text-sm font-hrsd-medium">
+                  ثالثا: سوف يتم تفعيل زر ارسال التقييم ادناه, وفي حال قمت بالضغط عليه سيتم
+                </p>
+                <p className="text-sm font-hrsd-medium">
+                  ارسال تقييمك ليم مراجعته من قبل الوزارة وافادتكم بالنتيجة
+                </p>
+              </div>
+            </div>
+            
+            {/* Send Evaluation Button */}
+            <button
+              onClick={handleSendEvaluation}
+              disabled={isSending}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-md text-sm font-hrsd-semibold text-white transition-all duration-200 hover:shadow-md hover:brightness-110 disabled:opacity-70 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#148287" }}
+            >
+              {isSending ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+              إرسال التقييم
+            </button>
           </div>
         </div>
       </div>
