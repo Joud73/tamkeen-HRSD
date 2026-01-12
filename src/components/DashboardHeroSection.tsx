@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Info, CheckCircle2, Circle, AlertCircle, XCircle, ClipboardCheck } from "lucide-react";
 
 // Donut Chart Component
@@ -103,7 +103,23 @@ const summaryData = {
 
 const totalItems = summaryData.incomplete + summaryData.needsMajorImprovement + summaryData.needsMinorImprovement + summaryData.complete;
 
+// Map course titles to slugs
+const courseSlugMap: Record<string, string> = {
+  "التوجه": "altawajuh",
+  "الفريق": "alfariq",
+  "الشراكات": "alsharakat",
+  "التأثير": "altaathir",
+  "البرامج": "albaramij",
+};
+
 const DashboardHeroSection = () => {
+  const navigate = useNavigate();
+  
+  const handleCourseClick = (courseTitle: string) => {
+    const slug = courseSlugMap[courseTitle] || "altawajuh";
+    navigate(`/technical-indicators/${slug}`);
+  };
+
   return (
     <section className="relative min-h-screen bg-white py-6">
       {/* Side Patterns - Curved Lines */}
@@ -327,7 +343,7 @@ const DashboardHeroSection = () => {
 
                   {/* Button on right */}
                   <button
-                    onClick={() => console.log(`Navigate to course: ${card.title}`)}
+                    onClick={() => handleCourseClick(card.title)}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110 cursor-pointer"
                     style={{ backgroundColor: "#148287" }}
                   >

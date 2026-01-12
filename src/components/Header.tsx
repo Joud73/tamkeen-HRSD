@@ -13,7 +13,7 @@ const Header = () => {
   const [isGuideDropdownOpen, setIsGuideDropdownOpen] = useState(false);
   
   // Pages that should always show white header (no transparent hero)
-  const alwaysWhitePages = ['/dashboard', '/settings', '/login', '/register'];
+  const alwaysWhitePages = ['/dashboard', '/settings', '/login', '/register', '/technical-indicators'];
   const shouldAlwaysBeWhite = alwaysWhitePages.some(page => location.pathname.startsWith(page));
   
   const [isScrolled, setIsScrolled] = useState(shouldAlwaysBeWhite);

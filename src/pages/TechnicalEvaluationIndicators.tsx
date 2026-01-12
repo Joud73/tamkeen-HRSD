@@ -1,0 +1,510 @@
+import { useState, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
+import { Upload, Check, FileText, Eye, MessageSquare } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Checkbox } from "@/components/ui/checkbox";
+
+// Types for the data structure
+interface VerificationItem {
+  id: string;
+  text: string;
+}
+
+interface Indicator {
+  id: string;
+  title: string;
+  items: VerificationItem[];
+}
+
+interface Criterion {
+  id: string;
+  number: number;
+  name: string;
+  indicators: Indicator[];
+}
+
+interface Course {
+  slug: string;
+  name: string;
+  criteria: Criterion[];
+}
+
+// Course data with placeholders
+const coursesData: Course[] = [
+  {
+    slug: "altawajuh",
+    name: "التوجه",
+    criteria: [
+      {
+        id: "c1",
+        number: 1,
+        name: "المعيار الأول: تحليل السياق",
+        indicators: [
+          {
+            id: "i1",
+            title: "المؤشر الأول: تجمع المنظمة بانتظام معلومات عن احتياجات المستفيدين وتوقعاتهم من البرامج والخدمات، وتقوم بتحليلها والاستفادة من نتائجها.",
+            items: [
+              { id: "item1", text: "لدى الجمعية نظام لجمع البيانات بانتظام مثل استبيانات أو لقاءات مخططة مع المستفيدين." },
+              { id: "item2", text: "قامت الجمعية بجمع معلومات عن احتياجات المستفيدين وتوقعاتهم." },
+              { id: "item3", text: "حللت الجمعية البيانات لتحديد توقعات المستفيدين ومدى رضاهم." },
+              { id: "item4", text: "لدى الجمعية تقرير أو سجل موثق عن توقعات واحتياجات المستفيدين." },
+              { id: "item5", text: "التقرير أو السجل حديث ومتاح." },
+              { id: "item6", text: "تمت مناقشة التقرير ويوجد توثيق للمناقشة مثل محضر اجتماع أو تقرير ورشة عمل داخلية." },
+              { id: "item7", text: "استخدمت الجمعية المعلومات في تحسين وتطوير البرامج والخدمات ويوجد دليل موثق يظهر ذلك." },
+            ],
+          },
+          {
+            id: "i2",
+            title: "المؤشر الثاني: [Placeholder]",
+            items: [
+              { id: "item2-1", text: "البند الأول: [Placeholder]" },
+              { id: "item2-2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+          {
+            id: "i3",
+            title: "المؤشر الثالث: [Placeholder]",
+            items: [
+              { id: "item3-1", text: "البند الأول: [Placeholder]" },
+              { id: "item3-2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+          {
+            id: "i4",
+            title: "المؤشر الرابع: [Placeholder]",
+            items: [
+              { id: "item4-1", text: "البند الأول: [Placeholder]" },
+              { id: "item4-2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+          {
+            id: "i5",
+            title: "المؤشر الخامس: [Placeholder]",
+            items: [
+              { id: "item5-1", text: "البند الأول: [Placeholder]" },
+              { id: "item5-2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+          {
+            id: "i6",
+            title: "المؤشر السادس: [Placeholder]",
+            items: [
+              { id: "item6-1", text: "البند الأول: [Placeholder]" },
+              { id: "item6-2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "c2",
+        number: 2,
+        name: "المعيار الثاني: [Placeholder]",
+        indicators: [
+          {
+            id: "c2-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "c2-item1", text: "البند الأول: [Placeholder]" },
+              { id: "c2-item2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "c3",
+        number: 3,
+        name: "المعيار الثالث: [Placeholder]",
+        indicators: [
+          {
+            id: "c3-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "c3-item1", text: "البند الأول: [Placeholder]" },
+              { id: "c3-item2", text: "البند الثاني: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "alfariq",
+    name: "الفريق",
+    criteria: [
+      {
+        id: "team-c1",
+        number: 1,
+        name: "المعيار الأول: [Placeholder]",
+        indicators: [
+          {
+            id: "team-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "team-item1", text: "البند الأول: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "alsharakat",
+    name: "الشراكات",
+    criteria: [
+      {
+        id: "part-c1",
+        number: 1,
+        name: "المعيار الأول: [Placeholder]",
+        indicators: [
+          {
+            id: "part-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "part-item1", text: "البند الأول: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "altaathir",
+    name: "التأثير",
+    criteria: [
+      {
+        id: "impact-c1",
+        number: 1,
+        name: "المعيار الأول: [Placeholder]",
+        indicators: [
+          {
+            id: "impact-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "impact-item1", text: "البند الأول: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "albaramij",
+    name: "البرامج",
+    criteria: [
+      {
+        id: "prog-c1",
+        number: 1,
+        name: "المعيار الأول: [Placeholder]",
+        indicators: [
+          {
+            id: "prog-i1",
+            title: "المؤشر الأول: [Placeholder]",
+            items: [
+              { id: "prog-item1", text: "البند الأول: [Placeholder]" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+// Result calculation helper
+type ResultType = "pending" | "needs_minor" | "needs_major" | "complete" | "incomplete";
+
+const getResultLabel = (result: ResultType): string => {
+  switch (result) {
+    case "needs_minor":
+      return "بحاجة إلى تحسين بسيط";
+    case "needs_major":
+      return "بحاجة إلى تحسين كبير";
+    case "complete":
+      return "مكتمل";
+    case "incomplete":
+      return "غير مكتمل";
+    default:
+      return "—";
+  }
+};
+
+const getResultColor = (result: ResultType): string => {
+  switch (result) {
+    case "needs_minor":
+      return "#22c55e";
+    case "needs_major":
+      return "#f5961e";
+    case "complete":
+      return "#148287";
+    case "incomplete":
+      return "#9ca3af";
+    default:
+      return "#9ca3af";
+  }
+};
+
+const TechnicalEvaluationIndicators = () => {
+  const { courseSlug } = useParams<{ courseSlug: string }>();
+  
+  // Find the current course
+  const currentCourse = coursesData.find((c) => c.slug === courseSlug) || coursesData[0];
+  
+  // State for checkboxes: { [itemId]: boolean }
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  
+  // State for uploaded files: { [itemId]: File | null }
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, File | null>>({});
+  
+  // State for indicator results: { [indicatorId]: ResultType }
+  const [indicatorResults, setIndicatorResults] = useState<Record<string, ResultType>>({});
+  
+  // File input refs
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  const handleCheckChange = (itemId: string, checked: boolean) => {
+    setCheckedItems((prev) => ({ ...prev, [itemId]: checked }));
+  };
+
+  const handleUploadClick = (itemId: string) => {
+    fileInputRefs.current[itemId]?.click();
+  };
+
+  const handleFileChange = (itemId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setUploadedFiles((prev) => ({ ...prev, [itemId]: file }));
+  };
+
+  const calculateIndicatorResult = (indicator: Indicator) => {
+    const checkedCount = indicator.items.filter((item) => checkedItems[item.id]).length;
+    const totalItems = indicator.items.length;
+    const percentage = totalItems > 0 ? (checkedCount / totalItems) * 100 : 0;
+
+    let result: ResultType;
+    if (percentage === 0) {
+      result = "incomplete";
+    } else if (percentage < 50) {
+      result = "needs_major";
+    } else if (percentage < 100) {
+      result = "needs_minor";
+    } else {
+      result = "complete";
+    }
+
+    setIndicatorResults((prev) => ({ ...prev, [indicator.id]: result }));
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Header />
+      
+      <main className="flex-1 pt-24 pb-12">
+        {/* Side Patterns - Curved Lines */}
+        <div 
+          className="fixed left-0 top-0 bottom-0 w-24 pointer-events-none z-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 80 0 Q 20 100 80 200 Q 20 300 80 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M 60 0 Q 0 100 60 200 Q 0 300 60 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.12'/%3E%3Cpath d='M 40 0 Q -20 100 40 200 Q -20 300 40 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.08'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat-y',
+            backgroundPosition: 'left center',
+          }}
+        />
+        <div 
+          className="fixed right-0 top-0 bottom-0 w-24 pointer-events-none z-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 20 0 Q 80 100 20 200 Q 80 300 20 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M 40 0 Q 100 100 40 200 Q 100 300 40 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.12'/%3E%3Cpath d='M 60 0 Q 120 100 60 200 Q 120 300 60 400' stroke='%23148287' stroke-width='1' fill='none' opacity='0.08'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat-y',
+            backgroundPosition: 'right center',
+          }}
+        />
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Constrained width container */}
+          <div className="max-w-5xl mx-auto">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-sm font-hrsd mb-3">
+              <Link to="/dashboard" className="text-primary hover:underline transition-colors">
+                العودة إلى لوحة التحكم
+              </Link>
+              <span className="text-primary">&gt;</span>
+              <span className="text-primary font-hrsd-semibold">مؤشرات التقييم الفني</span>
+            </nav>
+            
+            {/* Green horizontal line */}
+            <div className="h-0.5 bg-primary w-full mb-6" />
+
+            {/* Course Title (Orange) */}
+            <h1 
+              className="text-2xl font-hrsd-bold mb-6"
+              style={{ color: "#f5961e" }}
+            >
+              مساق: {currentCourse.name}
+            </h1>
+
+            {/* White content container */}
+            <div className="bg-white rounded-lg shadow-md p-6 border border-border">
+              {/* Criteria Loop */}
+              {currentCourse.criteria.map((criterion) => (
+                <div key={criterion.id} className="mb-8 last:mb-0">
+                  {/* Criterion Header */}
+                  <div className="flex items-center gap-3 mb-6">
+                    {/* Circle with number */}
+                    <div 
+                      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: "#e8f5f3" }}
+                    >
+                      <span className="text-sm font-hrsd-bold" style={{ color: "#f5961e" }}>
+                        {criterion.number}
+                      </span>
+                    </div>
+                    {/* Criterion name badge */}
+                    <div 
+                      className="px-4 py-2 rounded-md"
+                      style={{ backgroundColor: "#e8f5f3" }}
+                    >
+                      <span className="text-sm font-hrsd-semibold" style={{ color: "#f5961e" }}>
+                        {criterion.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Indicators Loop */}
+                  {criterion.indicators.map((indicator) => (
+                    <div key={indicator.id} className="mb-8 last:mb-0">
+                      {/* Indicator Title (Blue) */}
+                      <h3 
+                        className="text-base font-hrsd-medium mb-4"
+                        style={{ color: "#148287" }}
+                      >
+                        {indicator.title}
+                      </h3>
+
+                      {/* Verification Items Table */}
+                      <div className="border border-border rounded-lg overflow-hidden mb-4">
+                        {/* Table Header */}
+                        <div 
+                          className="flex items-center text-sm font-hrsd-semibold text-white"
+                          style={{ backgroundColor: "#148287" }}
+                        >
+                          <div className="w-16 py-3 text-center border-l border-white/20">
+                            اختر
+                          </div>
+                          <div className="flex-1 py-3 px-4">
+                            بنود التحقق
+                          </div>
+                        </div>
+
+                        {/* Table Rows */}
+                        {indicator.items.map((item, itemIndex) => (
+                          <div 
+                            key={item.id}
+                            className={`flex items-center transition-all duration-200 hover:bg-gray-50 ${
+                              itemIndex % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                            }`}
+                          >
+                            {/* Checkbox cell */}
+                            <div className="w-16 py-3 flex justify-center border-l border-border">
+                              <Checkbox
+                                id={item.id}
+                                checked={checkedItems[item.id] || false}
+                                onCheckedChange={(checked) => handleCheckChange(item.id, checked as boolean)}
+                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                              />
+                            </div>
+                            
+                            {/* Item text cell */}
+                            <div className="flex-1 py-3 px-4 text-sm font-hrsd text-foreground">
+                              {item.text}
+                            </div>
+
+                            {/* Upload button cell (far left) */}
+                            <div className="w-12 py-3 flex justify-center">
+                              <button
+                                onClick={() => handleUploadClick(item.id)}
+                                className={`w-8 h-8 rounded flex items-center justify-center transition-all duration-200 hover:bg-gray-200 ${
+                                  uploadedFiles[item.id] ? "bg-green-100" : "bg-gray-100"
+                                }`}
+                                title="رفع الشاهد"
+                              >
+                                {uploadedFiles[item.id] ? (
+                                  <Check className="w-4 h-4 text-green-600" />
+                                ) : (
+                                  <Upload className="w-4 h-4 text-gray-600" />
+                                )}
+                              </button>
+                              <input
+                                type="file"
+                                ref={(el) => (fileInputRefs.current[item.id] = el)}
+                                onChange={(e) => handleFileChange(item.id, e)}
+                                className="hidden"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Indicator Actions Row */}
+                      <div className="flex items-center justify-between mb-4">
+                        {/* Right side - Calculate button */}
+                        <button
+                          onClick={() => calculateIndicatorResult(indicator)}
+                          className="flex items-center gap-2 px-6 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                          style={{ backgroundColor: "#148287" }}
+                        >
+                          احتساب نتيجة المؤشر
+                        </button>
+
+                        {/* Left side - Result badge */}
+                        <div 
+                          className="px-4 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200"
+                          style={{ 
+                            backgroundColor: getResultColor(indicatorResults[indicator.id] || "pending"),
+                          }}
+                        >
+                          {getResultLabel(indicatorResults[indicator.id] || "pending")}
+                        </div>
+                      </div>
+
+                      {/* Thin grey divider line */}
+                      <div className="h-px bg-gray-200 mb-4" />
+
+                      {/* Bottom Action Buttons (3 blue buttons) */}
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => console.log("خطة التحسين clicked")}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                          style={{ backgroundColor: "#148287" }}
+                        >
+                          <FileText className="w-4 h-4" />
+                          خطة التحسين
+                        </button>
+                        <button
+                          onClick={() => console.log("الشواهد clicked")}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                          style={{ backgroundColor: "#148287" }}
+                        >
+                          <Eye className="w-4 h-4" />
+                          الشواهد
+                        </button>
+                        <button
+                          onClick={() => console.log("الملاحظات clicked")}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+                          style={{ backgroundColor: "#148287" }}
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          الملاحظات
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default TechnicalEvaluationIndicators;
