@@ -13,7 +13,7 @@ const Header = () => {
   const [isGuideDropdownOpen, setIsGuideDropdownOpen] = useState(false);
   
   // Pages that should always show white header (no transparent hero)
-  const alwaysWhitePages = ['/dashboard', '/settings', '/login', '/register', '/technical-indicators'];
+  const alwaysWhitePages = ['/dashboard', '/settings', '/login', '/register', '/technical-indicators', '/contact-us'];
   const shouldAlwaysBeWhite = alwaysWhitePages.some(page => location.pathname.startsWith(page));
   
   const [isScrolled, setIsScrolled] = useState(shouldAlwaysBeWhite);
@@ -75,10 +75,10 @@ const Header = () => {
                     <FileText className="w-5 h-5 text-primary" />
                     <span>دليل المستخدم</span>
                   </a>
-                  <a href="#" className="dropdown-item">
+                  <Link to="/contact-us" className="dropdown-item" onClick={() => setIsGuideDropdownOpen(false)}>
                     <Headphones className="w-5 h-5 text-primary" />
                     <span>تواصل معنا</span>
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
