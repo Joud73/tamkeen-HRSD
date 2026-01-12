@@ -56,6 +56,15 @@ interface ImprovementTask {
   isAuto: boolean;
 }
 
+// Note record type
+interface NoteRecord {
+  id: string;
+  indicatorId: string;
+  text: string;
+  date: string;
+  source: "المنظمة" | "المراجعة";
+}
+
 // Course data with placeholders
 const coursesData: Course[] = [
   {
@@ -306,6 +315,15 @@ const TechnicalEvaluationIndicators = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Notes state with localStorage persistence
+  const [notes, setNotes] = useState<NoteRecord[]>(() => {
+    const saved = localStorage.getItem(`notes-${courseSlug}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Note input state per indicator
+  const [noteInputs, setNoteInputs] = useState<Record<string, string>>({});
+
   // Modal states
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
@@ -329,6 +347,11 @@ const TechnicalEvaluationIndicators = () => {
   useEffect(() => {
     localStorage.setItem(`team-members-${courseSlug}`, JSON.stringify(teamMembers));
   }, [teamMembers, courseSlug]);
+
+  // Persist notes to localStorage
+  useEffect(() => {
+    localStorage.setItem(`notes-${courseSlug}`, JSON.stringify(notes));
+  }, [notes, courseSlug]);
   
   // File input refs
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -476,6 +499,41 @@ const TechnicalEvaluationIndicators = () => {
   // Get improvement tasks count for an indicator
   const getImprovementTasksCount = (indicatorId: string): number => {
     return improvementTasks.filter((t) => t.indicatorId === indicatorId).length;
+  };
+
+  // Get notes count for an indicator
+  const getNotesCount = (indicatorId: string): number => {
+    return notes.filter((n) => n.indicatorId === indicatorId).length;
+  };
+
+  // Handle saving a note
+  const handleSaveNote = (indicatorId: string) => {
+    const noteText = noteInputs[indicatorId]?.trim();
+    
+    if (!noteText) {
+      toast({
+        title: "تنبيه",
+        description: "اكتب ملاحظة قبل الحفظ",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newNote: NoteRecord = {
+      id: `note-${indicatorId}-${Date.now()}`,
+      indicatorId,
+      text: noteText,
+      date: formatDate(),
+      source: "المنظمة",
+    };
+
+    setNotes((prev) => [...prev, newNote]);
+    setNoteInputs((prev) => ({ ...prev, [indicatorId]: "" }));
+    
+    toast({
+      title: "تم",
+      description: "تم حفظ الملاحظة",
+    });
   };
 
   // Open add task modal
@@ -782,6 +840,92 @@ const TechnicalEvaluationIndicators = () => {
     );
   };
 
+  // Render notes panel for an indicator
+  const renderNotesPanel = (indicatorId: string) => {
+    const indicatorNotes = notes.filter((n) => n.indicatorId === indicatorId);
+
+    return (
+      <div className="mt-4 rounded-lg overflow-hidden" style={{ backgroundColor: "#e8f5f3" }}>
+        <div className="p-4">
+          {/* Panel Title */}
+          <h4 className="text-lg font-hrsd-semibold mb-2" style={{ color: "#f5961e" }}>
+            ملاحظات التقييم
+          </h4>
+          <div className="h-px bg-gray-300 mb-4" />
+
+          {/* Notes Table */}
+          <div className="rounded-lg overflow-hidden border border-gray-200 bg-white mb-4">
+            {/* Table Header */}
+            <div
+              className="flex items-center text-sm font-hrsd-semibold text-white"
+              style={{ backgroundColor: "#148287" }}
+            >
+              <div className="flex-1 py-3 px-4 border-l border-white/20">
+                الملاحظة
+              </div>
+              <div className="w-24 py-3 text-center border-l border-white/20">
+                التاريخ
+              </div>
+              <div className="w-24 py-3 text-center">
+                المصدر
+              </div>
+            </div>
+
+            {/* Table Rows */}
+            {indicatorNotes.length === 0 ? (
+              <div className="py-6 text-center text-sm font-hrsd text-gray-500">
+                لا توجد ملاحظات مضافة
+              </div>
+            ) : (
+              indicatorNotes.map((note, index) => (
+                <div
+                  key={note.id}
+                  className={`flex items-center text-sm ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                  }`}
+                >
+                  <div className="flex-1 py-3 px-4 font-hrsd text-foreground border-l border-gray-100">
+                    {note.text}
+                  </div>
+                  <div className="w-24 py-3 text-center font-hrsd text-gray-600 border-l border-gray-100">
+                    {note.date}
+                  </div>
+                  <div className="w-24 py-3 text-center font-hrsd text-gray-600">
+                    {note.source}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Add Note Textarea */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <textarea
+              value={noteInputs[indicatorId] || ""}
+              onChange={(e) =>
+                setNoteInputs((prev) => ({ ...prev, [indicatorId]: e.target.value }))
+              }
+              placeholder="إضافة الملاحظة"
+              className="w-full min-h-[120px] text-sm font-hrsd text-foreground placeholder:text-gray-400 focus:outline-none resize-none"
+              dir="rtl"
+            />
+          </div>
+
+          {/* Save Button */}
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => handleSaveNote(indicatorId)}
+              className="px-8 py-2 rounded-md text-sm font-hrsd-medium text-white transition-all duration-200 hover:shadow-md hover:brightness-110"
+              style={{ backgroundColor: "#148287" }}
+            >
+              حفظ
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
@@ -1002,6 +1146,11 @@ const TechnicalEvaluationIndicators = () => {
                         >
                           <MessageSquare className="w-4 h-4" />
                           الملاحظات
+                          {getNotesCount(indicator.id) > 0 && (
+                            <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs">
+                              {getNotesCount(indicator.id)}
+                            </span>
+                          )}
                         </button>
                       </div>
 
@@ -1010,6 +1159,9 @@ const TechnicalEvaluationIndicators = () => {
 
                       {/* Tab Content: الشواهد panel */}
                       {activeButtons[indicator.id] === "evidence" && renderEvidencePanel(indicator.id)}
+
+                      {/* Tab Content: الملاحظات panel */}
+                      {activeButtons[indicator.id] === "notes" && renderNotesPanel(indicator.id)}
                     </div>
                   ))}
                 </div>
