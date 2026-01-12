@@ -51,14 +51,7 @@ const App = () => (
                 </ProtectedRoute>
               }
               />
-            <Route
-              path="/contact-us"
-              element={
-                <ProtectedRoute>
-                  <ContactUs />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/contact-us" element={<ContactUs />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
