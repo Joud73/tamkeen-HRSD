@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Info, CheckCircle2, Circle, AlertCircle, XCircle, ClipboardCheck } from "lucide-react";
 
-// Donut Chart Component
+// Animated Donut Chart Component
 interface DonutChartProps {
   percentage: number;
   size?: number;
@@ -9,9 +10,17 @@ interface DonutChartProps {
 }
 
 const DonutChart = ({ percentage, size = 120, strokeWidth = 12 }: DonutChartProps) => {
+  const [animatedPercentage, setAnimatedPercentage] = useState(0);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedPercentage(percentage);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [percentage]);
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -36,13 +45,42 @@ const DonutChart = ({ percentage, size = 120, strokeWidth = 12 }: DonutChartProp
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
+          className="transition-all duration-1000 ease-out"
         />
       </svg>
       {/* Percentage text */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-hrsd-bold" style={{ color: "#148287" }}>{percentage}%</span>
+        <span className="text-xl font-hrsd-bold" style={{ color: "#148287" }}>{Math.round(animatedPercentage)}%</span>
       </div>
     </div>
+  );
+};
+
+// Animated Progress Bar Component
+interface AnimatedBarProps {
+  percentage: number;
+  color: string;
+  delay?: number;
+}
+
+const AnimatedBar = ({ percentage, color, delay = 0 }: AnimatedBarProps) => {
+  const [animatedWidth, setAnimatedWidth] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedWidth(percentage);
+    }, 100 + delay);
+    return () => clearTimeout(timer);
+  }, [percentage, delay]);
+
+  return (
+    <div
+      className="h-full rounded transition-all duration-1000 ease-out"
+      style={{
+        width: `${animatedWidth}%`,
+        backgroundColor: color,
+      }}
+    />
   );
 };
 
@@ -179,12 +217,10 @@ const DashboardHeroSection = () => {
                     <Circle className="w-4 h-4 text-gray-400 flex-shrink-0" />
                     <span className="text-sm font-hrsd-medium text-foreground w-32">غير مكتمل</span>
                     <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                      <div
-                        className="h-full rounded"
-                        style={{
-                          width: `${(summaryData.incomplete / totalItems) * 100}%`,
-                          backgroundColor: "#9ca3af",
-                        }}
+                      <AnimatedBar 
+                        percentage={(summaryData.incomplete / totalItems) * 100}
+                        color="#9ca3af"
+                        delay={0}
                       />
                     </div>
                     <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.incomplete}</span>
@@ -195,12 +231,10 @@ const DashboardHeroSection = () => {
                     <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#f5961e" }} />
                     <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين كبير</span>
                     <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                      <div
-                        className="h-full rounded"
-                        style={{
-                          width: `${(summaryData.needsMajorImprovement / totalItems) * 100}%`,
-                          backgroundColor: "#f5961e",
-                        }}
+                      <AnimatedBar 
+                        percentage={(summaryData.needsMajorImprovement / totalItems) * 100}
+                        color="#f5961e"
+                        delay={100}
                       />
                     </div>
                     <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMajorImprovement}</span>
@@ -211,12 +245,10 @@ const DashboardHeroSection = () => {
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#22c55e" }} />
                     <span className="text-sm font-hrsd-medium text-foreground w-32">بحاجة إلى تحسين بسيط</span>
                     <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                      <div
-                        className="h-full rounded"
-                        style={{
-                          width: `${(summaryData.needsMinorImprovement / totalItems) * 100}%`,
-                          backgroundColor: "#22c55e",
-                        }}
+                      <AnimatedBar 
+                        percentage={(summaryData.needsMinorImprovement / totalItems) * 100}
+                        color="#22c55e"
+                        delay={200}
                       />
                     </div>
                     <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.needsMinorImprovement}</span>
@@ -227,12 +259,10 @@ const DashboardHeroSection = () => {
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "#148287" }} />
                     <span className="text-sm font-hrsd-medium text-foreground w-32">مكتمل</span>
                     <div className="flex-1 h-5 bg-white rounded overflow-hidden">
-                      <div
-                        className="h-full rounded"
-                        style={{
-                          width: `${(summaryData.complete / totalItems) * 100}%`,
-                          backgroundColor: "#148287",
-                        }}
+                      <AnimatedBar 
+                        percentage={(summaryData.complete / totalItems) * 100}
+                        color="#148287"
+                        delay={300}
                       />
                     </div>
                     <span className="text-sm font-hrsd-semibold w-8 text-center">{summaryData.complete}</span>
@@ -247,12 +277,10 @@ const DashboardHeroSection = () => {
                 </h2>
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex-1 h-6 bg-white rounded overflow-hidden">
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${summaryData.totalPercentage}%`,
-                        backgroundColor: "#f5961e",
-                      }}
+                    <AnimatedBar 
+                      percentage={summaryData.totalPercentage}
+                      color="#f5961e"
+                      delay={400}
                     />
                   </div>
                   <span className="text-2xl font-hrsd-bold" style={{ color: "#148287" }}>
