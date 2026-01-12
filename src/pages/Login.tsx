@@ -45,7 +45,7 @@ const Login = () => {
       <main
         className="flex-1 relative pt-20"
         style={{
-          backgroundImage: `url(${heroBg})`,
+          backgroundImage: `url(${loginBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
