@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
+  const isGuest = localStorage.getItem("authRole") === "guest";
 
   if (loading) {
     return (
@@ -16,7 +17,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!user) {
+  // Allow authenticated users OR guest users
+  if (!user && !isGuest) {
     return <Navigate to="/login" replace />;
   }
 
