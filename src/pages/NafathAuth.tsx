@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Fingerprint, Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NafathIcon from "@/components/icons/NafathIcon";
 import loginBg from "@/assets/login-bg.jpg";
 
 const NafathAuth = () => {
@@ -75,7 +76,7 @@ const NafathAuth = () => {
                 {status === "success" ? (
                   <CheckCircle2 className="w-10 h-10 text-white" />
                 ) : (
-                  <Fingerprint className="w-10 h-10 text-white" />
+                  <NafathIcon size={40} className="text-white" />
                 )}
               </div>
 
