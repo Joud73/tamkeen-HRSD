@@ -7,7 +7,7 @@ import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, setRole } = useAuth?.() || { signIn: async () => ({ error: null }), setRole: () => {} };
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,8 +19,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      // Allow direct access without credentials
+      if (!email && !password) {
+        localStorage.setItem("authRole", "guest");
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      // If only one field is filled, show error
       if (!email || !password) {
-        setError("يمكنك المتابعة كضيف بدون تسجيل الدخول.");
+        setError("يرجى إدخال البريد الإلكتروني وكلمة المرور");
         return;
       }
 
@@ -40,11 +48,7 @@ const Login = () => {
   };
 
   const continueAsGuest = () => {
-    // خزن الدور كضيف (إن كان عندك AuthContext يدعم setRole)
-    try {
-      setRole?.("guest");
-    } catch {}
-    localStorage.setItem("authRole", "guest"); // بديل بسيط
+    localStorage.setItem("authRole", "guest");
     navigate("/dashboard", { replace: true });
   };
 
