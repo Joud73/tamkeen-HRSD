@@ -9,7 +9,7 @@ import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, setRole } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +24,6 @@ const Login = () => {
       // ✅ سماح مباشر للدخول كضيف إذا الحقول فاضية
       if (!email && !password) {
         localStorage.setItem("authRole", "guest");
-        setRole?.("guest");
         navigate("/dashboard", { replace: true });
         return;
       }
@@ -52,7 +51,6 @@ const Login = () => {
   const continueAsGuest = () => {
     // ✅ زر المتابعة كضيف
     localStorage.setItem("authRole", "guest");
-    setRole?.("guest");
     navigate("/dashboard", { replace: true });
   };
 
