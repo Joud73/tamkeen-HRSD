@@ -120,8 +120,9 @@ const Login = () => {
               <button
                 type="button"
                 onClick={handleNafathLogin}
+                aria-label="تسجيل الدخول عبر نفاذ الوطني"
                 className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-all duration-200 flex items-center justify-center gap-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
-                style={{ backgroundColor: "hsl(200, 70%, 35%)" }}
+                style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
               >
                 <Fingerprint className="w-5 h-5" />
                 <span>تسجيل الدخول عبر نفاذ</span>

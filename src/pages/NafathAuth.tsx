@@ -1,29 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Fingerprint, Loader2 } from "lucide-react";
+import { Fingerprint, Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import loginBg from "@/assets/login-bg.jpg";
 
 const NafathAuth = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<"pending" | "verifying" | "success" | "error">("pending");
-  const [nafathCode] = useState(() => Math.floor(10 + Math.random() * 90)); // Random 2-digit code
+  const [status, setStatus] = useState<"pending" | "success">("pending");
 
-  useEffect(() => {
-    // Simulate Nafath verification flow
-    const timer1 = setTimeout(() => setStatus("verifying"), 3000);
-    const timer2 = setTimeout(() => {
-      setStatus("success");
-      localStorage.setItem("authRole", "nafath");
-      setTimeout(() => navigate("/dashboard", { replace: true }), 1500);
-    }, 6000);
+  const handleCancel = () => {
+    navigate("/login", { replace: true });
+  };
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [navigate]);
+  const handleSimulateSuccess = () => {
+    setStatus("success");
+    localStorage.setItem("authRole", "nafath");
+    setTimeout(() => navigate("/dashboard", { replace: true }), 1500);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,14 +44,16 @@ const NafathAuth = () => {
           {/* Breadcrumb */}
           <div className="flex items-center justify-end gap-2 mb-8 text-sm">
             <button
-              onClick={() => navigate("/login")}
-              className="text-primary hover:underline font-hrsd-medium"
+              onClick={handleCancel}
+              className="text-primary hover:underline font-hrsd-medium flex items-center gap-1"
               style={{ color: "hsl(175, 75%, 45%)" }}
+              aria-label="العودة إلى صفحة تسجيل الدخول"
             >
+              <ArrowRight className="w-4 h-4" />
               العودة الى صفحة تسجيل الدخول
             </button>
             <span className="text-white/80">&gt;</span>
-            <span className="text-white font-hrsd-medium">تسجيل الدخول عبر نفاذ</span>
+            <span className="text-white font-hrsd-medium">التحقق عبر نفاذ</span>
           </div>
 
           {/* Divider */}
@@ -68,82 +64,90 @@ const NafathAuth = () => {
             <div
               className="rounded-xl p-8 shadow-lg text-center"
               style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
+              role="region"
+              aria-label="التحقق عبر نفاذ"
             >
               {/* Nafath Icon */}
               <div
                 className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6"
-                style={{ backgroundColor: "hsl(200, 70%, 35%)" }}
+                style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
               >
-                <Fingerprint className="w-10 h-10 text-white" />
+                {status === "success" ? (
+                  <CheckCircle2 className="w-10 h-10 text-white" />
+                ) : (
+                  <Fingerprint className="w-10 h-10 text-white" />
+                )}
               </div>
 
               <h1
                 className="text-xl font-hrsd-title mb-4"
                 style={{ color: "hsl(35, 91%, 54%)" }}
               >
-                تسجيل الدخول عبر نفاذ
+                التحقق عبر نفاذ
               </h1>
 
               {status === "pending" && (
                 <>
-                  <p className="text-gray-600 font-hrsd mb-6">
-                    افتح تطبيق نفاذ على جوالك واختر الرقم التالي للمصادقة
+                  <p className="text-gray-600 font-hrsd mb-6 leading-relaxed">
+                    سيتم تحويلك/تأكيد الطلب عبر تطبيق نفاذ الوطني الموحد
                   </p>
 
-                  {/* Nafath Code Display */}
-                  <div
-                    className="text-5xl font-hrsd-bold py-6 px-8 rounded-xl mb-6 inline-block"
-                    style={{ 
-                      backgroundColor: "hsl(200, 70%, 95%)",
-                      color: "hsl(200, 70%, 35%)",
-                    }}
+                  {/* Status Indicator */}
+                  <div 
+                    className="flex items-center justify-center gap-3 py-4 px-6 rounded-lg mb-8"
+                    style={{ backgroundColor: "hsl(175, 75%, 95%)" }}
+                    aria-live="polite"
                   >
-                    {nafathCode}
+                    <Loader2 
+                      className="w-5 h-5 animate-spin" 
+                      style={{ color: "hsl(175, 75%, 30%)" }}
+                    />
+                    <span 
+                      className="font-hrsd-medium"
+                      style={{ color: "hsl(175, 75%, 30%)" }}
+                    >
+                      بانتظار الموافقة...
+                    </span>
                   </div>
 
-                  <div className="flex items-center justify-center gap-2 text-gray-500">
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span className="font-hrsd">في انتظار المصادقة...</span>
-                  </div>
-                </>
-              )}
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={handleSimulateSuccess}
+                      className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
+                      style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
+                      aria-label="محاكاة نجاح التحقق"
+                    >
+                      لقد تمت الموافقة
+                    </button>
 
-              {status === "verifying" && (
-                <>
-                  <p className="text-gray-600 font-hrsd mb-6">
-                    جاري التحقق من هويتك...
-                  </p>
-                  <Loader2 
-                    className="w-12 h-12 animate-spin mx-auto" 
-                    style={{ color: "hsl(200, 70%, 35%)" }}
-                  />
+                    <button
+                      onClick={handleCancel}
+                      className="w-full py-3 rounded-lg font-hrsd-medium text-lg transition-all duration-200 border-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+                      style={{ 
+                        borderColor: "hsl(175, 75%, 30%)",
+                        color: "hsl(175, 75%, 30%)",
+                      }}
+                      aria-label="إلغاء والعودة إلى صفحة تسجيل الدخول"
+                    >
+                      إلغاء والعودة
+                    </button>
+                  </div>
                 </>
               )}
 
               {status === "success" && (
-                <>
-                  <p className="text-green-600 font-hrsd-semibold mb-4">
+                <div aria-live="polite">
+                  <p 
+                    className="font-hrsd-semibold mb-4 text-lg"
+                    style={{ color: "hsl(145, 63%, 42%)" }}
+                  >
                     ✓ تم التحقق بنجاح
                   </p>
                   <p className="text-gray-500 font-hrsd">
                     جاري تحويلك إلى لوحة التحكم...
                   </p>
-                </>
-              )}
-
-              {status === "error" && (
-                <>
-                  <p className="text-red-600 font-hrsd-semibold mb-4">
-                    فشل التحقق، يرجى المحاولة مرة أخرى
-                  </p>
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="px-6 py-2 rounded-lg text-white font-hrsd-medium transition-colors"
-                    style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
-                  >
-                    العودة لصفحة الدخول
-                  </button>
-                </>
+                </div>
               )}
             </div>
           </div>
