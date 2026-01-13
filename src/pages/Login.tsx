@@ -1,72 +1,26 @@
-
 // src/pages/Login.tsx
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useAuth } from "@/context/AuthContext";
 import NafathIcon from "@/components/icons/NafathIcon";
+import { User } from "lucide-react";
 import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    try {
-      // ✅ سماح مباشر للدخول كضيف إذا الحقول فاضية
-      if (!email && !password) {
-        localStorage.setItem("authRole", "guest");
-        navigate("/dashboard", { replace: true });
-        return;
-      }
-
-      // إن كانت واحدة فقط معبّأة
-      if (!email || !password) {
-        setError("يرجى إدخال البريد الإلكتروني وكلمة المرور أو المتابعة كضيف");
-        return;
-      }
-
-      const { error: signInError } = await signIn(email, password);
-      if (signInError) {
-        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-        return;
-      }
-
-      navigate("/dashboard", { replace: true });
-    } catch {
-      setError("حدث خطأ أثناء تسجيل الدخول");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const continueAsGuest = () => {
-    // ✅ زر المتابعة كضيف
-    localStorage.setItem("authRole", "guest");
-    navigate("/dashboard", { replace: true });
-  };
 
   const handleNafathLogin = () => {
-    // Placeholder for Nafath authentication flow
-    // In production, this will redirect to the real Nafath SSO
     navigate("/nafath-auth", { replace: false });
+  };
+
+  const handleLocalLogin = () => {
+    navigate("/login-local", { replace: false });
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <Header />
 
-      {/* Main */}
       <main
         className="flex-1 relative pt-20"
         style={{
@@ -76,7 +30,6 @@ const Login = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Overlay */}
         <div
           className="absolute inset-0"
           style={{
@@ -85,7 +38,6 @@ const Login = () => {
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10 container mx-auto px-4 py-8">
           {/* Breadcrumb */}
           <div className="flex items-center justify-end gap-2 mb-8 text-sm">
@@ -100,31 +52,29 @@ const Login = () => {
             <span className="text-white font-hrsd-medium">تسجيل دخول المنظمة</span>
           </div>
 
-          {/* Divider */}
           <div className="w-full h-0.5 mb-8" style={{ backgroundColor: "hsl(35, 91%, 54%)" }} />
 
-          {/* Card */}
           <div className="max-w-md mx-auto">
             <div
               className="rounded-xl p-8 shadow-lg"
               style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
             >
               <h1
-                className="text-xl font-hrsd-title text-center mb-6"
+                className="text-xl font-hrsd-title text-center mb-8"
                 style={{ color: "hsl(35, 91%, 54%)" }}
               >
-                بيانات دخول مفوض المنظمة
+                اختر طريقة تسجيل الدخول
               </h1>
 
-              {/* Nafath Login Button */}
+              {/* Nafath Login Button - Primary */}
               <button
                 type="button"
                 onClick={handleNafathLogin}
                 aria-label="تسجيل الدخول عبر نفاذ الوطني"
-                className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-all duration-200 flex items-center justify-center gap-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
+                className="w-full py-4 rounded-lg text-white font-hrsd-medium text-lg transition-all duration-200 flex items-center justify-center gap-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 mb-4"
                 style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
               >
-                <NafathIcon size={22} className="text-white" />
+                <NafathIcon size={24} className="text-white" />
                 <span>تسجيل الدخول عبر نفاذ</span>
               </button>
 
@@ -135,90 +85,37 @@ const Login = () => {
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
-              {/* Error */}
-              {error && (
-                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-right">
-                  <p className="text-red-600 text-sm font-hrsd">{error}</p>
-                </div>
-              )}
+              {/* Local Login Button - Secondary */}
+              <button
+                type="button"
+                onClick={handleLocalLogin}
+                aria-label="تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور"
+                className="w-full py-4 rounded-lg font-hrsd-medium text-lg transition-all duration-200 flex items-center justify-center gap-3 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 border-2"
+                style={{ 
+                  borderColor: "hsl(175, 75%, 30%)", 
+                  color: "hsl(175, 75%, 30%)",
+                  backgroundColor: "transparent"
+                }}
+              >
+                <User size={22} />
+                <span>تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور</span>
+              </button>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Email */}
-                <div>
-                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
-                    البريد الإلكتروني
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    placeholder="example@domain.com"
-                    dir="ltr"
-                    style={{ textAlign: "right" }}
-                  />
-                </div>
-
-                {/* Password */}
-                <div>
-                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
-                    كلمة المرور
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg text-right font-hrsd focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    dir="ltr"
-                    style={{ textAlign: "right" }}
-                  />
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors disabled:opacity-50"
-                  style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
+              {/* Links */}
+              <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-gray-100">
+                <Link
+                  to="/register"
+                  className="text-sm font-hrsd-medium hover:underline"
+                  style={{ color: "hsl(175, 75%, 30%)" }}
                 >
-                  {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
-                </button>
-
-                {/* Guest */}
-                <button
-                  type="button"
-                  className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors"
-                  style={{ backgroundColor: "hsl(175, 75%, 45%)" }}
-                  onClick={continueAsGuest}
-                >
-                  المتابعة كضيف
-                </button>
-
-                {/* Links */}
-                <div className="flex items-center justify-center gap-4 pt-2">
-                  <a
-                    href="#"
-                    className="text-sm font-hrsd-medium hover:underline"
-                    style={{ color: "hsl(175, 75%, 30%)" }}
-                  >
-                    نسيت بيانات الدخول؟
-                  </a>
-                  <span className="text-gray-300">|</span>
-                  <Link
-                    to="/register"
-                    className="text-sm font-hrsd-medium hover:underline"
-                    style={{ color: "hsl(175, 75%, 30%)" }}
-                  >
-                    تسجيل جديد
-                  </Link>
-                </div>
-              </form>
+                  تسجيل جديد
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
