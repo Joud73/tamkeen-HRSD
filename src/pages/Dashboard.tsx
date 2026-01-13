@@ -12,8 +12,8 @@ const Dashboard = () => {
       <div className="h-20" />
       
       <main className="flex-1">
-        <DashboardHeroSection />
         <OrganizationJourney />
+        <DashboardHeroSection />
       </main>
       
       <Footer />
