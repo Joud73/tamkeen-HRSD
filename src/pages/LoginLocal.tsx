@@ -156,13 +156,14 @@ const LoginLocal = () => {
 
 
                 <div className="flex items-center justify-center gap-4 pt-2">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forgot-password"
                     className="text-sm font-hrsd-medium hover:underline"
                     style={{ color: "hsl(175, 75%, 30%)" }}
+                    aria-label="الانتقال إلى صفحة إعادة تعيين كلمة المرور"
                   >
                     نسيت بيانات الدخول؟
-                  </a>
+                  </Link>
                   <span className="text-gray-300">|</span>
                   <Link
                     to="/register"

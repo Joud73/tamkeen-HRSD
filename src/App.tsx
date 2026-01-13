@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import LoginLocal from "./pages/LoginLocal";
+import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
 import NafathAuth from "./pages/NafathAuth";
 import Dashboard from "./pages/Dashboard";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login-local" element={<LoginLocal />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/nafath-auth" element={<NafathAuth />} />
             <Route path="/register" element={<Register />} />
             <Route
