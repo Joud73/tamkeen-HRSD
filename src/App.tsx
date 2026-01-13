@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import NafathAuth from "./pages/NafathAuth";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import TechnicalEvaluationIndicators from "./pages/TechnicalEvaluationIndicators";
@@ -26,6 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/nafath-auth" element={<NafathAuth />} />
             <Route path="/register" element={<Register />} />
             <Route
               path="/dashboard"
