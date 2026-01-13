@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Info, CheckCircle2, Circle, AlertCircle, ClipboardCheck, Send } from "lucide-react";
-
+import JourneyStepper from "./JourneyStepper";
 // Animated Donut Chart Component
 interface DonutChartProps {
   percentage: number;
@@ -190,6 +190,9 @@ const DashboardHeroSection = () => {
           {/* Green horizontal line */}
           <div className="h-0.5 bg-primary w-full" />
         </div>
+
+        {/* Journey Stepper */}
+        <JourneyStepper />
 
         {/* Info Message Box */}
         <div className="flex items-center gap-3 justify-center mb-6">
