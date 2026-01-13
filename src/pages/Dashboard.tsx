@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DashboardHeroSection from "@/components/DashboardHeroSection";
+import OrganizationJourney from "@/components/OrganizationJourney";
 
 const Dashboard = () => {
   return (
@@ -12,6 +13,7 @@ const Dashboard = () => {
       
       <main className="flex-1">
         <DashboardHeroSection />
+        <OrganizationJourney />
       </main>
       
       <Footer />
