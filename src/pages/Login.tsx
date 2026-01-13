@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NafathIcon from "@/components/icons/NafathIcon";
-import { User } from "lucide-react";
+import { User, Eye } from "lucide-react";
 import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
@@ -15,6 +15,11 @@ const Login = () => {
 
   const handleLocalLogin = () => {
     navigate("/login-local", { replace: false });
+  };
+
+  const handleGuestAccess = () => {
+    localStorage.setItem("authRole", "guest");
+    navigate("/dashboard", { replace: false });
   };
 
   return (
@@ -99,6 +104,22 @@ const Login = () => {
               >
                 <User size={22} />
                 <span>تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور</span>
+              </button>
+
+              {/* Guest Access Button - Tertiary */}
+              <button
+                type="button"
+                onClick={handleGuestAccess}
+                aria-label="المتابعة كضيف"
+                className="w-full py-3 rounded-lg font-hrsd-medium text-base transition-all duration-200 flex items-center justify-center gap-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 border mt-4"
+                style={{ 
+                  borderColor: "#d1d5db", 
+                  color: "#6b7280",
+                  backgroundColor: "transparent"
+                }}
+              >
+                <Eye size={20} />
+                <span>المتابعة كضيف</span>
               </button>
 
               {/* Links */}
