@@ -2,6 +2,7 @@
 // src/pages/Login.tsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Fingerprint } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
@@ -54,6 +55,12 @@ const Login = () => {
     navigate("/dashboard", { replace: true });
   };
 
+  const handleNafathLogin = () => {
+    // Placeholder for Nafath authentication flow
+    // In production, this will redirect to the real Nafath SSO
+    navigate("/nafath-auth", { replace: false });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -103,11 +110,29 @@ const Login = () => {
               style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
             >
               <h1
-                className="text-xl font-hrsd-title text-center mb-8"
+                className="text-xl font-hrsd-title text-center mb-6"
                 style={{ color: "hsl(35, 91%, 54%)" }}
               >
                 بيانات دخول مفوض المنظمة
               </h1>
+
+              {/* Nafath Login Button */}
+              <button
+                type="button"
+                onClick={handleNafathLogin}
+                className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-all duration-200 flex items-center justify-center gap-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
+                style={{ backgroundColor: "hsl(200, 70%, 35%)" }}
+              >
+                <Fingerprint className="w-5 h-5" />
+                <span>تسجيل الدخول عبر نفاذ</span>
+              </button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-4 my-6">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-gray-400 text-sm font-hrsd-medium">أو</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
 
               {/* Error */}
               {error && (
