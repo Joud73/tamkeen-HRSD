@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
@@ -12,6 +13,14 @@ const LoginLocal = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/login");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,6 +90,18 @@ const LoginLocal = () => {
               className="rounded-xl p-8 shadow-lg"
               style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
             >
+              {/* Back Button */}
+              <button
+                type="button"
+                onClick={handleBack}
+                aria-label="العودة إلى الصفحة السابقة"
+                className="flex items-center gap-2 mb-4 text-sm font-hrsd-medium transition-colors hover:opacity-80"
+                style={{ color: "hsl(175, 75%, 30%)" }}
+              >
+                <ArrowRight size={18} />
+                <span>العودة</span>
+              </button>
+
               <h1
                 className="text-xl font-hrsd-title text-center mb-6"
                 style={{ color: "hsl(35, 91%, 54%)" }}
