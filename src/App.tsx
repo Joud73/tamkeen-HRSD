@@ -14,6 +14,7 @@ import NafathAuth from "./pages/NafathAuth";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import TechnicalEvaluationIndicators from "./pages/TechnicalEvaluationIndicators";
+import TrainingStage from "./pages/TrainingStage";
 import ContactUs from "./pages/ContactUs";
 import NotFound from "./pages/NotFound";
 
@@ -57,6 +58,14 @@ const App = () => (
                 </ProtectedRoute>
               }
               />
+            <Route
+              path="/training-stage"
+              element={
+                <ProtectedRoute>
+                  <TrainingStage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/contact-us" element={<ContactUs />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
