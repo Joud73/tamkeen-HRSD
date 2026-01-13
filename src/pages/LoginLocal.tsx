@@ -38,10 +38,6 @@ const LoginLocal = () => {
     }
   };
 
-  const continueAsGuest = () => {
-    localStorage.setItem("authRole", "guest");
-    navigate("/dashboard", { replace: true });
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -137,14 +133,6 @@ const LoginLocal = () => {
                   {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
                 </button>
 
-                <button
-                  type="button"
-                  className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors"
-                  style={{ backgroundColor: "hsl(175, 75%, 45%)" }}
-                  onClick={continueAsGuest}
-                >
-                  المتابعة كضيف
-                </button>
 
                 <div className="flex items-center justify-center gap-4 pt-2">
                   <a
