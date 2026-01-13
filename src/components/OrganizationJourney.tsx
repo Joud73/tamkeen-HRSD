@@ -1,6 +1,12 @@
 import { Check } from "lucide-react";
 
-const steps = [
+type Step = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+const steps: Step[] = [
   { id: 1, title: "التسجيل", description: "إنشاء حساب المنظمة" },
   { id: 2, title: "التوجيه", description: "جلسة تعريفية" },
   { id: 3, title: "التقييم الذاتي", description: "تحليل الوضع الحالي" },
@@ -12,28 +18,52 @@ const steps = [
   { id: 9, title: "النتيجة النهائية", description: "إصدار الشهادة" },
 ];
 
-const OrganizationJourney = () => {
-  const currentStep = 1; // This could be dynamic based on user progress
+interface OrganizationJourneyProps {
+  /** الخطوة الحالية (1..9) */
+  currentStep?: number;
+  /** إظهار شريط تقدّم على الخط الأفقي (اختياري) */
+  showProgressLine?: boolean;
+}
+
+const OrganizationJourney = ({ currentStep = 1, showProgressLine = true }: OrganizationJourneyProps) => {
+  // ألوان العلامة التجارية
+  const brandTeal = "hsl(175, 75%, 30%)"; // تيفوي غامق
+  const brandTealLight = "hsl(175, 75%, 85%)"; // تيفوي فاتح للخلفية والخط
+  const brandOrange = "hsl(35, 91%, 54%)"; // برتقالي للخطوة الحالية
+
+  // نسبة التقدّم (من 0% إلى 100%) حتى موضع الخطوة الحالية
+  const progressPercent = steps.length > 1 ? ((currentStep - 1) / (steps.length - 1)) * 100 : 0;
 
   return (
-    <section className="py-8 px-4 md:px-8 bg-white" dir="rtl">
+    <section className="py-8 px-4 md:px-8 bg-white" dir="rtl" aria-label="رحلة المنظمة">
       <div className="max-w-7xl mx-auto">
-        <h2
-          className="text-2xl md:text-3xl font-hrsd-bold text-center mb-8"
-          style={{ color: "hsl(175, 75%, 30%)" }}
-        >
+        <h2 className="text-2xl md:text-3xl font-hrsd-bold text-center mb-8" style={{ color: brandTeal }}>
           رحلة المنظمة
         </h2>
 
-        {/* Timeline Container */}
+        {/* الحاوية العامة للمخطط */}
         <div className="relative">
-          {/* Horizontal Line */}
+          {/* الخط الأفقي الأساسي */}
           <div
             className="absolute top-6 right-0 left-0 h-0.5"
-            style={{ backgroundColor: "hsl(175, 75%, 85%)" }}
+            style={{ backgroundColor: brandTealLight }}
+            aria-hidden="true"
           />
 
-          {/* Steps */}
+          {/* شريط تقدّم اختياري (حتى موضع الخطوة الحالية) */}
+          {showProgressLine && (
+            <div
+              className="absolute top-6 right-0 h-0.5"
+              style={{
+                backgroundColor: brandTeal,
+                width: `${progressPercent}%`,
+                transition: "width 300ms ease",
+              }}
+              aria-hidden="true"
+            />
+          )}
+
+          {/* الدوائر + النصوص */}
           <div className="flex justify-between items-start relative">
             {steps.map((step, index) => {
               const isCompleted = step.id < currentStep;
@@ -46,44 +76,34 @@ const OrganizationJourney = () => {
                   className="flex flex-col items-center relative"
                   style={{ width: `${100 / steps.length}%` }}
                 >
-                  {/* Top Text (for even indices) */}
-                  {isTop && (
+                  {/* نص أعلى (للمؤشرات الزوجية) */}
+                  {isTop ? (
                     <div className="mb-3 text-center min-h-[48px] flex flex-col justify-end">
                       <p
                         className="text-xs md:text-sm font-hrsd-semibold"
-                        style={{
-                          color: isCurrent
-                            ? "hsl(35, 91%, 54%)"
-                            : "hsl(175, 75%, 30%)",
-                        }}
+                        style={{ color: isCurrent ? brandOrange : brandTeal }}
                       >
                         {step.title}
                       </p>
-                      <p className="text-[10px] md:text-xs text-gray-500 font-hrsd">
-                        {step.description}
-                      </p>
+                      <p className="text-[10px] md:text-xs text-gray-500 font-hrsd">{step.description}</p>
                     </div>
+                  ) : (
+                    <div className="mb-3 min-h-[48px]" />
                   )}
 
-                  {/* Spacer for bottom text items */}
-                  {!isTop && <div className="mb-3 min-h-[48px]" />}
-
-                  {/* Circle */}
+                  {/* الدائرة */}
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center z-10 transition-all duration-300"
                     style={{
-                      backgroundColor: isCompleted
-                        ? "hsl(175, 75%, 30%)"
-                        : isCurrent
-                        ? "hsl(35, 91%, 54%)"
-                        : "hsl(175, 75%, 85%)",
-                      border: isCurrent
-                        ? "3px solid hsl(35, 91%, 54%)"
-                        : "none",
-                      boxShadow: isCurrent
-                        ? "0 0 0 4px hsla(35, 91%, 54%, 0.2)"
-                        : "none",
+                      // ✅ فقط الخطوة الحالية تصبح برتقالية
+                      backgroundColor: isCurrent ? brandOrange : isCompleted ? brandTeal : brandTealLight,
+                      // إطار توكيد خفيف للخطوة الحالية
+                      border: isCurrent ? `3px solid ${brandOrange}` : "none",
+                      boxShadow: isCurrent ? `0 0 0 4px ${brandOrange}33` : "none",
                     }}
+                    role="group"
+                    aria-label={`الخطوة ${step.id}: ${step.title}`}
+                    aria-current={isCurrent ? "step" : undefined}
                   >
                     {isCompleted ? (
                       <Check className="w-5 h-5 text-white" />
@@ -91,7 +111,7 @@ const OrganizationJourney = () => {
                       <span
                         className="text-sm font-hrsd-bold"
                         style={{
-                          color: isCurrent ? "white" : "hsl(175, 75%, 30%)",
+                          color: isCurrent ? "white" : brandTeal,
                         }}
                       >
                         {step.id}
@@ -99,25 +119,18 @@ const OrganizationJourney = () => {
                     )}
                   </div>
 
-                  {/* Spacer for top text items */}
-                  {isTop && <div className="mt-3 min-h-[48px]" />}
-
-                  {/* Bottom Text (for odd indices) */}
-                  {!isTop && (
+                  {/* نص أسفل (للمؤشرات الفردية) */}
+                  {isTop ? (
+                    <div className="mt-3 min-h-[48px]" />
+                  ) : (
                     <div className="mt-3 text-center min-h-[48px] flex flex-col justify-start">
                       <p
                         className="text-xs md:text-sm font-hrsd-semibold"
-                        style={{
-                          color: isCurrent
-                            ? "hsl(35, 91%, 54%)"
-                            : "hsl(175, 75%, 30%)",
-                        }}
+                        style={{ color: isCurrent ? brandOrange : brandTeal }}
                       >
                         {step.title}
                       </p>
-                      <p className="text-[10px] md:text-xs text-gray-500 font-hrsd">
-                        {step.description}
-                      </p>
+                      <p className="text-[10px] md:text-xs text-gray-500 font-hrsd">{step.description}</p>
                     </div>
                   )}
                 </div>
