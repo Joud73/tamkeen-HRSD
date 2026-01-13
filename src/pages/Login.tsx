@@ -1,3 +1,5 @@
+
+// src/pages/Login.tsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -7,7 +9,7 @@ import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, setRole } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,21 +21,21 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Allow direct access without credentials
+      // ✅ سماح مباشر للدخول كضيف إذا الحقول فاضية
       if (!email && !password) {
         localStorage.setItem("authRole", "guest");
+        setRole?.("guest");
         navigate("/dashboard", { replace: true });
         return;
       }
 
-      // If only one field is filled, show error
+      // إن كانت واحدة فقط معبّأة
       if (!email || !password) {
-        setError("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+        setError("يرجى إدخال البريد الإلكتروني وكلمة المرور أو المتابعة كضيف");
         return;
       }
 
       const { error: signInError } = await signIn(email, password);
-
       if (signInError) {
         setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
         return;
@@ -48,14 +50,18 @@ const Login = () => {
   };
 
   const continueAsGuest = () => {
+    // ✅ زر المتابعة كضيف
     localStorage.setItem("authRole", "guest");
+    setRole?.("guest");
     navigate("/dashboard", { replace: true });
   };
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Header */}
       <Header />
 
+      {/* Main */}
       <main
         className="flex-1 relative pt-20"
         style={{
@@ -65,13 +71,18 @@ const Login = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
+        {/* Overlay */}
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to bottom, rgba(20, 80, 85, 0.75) 0%, rgba(15, 60, 65, 0.85) 100%)",
+            background:
+              "linear-gradient(to bottom, rgba(20, 80, 85, 0.75) 0%, rgba(15, 60, 65, 0.85) 100%)",
           }}
         />
+
+        {/* Content */}
         <div className="relative z-10 container mx-auto px-4 py-8">
+          {/* Breadcrumb */}
           <div className="flex items-center justify-end gap-2 mb-8 text-sm">
             <Link
               to="/"
@@ -84,14 +95,23 @@ const Login = () => {
             <span className="text-white font-hrsd-medium">تسجيل دخول المنظمة</span>
           </div>
 
+          {/* Divider */}
           <div className="w-full h-0.5 mb-8" style={{ backgroundColor: "hsl(35, 91%, 54%)" }} />
 
+          {/* Card */}
           <div className="max-w-md mx-auto">
-            <div className="rounded-xl p-8 shadow-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}>
-              <h1 className="text-xl font-hrsd-title text-center mb-8" style={{ color: "hsl(35, 91%, 54%)" }}>
+            <div
+              className="rounded-xl p-8 shadow-lg"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}
+            >
+              <h1
+                className="text-xl font-hrsd-title text-center mb-8"
+                style={{ color: "hsl(35, 91%, 54%)" }}
+              >
                 بيانات دخول مفوض المنظمة
               </h1>
 
+              {/* Error */}
               {error && (
                 <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-right">
                   <p className="text-red-600 text-sm font-hrsd">{error}</p>
@@ -99,6 +119,7 @@ const Login = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Email */}
                 <div>
                   <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
                     البريد الإلكتروني
@@ -114,8 +135,11 @@ const Login = () => {
                   />
                 </div>
 
+                {/* Password */}
                 <div>
-                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">كلمة المرور</label>
+                  <label className="block text-right text-sm font-hrsd-medium mb-2 text-gray-700">
+                    كلمة المرور
+                  </label>
                   <input
                     type="password"
                     value={password}
@@ -126,6 +150,7 @@ const Login = () => {
                   />
                 </div>
 
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -135,7 +160,7 @@ const Login = () => {
                   {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
                 </button>
 
-                {/* زر المتابعة كضيف */}
+                {/* Guest */}
                 <button
                   type="button"
                   className="w-full py-3 rounded-lg text-white font-hrsd-medium text-lg transition-colors"
@@ -145,6 +170,7 @@ const Login = () => {
                   المتابعة كضيف
                 </button>
 
+                {/* Links */}
                 <div className="flex items-center justify-center gap-4 pt-2">
                   <a
                     href="#"
@@ -168,6 +194,7 @@ const Login = () => {
         </div>
       </main>
 
+      {/* Footer */}
       <Footer />
     </div>
   );
