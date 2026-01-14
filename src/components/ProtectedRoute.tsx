@@ -7,7 +7,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
-  const isGuest = localStorage.getItem("authRole") === "guest";
 
   if (loading) {
     return (
@@ -17,8 +16,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  // Allow authenticated users OR guest users
-  if (!user && !isGuest) {
+  // Only allow authenticated users with valid Supabase session
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
