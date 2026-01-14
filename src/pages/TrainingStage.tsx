@@ -279,6 +279,27 @@ const TrainingStage = () => {
             </p>
           </div>
 
+          {/* Stage 5 Explanation Block */}
+          <div className="bg-card rounded-xl p-6 md:p-8 border border-border mb-8 md:mb-12">
+            <h3 className="text-lg md:text-xl font-hrsd-bold text-foreground mb-4">
+              استكمال التأهيل واعتماد المخرجات
+            </h3>
+            <div className="space-y-4 text-muted-foreground font-hrsd-medium leading-relaxed">
+              <p>
+                تمثل هذه المرحلة استكمال مسار التأهيل والتدريب، حيث يتم التأكد من
+                إتمام جميع البرامج التدريبية المطلوبة، ومراجعة واعتماد المخرجات
+                من قبل الجهة المختصة.
+              </p>
+              <p>
+                لا يتم الانتقال من هذه المرحلة إلا بعد اعتماد النتائج النهائية
+                وإصدار المخرجات الرسمية التي تعكس مستوى الجاهزية والتأهيل.
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-b border-border/50 mb-8 md:mb-12" />
+
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {outputs.map((output) => (
