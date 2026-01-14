@@ -17,7 +17,7 @@ const TrainingHero = () => {
           {/* Content */}
           <div className="flex-1 space-y-6">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-hrsd-title text-white leading-relaxed">
-              مرحلة التأهيل والتدريب – طموحي
+              مرحلة التأهيل والتدريب – منصة التدريب والتأهيل
             </h1>
             <p className="text-white/90 text-base md:text-lg leading-relaxed max-w-2xl font-hrsd-medium">
               تهدف هذه المرحلة إلى تزويدك بالمعرفة والمهارات اللازمة للنجاح في
