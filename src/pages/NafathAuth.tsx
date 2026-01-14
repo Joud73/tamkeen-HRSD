@@ -16,7 +16,8 @@ const NafathAuth = () => {
 
   const handleSimulateSuccess = () => {
     setStatus("success");
-    localStorage.setItem("authRole", "nafath");
+    // Note: In production, this would be replaced with actual Nafath SSO integration
+    // which would create a proper Supabase session through OAuth or custom auth flow
     setTimeout(() => navigate("/dashboard", { replace: true }), 1500);
   };
 
