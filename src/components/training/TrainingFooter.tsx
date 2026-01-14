@@ -1,38 +1,28 @@
+import hrsdLogo from "@/assets/logos/hrsd-white.png";
+
 const TrainingFooter = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-dark-navy py-8 px-4" dir="rtl">
+    <footer className="py-8 px-4" style={{ backgroundColor: '#148287' }} dir="rtl">
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-hrsd-bold text-lg">ط</span>
-            </div>
-            <span className="font-hrsd-title text-white text-lg">طموحي</span>
-          </div>
+        {/* Logo and Ministry Name */}
+        <div className="flex justify-center items-center gap-3 mb-6">
+          <span className="text-lg font-hrsd-medium text-white/90">
+            وزارة الموارد البشرية والتنمية الاجتماعية
+          </span>
+          <img 
+            src="/lovable-uploads/6a75d875-24f4-44a6-9d0f-d9febe082d2f.png" 
+            alt="HRSD Logo" 
+            className="h-10 w-auto" 
+          />
+        </div>
 
-          {/* Copyright */}
-          <p className="text-white/70 text-sm font-hrsd-medium text-center">
-            جميع الحقوق محفوظة © {currentYear} منصة طموحي
+        {/* Copyright */}
+        <div className="text-center">
+          <p className="text-white/80 text-sm font-hrsd">
+            {currentYear} © جميع الحقوق محفوظة
           </p>
-
-          {/* Links */}
-          <div className="flex items-center gap-6">
-            <a
-              href="#"
-              className="text-white/70 hover:text-white text-sm font-hrsd-medium transition-colors"
-            >
-              سياسة الخصوصية
-            </a>
-            <a
-              href="#"
-              className="text-white/70 hover:text-white text-sm font-hrsd-medium transition-colors"
-            >
-              الشروط والأحكام
-            </a>
-          </div>
         </div>
       </div>
     </footer>

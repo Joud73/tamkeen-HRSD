@@ -5,26 +5,40 @@ import {
   FileText,
   Award,
   Target,
-  Briefcase,
+  BookOpen,
   Users,
+  Laptop,
+  TrendingUp,
 } from "lucide-react";
-import TrainingHeader from "@/components/training/TrainingHeader";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import TrainingBreadcrumb from "@/components/training/TrainingBreadcrumb";
 import TrainingHero from "@/components/training/TrainingHero";
 import TrainingCard from "@/components/training/TrainingCard";
 import OutputCard from "@/components/training/OutputCard";
 import TrainingProgramModal from "@/components/training/TrainingProgramModal";
-import TrainingFooter from "@/components/training/TrainingFooter";
+import CategoryFilter from "@/components/training/CategoryFilter";
 
-// Training programs data
+// Categories for filtering
+const categories = [
+  "جميع البرامج",
+  "القيادة والإدارة",
+  "المهارات المهنية",
+  "التقنية والابتكار",
+];
+
+// Training programs data with categories
 const trainingPrograms = [
   {
     id: 1,
     title: "أساسيات القيادة الإدارية",
     description:
-      "برنامج شامل يغطي المفاهيم الأساسية للقيادة الفعالة وإدارة الفرق في بيئة العمل الحديثة.",
+      "برنامج شامل يغطي المفاهيم الأساسية للقيادة الفعالة وإدارة الفرق في بيئة العمل الحديثة. يتضمن البرنامج تدريبات عملية ودراسات حالة.",
     duration: "4 أسابيع",
     type: "تفاعلي",
+    deliveryMode: "عن بُعد",
+    category: "القيادة والإدارة",
+    icon: Users,
     objectives: [
       "فهم أساليب القيادة المختلفة",
       "تطوير مهارات اتخاذ القرار",
@@ -39,9 +53,12 @@ const trainingPrograms = [
     id: 2,
     title: "مهارات التواصل المهني",
     description:
-      "تعلم فنون التواصل الفعال في بيئة العمل، بما في ذلك العروض التقديمية والتفاوض.",
+      "تعلم فنون التواصل الفعال في بيئة العمل، بما في ذلك العروض التقديمية والتفاوض وإدارة الاجتماعات بكفاءة عالية.",
     duration: "3 أسابيع",
     type: "تطبيقي",
+    deliveryMode: "حضوري",
+    category: "المهارات المهنية",
+    icon: BookOpen,
     objectives: [
       "إتقان فن العرض والإلقاء",
       "تطوير مهارات الاستماع الفعال",
@@ -55,9 +72,12 @@ const trainingPrograms = [
     id: 3,
     title: "التخطيط الاستراتيجي",
     description:
-      "برنامج متقدم في التخطيط الاستراتيجي وتحديد الأهداف وقياس مؤشرات الأداء.",
+      "برنامج متقدم في التخطيط الاستراتيجي وتحديد الأهداف وقياس مؤشرات الأداء الرئيسية للمؤسسات الحكومية والخاصة.",
     duration: "5 أسابيع",
     type: "تفاعلي",
+    deliveryMode: "مدمج",
+    category: "القيادة والإدارة",
+    icon: Target,
     objectives: [
       "وضع الخطط الاستراتيجية",
       "تحديد مؤشرات الأداء الرئيسية",
@@ -71,9 +91,12 @@ const trainingPrograms = [
     id: 4,
     title: "إدارة المشاريع الاحترافية",
     description:
-      "برنامج معتمد في إدارة المشاريع وفق أفضل الممارسات والمعايير العالمية.",
+      "برنامج معتمد في إدارة المشاريع وفق أفضل الممارسات والمعايير العالمية مع شهادة معتمدة عند الإتمام.",
     duration: "6 أسابيع",
     type: "تطبيقي",
+    deliveryMode: "عن بُعد",
+    category: "المهارات المهنية",
+    icon: TrendingUp,
     objectives: [
       "تخطيط وتنفيذ المشاريع",
       "إدارة الموارد والميزانيات",
@@ -87,9 +110,12 @@ const trainingPrograms = [
     id: 5,
     title: "الابتكار وريادة الأعمال",
     description:
-      "اكتشف عالم الابتكار والريادة وتعلم كيفية تحويل الأفكار إلى مشاريع ناجحة.",
+      "اكتشف عالم الابتكار والريادة وتعلم كيفية تحويل الأفكار إلى مشاريع ناجحة ومستدامة في السوق.",
     duration: "4 أسابيع",
     type: "تفاعلي",
+    deliveryMode: "حضوري",
+    category: "التقنية والابتكار",
+    icon: GraduationCap,
     objectives: [
       "توليد الأفكار الإبداعية",
       "بناء نموذج العمل",
@@ -103,9 +129,12 @@ const trainingPrograms = [
     id: 6,
     title: "التحول الرقمي",
     description:
-      "برنامج متخصص في فهم التحول الرقمي وتطبيقاته في المؤسسات الحكومية والخاصة.",
+      "برنامج متخصص في فهم التحول الرقمي وتطبيقاته في المؤسسات الحكومية والخاصة مع أمثلة عملية.",
     duration: "4 أسابيع",
     type: "نظري وتطبيقي",
+    deliveryMode: "مدمج",
+    category: "التقنية والابتكار",
+    icon: Laptop,
     objectives: [
       "فهم استراتيجيات التحول الرقمي",
       "تطبيق التقنيات الحديثة",
@@ -117,7 +146,7 @@ const trainingPrograms = [
   },
 ];
 
-// Outputs data
+// Outputs data - removed برامج متقدمة، شبكة المتدربين، فرص التوظيف
 const outputs = [
   {
     id: 1,
@@ -140,27 +169,6 @@ const outputs = [
     icon: FileText,
     isComingSoon: false,
   },
-  {
-    id: 4,
-    title: "فرص التوظيف",
-    description: "الوصول إلى فرص وظيفية حصرية تتناسب مع مؤهلاتك.",
-    icon: Briefcase,
-    isComingSoon: true,
-  },
-  {
-    id: 5,
-    title: "شبكة المتدربين",
-    description: "الانضمام إلى مجتمع من المتدربين والخريجين للتواصل والتعاون.",
-    icon: Users,
-    isComingSoon: true,
-  },
-  {
-    id: 6,
-    title: "برامج متقدمة",
-    description: "الأهلية للالتحاق ببرامج تدريبية متقدمة ومتخصصة.",
-    icon: GraduationCap,
-    isComingSoon: true,
-  },
 ];
 
 const TrainingStage = () => {
@@ -169,6 +177,7 @@ const TrainingStage = () => {
     (typeof trainingPrograms)[0] | null
   >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("جميع البرامج");
 
   const handleEnroll = (programId: number) => {
     if (!enrolledPrograms.includes(programId)) {
@@ -187,10 +196,16 @@ const TrainingStage = () => {
     setSelectedProgram(null);
   };
 
+  // Filter programs by category
+  const filteredPrograms =
+    activeCategory === "جميع البرامج"
+      ? trainingPrograms
+      : trainingPrograms.filter((p) => p.category === activeCategory);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <TrainingHeader />
+      {/* Header - using platform header */}
+      <Header />
 
       {/* Breadcrumb */}
       <TrainingBreadcrumb />
@@ -206,8 +221,8 @@ const TrainingStage = () => {
       >
         <div className="container mx-auto">
           {/* Section Header */}
-          <div className="mb-8 md:mb-12">
-            <h2 className="section-title">البرامج التدريبية</h2>
+          <div className="mb-6 md:mb-8">
+            <h2 className="section-title">المسار التدريبي</h2>
             <div className="section-title-underline" />
             <p className="mt-4 text-muted-foreground max-w-2xl font-hrsd-medium">
               اختر من بين مجموعة متنوعة من البرامج التدريبية المصممة لتطوير
@@ -215,15 +230,29 @@ const TrainingStage = () => {
             </p>
           </div>
 
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {trainingPrograms.map((program) => (
+          {/* Category Filter Pills */}
+          <div className="mb-8">
+            <CategoryFilter
+              categories={categories}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+            />
+          </div>
+
+          {/* Cards Grid - 2 columns on desktop as per reference */}
+          <div
+            id="training-programs-grid"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            {filteredPrograms.map((program) => (
               <TrainingCard
                 key={program.id}
                 title={program.title}
                 description={program.description}
                 duration={program.duration}
                 type={program.type}
+                deliveryMode={program.deliveryMode}
+                icon={program.icon}
                 isEnrolled={enrolledPrograms.includes(program.id)}
                 onEnroll={() => handleEnroll(program.id)}
                 onDetails={() => handleOpenDetails(program)}
@@ -265,8 +294,8 @@ const TrainingStage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <TrainingFooter />
+      {/* Footer - using platform footer */}
+      <Footer />
 
       {/* Program Details Modal */}
       <TrainingProgramModal
