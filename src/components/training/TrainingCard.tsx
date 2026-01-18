@@ -93,7 +93,7 @@ const TrainingCard = ({
           className="h-11 flex-1 font-hrsd-semibold rounded-lg min-h-[44px] bg-primary hover:bg-primary/90 text-white"
           aria-label={`الالتحاق ببرنامج ${title}`}
         >
-          <a href="https://phpstack-1518564-5838964.cloudwaysapps.com/" target="_blank" rel="noopener noreferrer">
+          <a href="https://phpstack-1518564-5838964.cloudwaysapps.com/">
             الالتحاق بالبرنامج
           </a>
         </Button>
