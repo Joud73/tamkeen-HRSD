@@ -18,23 +18,23 @@ const HeroSection = () => {
             fontWeight: 700,
           }}
         >
-          الريادة عالمياً في تمكين الإنسان والمجتمع، وتعزيز تنافسية سوق العمل
+          مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
         </h1>
 
         {/* Description */}
-        <p 
+        <p
           className="text-base md:text-lg lg:text-xl mb-10 text-white/90 animate-fade-in animation-delay-200 leading-relaxed max-w-3xl mx-auto"
           style={{
             fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
             fontWeight: 400,
           }}
         >
-          تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة ومواكبة التحولات المستقبلية، من خلال سياسات وتشريعات مرنة وفاعلة
+          تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني
         </p>
 
         {/* CTA Button */}
-        <Link 
-          to="/login" 
+        <Link
+          to="/login"
           className="inline-block px-8 py-3 bg-white text-[#1D4D37] border border-gray-300 rounded-lg text-base font-medium transition-all hover:border-gray-400 hover:shadow-md animate-fade-in animation-delay-400"
           style={{
             fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
