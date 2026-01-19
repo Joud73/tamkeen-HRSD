@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 const HeroSection = () => {
-  return <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4" style={{
+  return <section className="relative min-h-screen flex flex-col items-center justify-center px-4" style={{
     backgroundColor: "#1D4D37"
   }}>
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto">
+      <div className="relative z-10 w-full max-w-6xl px-8">
         {/* Title */}
         <h1 className="text-3xl lg:text-5xl mb-6 animate-fade-in text-white leading-relaxed md:text-2xl text-right" style={{
         fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
