@@ -30,9 +30,7 @@ const SpecializationsSection = () => {
   return (
     <section className="py-16 md:py-24 bg-section-light relative">
       {/* Side patterns */}
-      <div className="side-pattern-left" />
-      <div className="side-pattern-right" />
-      
+
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-right mb-12">
@@ -43,19 +41,10 @@ const SpecializationsSection = () => {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {specializations.map((item, index) => (
-            <div 
-              key={index}
-              className={`feature-card animate-fade-in ${item.delay}`}
-            >
+            <div key={index} className={`feature-card animate-fade-in ${item.delay}`}>
               <div className="flex flex-col items-start">
-                <img 
-                  src={item.icon} 
-                  alt="feature icon" 
-                  className="w-12 h-12 mb-4"
-                />
-                <p className="text-lg font-hrsd-medium text-foreground text-right leading-relaxed">
-                  {item.text}
-                </p>
+                <img src={item.icon} alt="feature icon" className="w-12 h-12 mb-4" />
+                <p className="text-lg font-hrsd-medium text-foreground text-right leading-relaxed">{item.text}</p>
               </div>
             </div>
           ))}
