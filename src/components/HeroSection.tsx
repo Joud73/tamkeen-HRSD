@@ -1,43 +1,50 @@
 import { Link } from "react-router-dom";
 
-const HeroSection = () => {
+export default function HeroSection() {
   return (
-    <section
-      className="relative min-h-screen flex flex-col items-center justify-center text-center px-4"
-      style={{
-        backgroundColor: "#1D4D37",
-      }}
-    >
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto">
-        {/* Title */}
+    <section dir="rtl" className="relative min-h-screen bg-[#1D4D37] px-6">
+      {/* هذا الفراغ هو المفتاح للمسافة بين الهيدر والعنوان */}
+      <div className="h-28 md:h-36 lg:h-44" />
+
+      {/* المحتوى */}
+      <div className="max-w-5xl ms-auto text-right">
+        {/* العنوان */}
         <h1
-          className="text-3xl md:text-4xl lg:text-5xl mb-6 animate-fade-in text-center text-white leading-relaxed"
+          className="text-white leading-tight
+                     text-4xl md:text-5xl lg:text-6xl
+                     mb-10"
           style={{
-            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
             fontWeight: 700,
           }}
         >
-          الريادة عالمياً في تمكين الإنسان والمجتمع، وتعزيز تنافسية سوق العمل
+          مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
         </h1>
 
-        {/* Description */}
+        {/* الوصف */}
         <p
-          className="text-base md:text-lg lg:text-xl mb-10 text-white/90 animate-fade-in animation-delay-200 leading-relaxed max-w-3xl mx-auto"
+          className="text-white/90 text-lg md:text-xl mb-14 max-w-3xl"
           style={{
-            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
             fontWeight: 400,
           }}
         >
           تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني
         </p>
 
-        {/* CTA Button */}
+        {/* الزر */}
         <Link
           to="/login"
-          className="inline-block px-8 py-3 bg-white text-[#1D4D37] border border-gray-300 rounded-lg text-base font-medium transition-all hover:border-gray-400 hover:shadow-md animate-fade-in animation-delay-400"
+          className="inline-flex items-center
+                     bg-white text-[#1D4D37]
+                     px-10 py-4 rounded-xl
+                     text-base font-medium
+                     border border-transparent
+                     hover:border-gray-300
+                     hover:shadow-md
+                     transition"
           style={{
-            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
             fontWeight: 500,
           }}
         >
@@ -46,6 +53,4 @@ const HeroSection = () => {
       </div>
     </section>
   );
-};
-
-export default HeroSection;
+}
