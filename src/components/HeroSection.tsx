@@ -7,9 +7,7 @@ export default function HeroSection() {
       {/* المحتوى */}
       <div className="max-w-5xl ms-auto text-right bg-primary">
         {/* العنوان */}
-        <h1 className="text-white leading-tight
-                     text-3xl md:text-4xl lg:text-5xl
-                     mb-10" style={{
+        <h1 className="text-white leading-tight text-3xl lg:text-5xl mb-10 text-right md:text-3xl" style={{
         fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
         fontWeight: 700
       }}>
@@ -17,7 +15,7 @@ export default function HeroSection() {
         </h1>
 
         {/* الوصف */}
-        <p className="text-white/90 text-lg md:text-xl mb-14 max-w-3xl" style={{
+        <p className="text-white/90 text-lg md:text-xl mb-14 max-w-3xl text-right" style={{
         fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
         fontWeight: 400
       }}>
