@@ -5,7 +5,7 @@ export default function HeroSection() {
       <div className="h-28 md:h-36 lg:h-44" />
 
       {/* المحتوى */}
-      <div className="max-w-5xl ms-auto text-right bg-[#188186]">
+      <div className="max-w-5xl ms-auto text-right bg-[#13867c]">
         {/* العنوان */}
         <h1 className="text-white leading-tight text-3xl lg:text-5xl mb-10 text-right md:text-3xl" style={{
         fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
