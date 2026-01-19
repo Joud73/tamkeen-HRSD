@@ -11,15 +11,15 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Title */}
-        <h1
+        <h2
           className="text-3xl md:text-4xl lg:text-5xl mb-6 animate-fade-in text-center text-white leading-relaxed"
           style={{
             fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
             fontWeight: 700,
           }}
         >
-          مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
-        </h1>
+          الريادة عالمياً في تمكين الإنسان والمجتمع، وتعزيز تنافسية سوق العمل
+        </h2>
 
         {/* Description */}
         <p
@@ -29,7 +29,8 @@ const HeroSection = () => {
             fontWeight: 400,
           }}
         >
-          تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني
+          تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة ومواكبة التحولات المستقبلية، من خلال
+          سياسات وتشريعات مرنة وفاعلة
         </p>
 
         {/* CTA Button */}
