@@ -153,9 +153,6 @@ const GeographicDistributionSection = () => {
   
   return (
     <section ref={sectionRef} className="py-16 md:py-24 bg-white relative">
-      {/* Side patterns */}
-      <div className="side-pattern-left" />
-      <div className="side-pattern-right" />
       
       <div className="container mx-auto px-4">
         {/* Section Header */}
