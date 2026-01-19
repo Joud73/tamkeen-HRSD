@@ -1,61 +1,51 @@
 import { Link } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.png";
+
 const HeroSection = () => {
   return (
     <section
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-4"
       style={{
-        backgroundImage: `url(${heroBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundColor: "#148287",
+        backgroundColor: "#1D4D37",
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-[#148287]/40" />
-
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Title */}
         <h1
+          className="text-3xl md:text-4xl lg:text-5xl mb-6 animate-fade-in text-center text-white leading-relaxed"
           style={{
-            color: "#f5961e",
+            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontWeight: 700,
           }}
-          className="text-4xl md:text-5xl lg:text-6xl mb-6 animate-fade-in text-center font-sans text-[#f49b1f]"
         >
-          مركز التأهيل والتدريب للمنظمات
+          الريادة عالمياً في تمكين الإنسان والمجتمع، وتعزيز تنافسية سوق العمل
         </h1>
 
-        {/* Decorative Lines */}
-        <div className="flex justify-center items-center gap-2 mb-8">
-          <div
-            className="w-12 h-1 rounded"
-            style={{
-              backgroundColor: "#148287",
-            }}
-          />
-          <div
-            className="w-24 h-1 rounded"
-            style={{
-              backgroundColor: "#148287",
-            }}
-          />
-        </div>
-
         {/* Description */}
-        <p className="text-xl md:text-2xl font-hrsd-medium mb-10 text-white/90 animate-fade-in animation-delay-200">
-          تابع لإشراف وزارة الموارد البشرية فنيًا لتمكين المنظمات غير الربحية
+        <p 
+          className="text-base md:text-lg lg:text-xl mb-10 text-white/90 animate-fade-in animation-delay-200 leading-relaxed max-w-3xl mx-auto"
+          style={{
+            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontWeight: 400,
+          }}
+        >
+          تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة ومواكبة التحولات المستقبلية، من خلال سياسات وتشريعات مرنة وفاعلة
         </p>
 
         {/* CTA Button */}
-        <Link to="/login" className="hero-button inline-block animate-fade-in animation-delay-400">
-          ابدأ الآن
+        <Link 
+          to="/login" 
+          className="inline-block px-8 py-3 bg-white text-[#1D4D37] border border-gray-300 rounded-lg text-base font-medium transition-all hover:border-gray-400 hover:shadow-md animate-fade-in animation-delay-400"
+          style={{
+            fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+            fontWeight: 500,
+          }}
+        >
+          المزيد
         </Link>
       </div>
-
-      {/* Side Badge */}
-      <div className="side-badge text-primary-foreground bg-accent">نسخة تجريبية</div>
     </section>
   );
 };
+
 export default HeroSection;

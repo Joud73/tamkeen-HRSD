@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, HelpCircle, FileText, Video, Headphones } from "lucide-react";
 import hrsdWhiteLogo from "@/assets/logos/hrsd-white.png";
@@ -12,26 +12,9 @@ const Header = () => {
   const location = useLocation();
   const [isGuideDropdownOpen, setIsGuideDropdownOpen] = useState(false);
   
-  // Pages that should always show white header (no transparent hero)
-  const alwaysWhitePages = ['/dashboard', '/settings', '/login', '/register', '/technical-indicators', '/contact-us', '/training-stage'];
-  const shouldAlwaysBeWhite = alwaysWhitePages.some(page => location.pathname.startsWith(page));
-  
-  const [isScrolled, setIsScrolled] = useState(shouldAlwaysBeWhite);
+  // Header is ALWAYS white now (per new design requirements)
+  const [isScrolled] = useState(true);
   const { user, loading } = useAuth();
-
-  useEffect(() => {
-    // On pages with transparent hero, listen for scroll
-    if (!shouldAlwaysBeWhite) {
-      const handleScroll = () => {
-        setIsScrolled(window.scrollY > 100);
-      };
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    } else {
-      // Always white on dashboard/settings/login pages
-      setIsScrolled(true);
-    }
-  }, [shouldAlwaysBeWhite]);
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-sm' : 'bg-transparent'}`}>
