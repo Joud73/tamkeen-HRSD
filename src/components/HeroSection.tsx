@@ -7,7 +7,7 @@ const HeroSection = () => {
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Title */}
         <h1 className="text-3xl lg:text-5xl mb-6 animate-fade-in text-center text-white leading-relaxed md:text-2xl" style={{
-        fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
+        fontFamily: "'DIN Next LT Arabic', 'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
         fontWeight: 700
       }}>مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً</h1>
 
