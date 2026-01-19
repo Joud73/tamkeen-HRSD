@@ -45,7 +45,7 @@ const HeroSection = () => {
             المزيد
           </Link>
         </div>
-
+      </div>
     </section>
   );
 };
