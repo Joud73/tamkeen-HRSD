@@ -15,10 +15,10 @@ const HeroSection = () => {
           className="text-3xl md:text-4xl lg:text-5xl mb-6 animate-fade-in text-center text-white leading-relaxed"
           style={{
             fontFamily: "'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif",
-            fontWeight: 500,
+            fontWeight: 700,
           }}
         >
-          مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
+          الريادة عالمياً في تمكين الإنسان والمجتمع، وتعزيز تنافسية سوق العمل
         </h1>
 
         {/* Description */}
@@ -29,8 +29,7 @@ const HeroSection = () => {
             fontWeight: 400,
           }}
         >
-          تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة ومواكبة التحولات المستقبلية، من خلال
-          سياسات وتشريعات مرنة وفاعلة
+          تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني
         </p>
 
         {/* CTA Button */}
