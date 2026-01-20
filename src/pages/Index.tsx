@@ -4,7 +4,7 @@ import SpecializationsSection from "@/components/SpecializationsSection";
 import GeographicDistributionSection from "@/components/GeographicDistributionSection";
 import Footer from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
-import loginBg from "@/assets/login-bg.jpg";
+import loginBg from "@/assets/hero-bg.png";
 
 const Index = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
-import loginBg from "@/assets/login-bg.jpg";
+import loginBg from "@/assets/hero-bg.png";
 
 const LoginLocal = () => {
   const navigate = useNavigate();

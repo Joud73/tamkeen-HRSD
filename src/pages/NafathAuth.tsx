@@ -4,7 +4,7 @@ import { Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NafathIcon from "@/components/icons/NafathIcon";
-import loginBg from "@/assets/login-bg.jpg";
+import loginBg from "@/assets/hero-bg.png";
 
 const NafathAuth = () => {
   const navigate = useNavigate();
