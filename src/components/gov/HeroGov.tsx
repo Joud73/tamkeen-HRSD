@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 export default function HeroGov() {
   return <section dir="rtl" className="relative min-h-[85vh] bg-[#1D4D37]">
-      {/* Content Container - Right aligned with left padding only */}
+      {/* Content Container - Right aligned starting from far right */}
       <div className="h-full flex items-center">
-        <div className="w-full pl-8 md:pl-24 lg:pl-48 xl:pl-64 pr-0">
-          <div className="max-w-4xl mr-auto py-24 md:py-32 lg:py-40 text-right">
+        <div className="w-full pl-8 md:pl-24 lg:pl-48 xl:pl-64 pr-8 md:pr-16 lg:pr-24">
+          <div className="max-w-4xl ml-auto py-24 md:py-32 lg:py-40 text-right">
             {/* Main Headline */}
             <h1 className="text-white text-3xl lg:text-5xl xl:text-[56px] leading-[1.4] mb-8 md:text-3xl" style={{
             fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
