@@ -17,10 +17,7 @@ export default function HeroGov() {
             <p className="text-white/90 text-base md:text-lg lg:text-xl leading-relaxed mb-10 max-w-3xl" style={{
             fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
             fontWeight: 400
-          }}>
-              تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة
-              ومواكبة التحولات من خلال سياسات وتشريعات مرنة وفاعلة
-            </p>
+          }}>تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني</p>
 
             {/* CTA Button */}
             <Link to="/login" className="inline-flex items-center justify-center
