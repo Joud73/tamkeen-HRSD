@@ -166,7 +166,7 @@ const GeographicDistributionSection = () => {
 
         {/* Summary Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="stats-card-teal py-8">
+          <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
             <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
               +{orgCount}
             </div>
@@ -174,7 +174,7 @@ const GeographicDistributionSection = () => {
               {summaryStats[0].label}
             </div>
           </div>
-          <div className="stats-card-teal py-8">
+          <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
             <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
               +{foundationCount}
             </div>
@@ -185,9 +185,9 @@ const GeographicDistributionSection = () => {
         </div>
 
         {/* Total Card */}
-        <div className="stats-card-navy py-8">
+        <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
           <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
-            {total}+
+            +{total}
           </div>
           <div className="text-xl font-hrsd-medium">
             الإجمالي
