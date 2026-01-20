@@ -94,7 +94,7 @@ const Login = () => {
                   {/* Individuals Card */}
                   <button
                     type="button"
-                    onClick={() => handleSelectType("individual")}
+                    onClick={() => navigate("/individuals-journey")}
                     className="group p-6 rounded-xl border-2 border-gray-200 bg-white hover:border-[hsl(175,75%,30%)] hover:shadow-lg transition-all duration-200 flex flex-col items-center gap-4"
                   >
                     <div 
