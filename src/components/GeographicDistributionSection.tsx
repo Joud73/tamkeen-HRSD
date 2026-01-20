@@ -71,7 +71,7 @@ const useCountUp = (end: number, duration: number = 2000, startCounting: boolean
 };
 
 // Orbit graphic SVG component - matches the curved lines in screenshot
-const OrbitGraphic = () => {};
+const OrbitGraphic = () => null;
 
 // Region Card Component
 const RegionCard = ({

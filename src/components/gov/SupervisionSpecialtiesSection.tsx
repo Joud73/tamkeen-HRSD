@@ -46,11 +46,11 @@ export default function SupervisionSpecialtiesSection() {
           // Determine icon position: right column (index 0, 2) = icon on right, left column (index 1, 3) = icon on left
           const isRightColumn = index % 2 === 0;
           return <div key={item.id} className="relative bg-white border border-gray-100 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-200">
-                <div className={`flex items-center gap-6 ${isRightColumn ? 'flex-row' : 'flex-row-reverse'}`}>
-                  {/* Icon */}
+                <div className="flex items-center gap-6 flex-row">
+                  {/* Icon - always on the right in RTL */}
                   <div className="flex-shrink-0">
                     <div className="w-16 h-16 flex items-center justify-center">
-                      <Icon className="w-12 h-12 text-[#1a9b8e]" strokeWidth={1.5} />
+                      <Icon className="w-12 h-12" style={{ color: '#14573A' }} strokeWidth={1.5} />
                     </div>
                   </div>
                   
