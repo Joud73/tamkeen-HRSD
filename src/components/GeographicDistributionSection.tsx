@@ -82,13 +82,13 @@ const RegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return <div className="min-h-[140px] flex items-center justify-center rounded-xl border-2 relative cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg hover:border-[#14573A]" style={{
+  return <div className="min-h-[140px] flex items-center justify-center rounded-xl border-2 relative transition-shadow duration-200 hover:shadow-md" style={{
     backgroundColor: '#F3F4F6',
     borderColor: '#1B8354'
   }}>
       <OrbitGraphic />
-      <div className="relative z-10 text-center transition-transform duration-300">
-        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1 transition-colors duration-300" style={{
+      <div className="relative z-10 text-center">
+        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1" style={{
         color: '#1B8354'
       }}>
           {count}
@@ -109,13 +109,13 @@ const FullWidthRegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return <div className="min-h-[140px] flex items-center justify-center col-span-full rounded-xl border-2 relative cursor-pointer transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg hover:border-[#14573A]" style={{
+  return <div className="min-h-[140px] flex items-center justify-center col-span-full rounded-xl border-2 relative transition-shadow duration-200 hover:shadow-md" style={{
     backgroundColor: '#F3F4F6',
     borderColor: '#1B8354'
   }}>
       <OrbitGraphic />
-      <div className="relative z-10 text-center transition-transform duration-300">
-        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1 transition-colors duration-300" style={{
+      <div className="relative z-10 text-center">
+        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1" style={{
         color: '#1B8354'
       }}>
           {count}
