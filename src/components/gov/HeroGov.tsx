@@ -4,7 +4,7 @@ export default function HeroGov() {
     <section dir="rtl" className="relative min-h-[85vh] bg-[#1D4D37]">
       {/* Content Container - Right aligned starting from far right */}
       <div className="h-full flex items-center">
-        <div className="w-full pl-8 md:pl-24 lg:pl-48 xl:pl-40 pr-8 md:pr-16 lg:pr-24">
+        <div className="w-full pl-4 md:pl-12 lg:pl-24 xl:pl-32 pr-8 md:pr-16 lg:pr-24">
           <div className="max-w-4xl ml-auto py-24 md:py-32 lg:py-40 text-right">
             {/* Main Headline */}
             <h1
