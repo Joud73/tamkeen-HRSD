@@ -144,9 +144,14 @@ const GeographicDistributionSection = () => {
   return <section ref={sectionRef} className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-right mb-12">
-          <h2 className="section-title text-black">التوزيع الجغرافي للإشراف الفني</h2>
-          <div className="section-title-underline" />
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-right text-black" style={{
+            fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif"
+          }}>التوزيع الجغرافي للإشراف الفني</h2>
+          {/* Decorative lines */}
+          <div className="flex justify-end gap-2">
+            
+          </div>
         </div>
 
         {/* Region Cards Grid - 3 columns on desktop */}
