@@ -10,7 +10,7 @@ export default function HeroSection() {
         <div className="max-w-2xl text-right bg-[#0d3f29]">
           {/* Title - matching HRSD font style */}
           <h1
-            className="text-white leading-[1.3] text-3xl md:text-4xl lg:text-[52px] mb-8"
+            className="text-white leading-[1.3] text-4xl md:text-5xl lg:text-[56px] mb-8"
             style={{
               fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
               fontWeight: 700,
