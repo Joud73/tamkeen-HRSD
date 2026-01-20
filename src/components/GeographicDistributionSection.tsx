@@ -71,12 +71,7 @@ const useCountUp = (end: number, duration: number = 2000, startCounting: boolean
 };
 
 // Orbit graphic SVG component - matches the curved lines in screenshot
-const OrbitGraphic = () => <svg viewBox="0 0 120 120" className="w-20 h-20 absolute left-4 bottom-4">
-    {/* Multiple curved ellipses forming orbit pattern */}
-    {[...Array(8)].map((_, i) => <ellipse key={i} cx="30" cy="60" rx={20 + i * 8} ry={35 + i * 5} fill="none" stroke={i % 2 === 0 ? "#f5961e" : "#1a9b8e"} strokeWidth="1.5" transform="rotate(-25 30 60)" opacity={0.4 + i * 0.05} />)}
-    {/* Star/palm icon in center */}
-    <image href={favIcon} x="10" y="40" width="40" height="40" />
-  </svg>;
+const OrbitGraphic = () => {};
 
 // Region Card Component
 const RegionCard = ({
@@ -87,28 +82,22 @@ const RegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return (
-    <div 
-      className="min-h-[140px] flex items-center justify-center rounded-xl border-2 relative"
-      style={{ 
-        backgroundColor: '#F3F4F6',
-        borderColor: '#1B8354'
-      }}
-    >
+  return <div className="min-h-[140px] flex items-center justify-center rounded-xl border-2 relative" style={{
+    backgroundColor: '#F3F4F6',
+    borderColor: '#1B8354'
+  }}>
       <OrbitGraphic />
       <div className="relative z-10 text-center">
-        <div 
-          className="text-4xl md:text-5xl font-hrsd-bold mb-1"
-          style={{ color: '#1B8354' }}
-        >
+        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1" style={{
+        color: '#1B8354'
+      }}>
           {count}
         </div>
         <div className="text-lg font-hrsd-medium text-black">
           {region.name}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
 
 // Full width region card for Tabuk
@@ -120,28 +109,22 @@ const FullWidthRegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return (
-    <div 
-      className="min-h-[140px] flex items-center justify-center col-span-full rounded-xl border-2 relative"
-      style={{ 
-        backgroundColor: '#F3F4F6',
-        borderColor: '#1B8354'
-      }}
-    >
+  return <div className="min-h-[140px] flex items-center justify-center col-span-full rounded-xl border-2 relative" style={{
+    backgroundColor: '#F3F4F6',
+    borderColor: '#1B8354'
+  }}>
       <OrbitGraphic />
       <div className="relative z-10 text-center">
-        <div 
-          className="text-4xl md:text-5xl font-hrsd-bold mb-1"
-          style={{ color: '#1B8354' }}
-        >
+        <div className="text-4xl md:text-5xl font-hrsd-bold mb-1" style={{
+        color: '#1B8354'
+      }}>
           {count}
         </div>
         <div className="text-lg font-hrsd-medium text-black">
           {region.name}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
 const GeographicDistributionSection = () => {
   const [startCounting, setStartCounting] = useState(false);
@@ -168,8 +151,8 @@ const GeographicDistributionSection = () => {
         {/* Section Header */}
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-right text-black" style={{
-            fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif"
-          }}>التوزيع الجغرافي للإشراف الفني</h2>
+          fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif"
+        }}>التوزيع الجغرافي للإشراف الفني</h2>
           {/* Decorative lines */}
           <div className="flex justify-end gap-2">
             
@@ -188,7 +171,9 @@ const GeographicDistributionSection = () => {
 
         {/* Summary Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
+          <div className="rounded-xl py-8 text-center text-white" style={{
+          backgroundColor: '#1D4D37'
+        }}>
             <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
               +{orgCount}
             </div>
@@ -196,7 +181,9 @@ const GeographicDistributionSection = () => {
               {summaryStats[0].label}
             </div>
           </div>
-          <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
+          <div className="rounded-xl py-8 text-center text-white" style={{
+          backgroundColor: '#1D4D37'
+        }}>
             <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
               +{foundationCount}
             </div>
@@ -207,7 +194,9 @@ const GeographicDistributionSection = () => {
         </div>
 
         {/* Total Card */}
-        <div className="rounded-xl py-8 text-center text-white" style={{ backgroundColor: '#1D4D37' }}>
+        <div className="rounded-xl py-8 text-center text-white" style={{
+        backgroundColor: '#1D4D37'
+      }}>
           <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
             +{total}
           </div>
