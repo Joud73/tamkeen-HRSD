@@ -87,17 +87,28 @@ const RegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return <div className="region-card min-h-[140px] flex items-center justify-center">
+  return (
+    <div 
+      className="min-h-[140px] flex items-center justify-center rounded-xl border-2 relative"
+      style={{ 
+        backgroundColor: '#F3F4F6',
+        borderColor: '#1B8354'
+      }}
+    >
       <OrbitGraphic />
       <div className="relative z-10 text-center">
-        <div className="text-4xl md:text-5xl font-hrsd-bold text-primary mb-1">
+        <div 
+          className="text-4xl md:text-5xl font-hrsd-bold mb-1"
+          style={{ color: '#1B8354' }}
+        >
           {count}
         </div>
-        <div className="text-lg font-hrsd-medium text-accent">
+        <div className="text-lg font-hrsd-medium text-black">
           {region.name}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 // Full width region card for Tabuk
@@ -109,17 +120,28 @@ const FullWidthRegionCard = ({
   startCounting: boolean;
 }) => {
   const count = useCountUp(region.count, 1500, startCounting);
-  return <div className="region-card min-h-[140px] flex items-center justify-center col-span-full">
+  return (
+    <div 
+      className="min-h-[140px] flex items-center justify-center col-span-full rounded-xl border-2 relative"
+      style={{ 
+        backgroundColor: '#F3F4F6',
+        borderColor: '#1B8354'
+      }}
+    >
       <OrbitGraphic />
       <div className="relative z-10 text-center">
-        <div className="text-4xl md:text-5xl font-hrsd-bold text-primary mb-1">
+        <div 
+          className="text-4xl md:text-5xl font-hrsd-bold mb-1"
+          style={{ color: '#1B8354' }}
+        >
           {count}
         </div>
-        <div className="text-lg font-hrsd-medium text-accent">
+        <div className="text-lg font-hrsd-medium text-black">
           {region.name}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 const GeographicDistributionSection = () => {
   const [startCounting, setStartCounting] = useState(false);
