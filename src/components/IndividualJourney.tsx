@@ -38,13 +38,7 @@ const IndividualJourney = ({
 
         <div className="relative min-w-[700px]">
           {/* Golden connecting line */}
-          <div className="absolute h-1 rounded-full" style={{
-          backgroundColor: "hsl(40, 50%, 65%)",
-          top: "50%",
-          right: "10%",
-          left: "10%",
-          transform: "translateY(-50%)"
-        }} />
+          
 
           
         </div>
