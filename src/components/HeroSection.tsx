@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 export default function HeroSection() {
-  return <section dir="rtl" className="relative min-h-screen px-6 bg-[#0d4029]">
+  return <section dir="rtl" className="relative min-h-screen px-6 bg-[#0d3f29]">
       {/* هذا الفراغ هو المفتاح للمسافة بين الهيدر والعنوان */}
       <div className="h-28 md:h-36 lg:h-44" />
 
