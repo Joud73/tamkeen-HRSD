@@ -7,7 +7,7 @@ const FooterLogo = () => <div className="flex items-center justify-center gap-3"
   </div>;
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  return <footer className="py-8 bg-primary" style={{
+  return <footer className="py-8 bg-[#0d4029]" style={{
     backgroundColor: '#148287'
   }}>
       <div className="container mx-auto px-4">
