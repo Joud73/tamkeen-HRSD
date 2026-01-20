@@ -1,6 +1,7 @@
 import GovHeader from "@/components/gov/GovHeader";
 import HeroGov from "@/components/gov/HeroGov";
 import SupervisionSpecialtiesSection from "@/components/gov/SupervisionSpecialtiesSection";
+import GeographicDistributionSection from "@/components/GeographicDistributionSection";
 import ServicesExplorer from "@/components/gov/ServicesExplorer";
 import KpiBand from "@/components/gov/KpiBand";
 import NewsPreview from "@/components/gov/NewsPreview";
@@ -15,6 +16,7 @@ const Index = () => {
       <main>
         <HeroGov />
         <SupervisionSpecialtiesSection />
+        <GeographicDistributionSection />
         <ServicesExplorer />
         <KpiBand />
         <NewsPreview />
