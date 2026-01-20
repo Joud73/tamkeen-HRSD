@@ -49,30 +49,27 @@ const useCountUp = (end: number, duration: number = 2000, startCounting: boolean
   return count;
 };
 
-// Orbit graphic SVG component
+// Orbit graphic SVG component - matches the curved lines in screenshot
 const OrbitGraphic = () => (
-  <svg viewBox="0 0 100 100" className="w-24 h-24 absolute left-4 bottom-4 opacity-60">
-    {/* Multiple curved lines forming orbit pattern */}
+  <svg viewBox="0 0 120 120" className="w-20 h-20 absolute left-4 bottom-4">
+    {/* Multiple curved ellipses forming orbit pattern */}
     {[...Array(8)].map((_, i) => (
       <ellipse
         key={i}
-        cx="20"
-        cy="50"
-        rx={15 + i * 5}
-        ry={30 + i * 3}
+        cx="30"
+        cy="60"
+        rx={20 + i * 8}
+        ry={35 + i * 5}
         fill="none"
-        stroke={i % 2 === 0 ? "#f5961e" : "#2db473"}
-        strokeWidth="1"
-        transform={`rotate(-30 20 50)`}
-        opacity={0.5 + (i * 0.05)}
+        stroke={i % 2 === 0 ? "#f5961e" : "#1a9b8e"}
+        strokeWidth="1.5"
+        transform="rotate(-25 30 60)"
+        opacity={0.4 + (i * 0.05)}
       />
     ))}
+    {/* Star/palm icon in center */}
+    <image href={favIcon} x="10" y="40" width="40" height="40" />
   </svg>
-);
-
-// Star icon component (representing palm/star from the site)
-const StarIcon = () => (
-  <img src={favIcon} alt="icon" className="w-8 h-8" />
 );
 
 // Region Card Component
@@ -80,20 +77,14 @@ const RegionCard = ({ region, startCounting }: { region: typeof regions[0]; star
   const count = useCountUp(region.count, 1500, startCounting);
   
   return (
-    <div className="region-card min-h-32">
+    <div className="region-card min-h-[140px] flex items-center justify-center">
       <OrbitGraphic />
-      <div className="relative z-10 flex items-center justify-between w-full">
-        <div className="flex-1" />
-        <div className="text-center flex-1">
-          <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
-            {count}
-          </div>
-          <div className="text-lg font-hrsd-medium text-accent">
-            {region.name}
-          </div>
+      <div className="relative z-10 text-center">
+        <div className="text-4xl md:text-5xl font-hrsd-bold text-primary mb-1">
+          {count}
         </div>
-        <div className="flex-1 flex justify-end">
-          <StarIcon />
+        <div className="text-lg font-hrsd-medium text-accent">
+          {region.name}
         </div>
       </div>
     </div>
@@ -105,20 +96,14 @@ const FullWidthRegionCard = ({ region, startCounting }: { region: typeof regions
   const count = useCountUp(region.count, 1500, startCounting);
   
   return (
-    <div className="region-card min-h-32 col-span-full">
+    <div className="region-card min-h-[140px] flex items-center justify-center col-span-full">
       <OrbitGraphic />
-      <div className="relative z-10 flex items-center justify-between w-full">
-        <div className="flex-1" />
-        <div className="text-center flex-1">
-          <div className="text-3xl md:text-4xl font-hrsd-bold text-primary">
-            {count}
-          </div>
-          <div className="text-lg font-hrsd-medium text-accent">
-            {region.name}
-          </div>
+      <div className="relative z-10 text-center">
+        <div className="text-4xl md:text-5xl font-hrsd-bold text-primary mb-1">
+          {count}
         </div>
-        <div className="flex-1 flex justify-end">
-          <StarIcon />
+        <div className="text-lg font-hrsd-medium text-accent">
+          {region.name}
         </div>
       </div>
     </div>
@@ -152,8 +137,7 @@ const GeographicDistributionSection = () => {
   }, []);
   
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-white relative">
-      
+    <section ref={sectionRef} className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-right mb-12">
@@ -161,51 +145,44 @@ const GeographicDistributionSection = () => {
           <div className="section-title-underline" />
         </div>
 
-        {/* Region Cards Grid - First 9 regions (3x3) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {regions.slice(0, 9).map((region, index) => (
-            <RegionCard key={index} region={region} startCounting={startCounting} />
-          ))}
-        </div>
-
-        {/* Second row - 3 regions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {regions.slice(9, 12).map((region, index) => (
+        {/* Region Cards Grid - 3 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          {regions.slice(0, 12).map((region, index) => (
             <RegionCard key={index} region={region} startCounting={startCounting} />
           ))}
         </div>
 
         {/* Tabuk - Full width */}
-        <div className="mb-6">
+        <div className="mb-8">
           <FullWidthRegionCard region={regions[12]} startCounting={startCounting} />
         </div>
 
         {/* Summary Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="stats-card-teal">
-          <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
-              {orgCount}+
+          <div className="stats-card-teal py-8">
+            <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
+              +{orgCount}
             </div>
-            <div className="text-lg font-hrsd-medium">
+            <div className="text-xl font-hrsd-medium">
               {summaryStats[0].label}
             </div>
           </div>
-          <div className="stats-card-teal">
-            <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
-              {foundationCount}+
+          <div className="stats-card-teal py-8">
+            <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
+              +{foundationCount}
             </div>
-            <div className="text-lg font-hrsd-medium">
+            <div className="text-xl font-hrsd-medium">
               {summaryStats[1].label}
             </div>
           </div>
         </div>
 
         {/* Total Card */}
-        <div className="stats-card-navy">
-          <div className="text-4xl md:text-5xl font-hrsd-bold mb-2">
-            +{total}
+        <div className="stats-card-navy py-8">
+          <div className="text-5xl md:text-6xl font-hrsd-bold mb-2">
+            {total}+
           </div>
-          <div className="text-lg font-hrsd-medium">
+          <div className="text-xl font-hrsd-medium">
             الإجمالي
           </div>
         </div>
