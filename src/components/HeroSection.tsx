@@ -6,9 +6,9 @@ export default function HeroSection() {
       {/* Spacing from header */}
       <div className="h-28 md:h-36 lg:h-44" />
 
-      {/* Content container - right aligned with max-width */}
-      <div className="container mx-auto px-8 md:px-16 lg:px-24">
-        <div className="max-w-3xl mr-0 ml-auto text-right">
+      {/* Content - positioned on the right side like HRSD website */}
+      <div className="flex justify-end px-8 md:px-16 lg:px-24 xl:px-32">
+        <div className="max-w-2xl text-right">
           {/* Title - matching HRSD font style */}
           <h1 
             className="text-white leading-[1.3] text-3xl md:text-4xl lg:text-[52px] mb-8"
@@ -22,7 +22,7 @@ export default function HeroSection() {
 
           {/* Description */}
           <p 
-            className="text-white/90 text-base md:text-lg mb-10 max-w-2xl mr-0 ml-auto"
+            className="text-white/90 text-base md:text-lg mb-10"
             style={{
               fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
               fontWeight: 400
