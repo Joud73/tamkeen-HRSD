@@ -6,7 +6,7 @@ export default function HeroSection() {
 
       {/* Content - positioned on the right side like HRSD website */}
       <div className="flex justify-end px-8 md:px-16 lg:px-24 xl:px-32">
-        <div className="max-w-2xl text-right">
+        <div className="max-w-2xl text-right bg-[#0d3f29]">
           {/* Title - matching HRSD font style */}
           <h1 className="text-white leading-[1.3] text-3xl md:text-4xl lg:text-[52px] mb-8" style={{
           fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
