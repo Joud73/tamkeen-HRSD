@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 export default function HeroSection() {
-  return <section dir="rtl" className="relative min-h-screen px-6 bg-[#13867c]">
+  return <section dir="rtl" className="relative min-h-screen px-6 bg-green-900">
       {/* هذا الفراغ هو المفتاح للمسافة بين الهيدر والعنوان */}
       <div className="h-28 md:h-36 lg:h-44" />
 
       {/* المحتوى */}
-      <div className="max-w-5xl ms-auto text-right bg-[#13867c]">
+      <div className="max-w-5xl ms-auto text-right bg-green-900">
         {/* العنوان */}
         <h1 className="text-white leading-tight text-3xl lg:text-5xl mb-10 text-right md:text-3xl" style={{
         fontFamily: "'DIN Next Arabic', system-ui, sans-serif",
