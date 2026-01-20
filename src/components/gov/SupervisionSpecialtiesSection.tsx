@@ -31,7 +31,7 @@ export default function SupervisionSpecialtiesSection() {
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-right text-black" style={{
           fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif"
-        }}>hختصاصات الإشراف الفني</h2>
+        }}>اختصاصات الإشراف الفني</h2>
           {/* Decorative lines */}
           <div className="flex justify-end gap-2">
             
