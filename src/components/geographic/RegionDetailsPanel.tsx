@@ -28,7 +28,7 @@ const SummaryView = ({
 }: {
   startCounting: boolean;
 }) => <div className="h-full flex flex-col">
-    <h3 className="font-hrsd-bold text-base text-[#1D4D37] text-right mb-2">
+    <h3 className="font-hrsd-bold text-[#1D4D37] text-right mb-2 text-3xl">
       ملخص الإحصائيات
     </h3>
 
