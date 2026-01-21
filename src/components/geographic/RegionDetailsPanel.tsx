@@ -95,7 +95,7 @@ const RegionDetailView = ({
     </div>
 
     {/* Details placeholder */}
-    <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+    <div className="bg-gray-50 rounded-xl p-5 border border-gray-100 py-[10px]">
       <h4 className="font-hrsd-semibold text-gray-700 text-right mb-3">
         تفاصيل المنطقة
       </h4>
