@@ -29,28 +29,28 @@ const GeographicDistributionSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-white">
+    <section ref={sectionRef} className="py-8 md:py-12 bg-white min-h-0">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="mb-12">
+        <div className="mb-4 md:mb-6">
           <h2
-            className="text-3xl md:text-4xl font-bold mb-4 text-right text-black"
+            className="text-2xl md:text-3xl font-bold mb-2 text-right text-black"
             style={{
               fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
             }}
           >
             التوزيع الجغرافي للإشراف الفني
           </h2>
-          <p className="text-gray-600 text-right font-hrsd-regular text-lg">
+          <p className="text-gray-600 text-right font-hrsd-regular text-base">
             انقر على أي منطقة لعرض التفاصيل
           </p>
         </div>
 
         {/* Map and Details Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 lg:h-[calc(100vh-220px)] lg:max-h-[500px]">
           {/* Map - Right side on desktop (RTL) */}
-          <div className="lg:col-span-7 order-1">
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="lg:col-span-7 order-1 h-full">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 h-full">
               <SaudiHeatmapMap
                 regions={regions}
                 selectedRegion={selectedRegion}
@@ -60,7 +60,7 @@ const GeographicDistributionSection = () => {
           </div>
 
           {/* Details Panel - Left side on desktop (RTL) */}
-          <div className="lg:col-span-5 order-2">
+          <div className="lg:col-span-5 order-2 h-full">
             <RegionDetailsPanel
               selectedRegion={selectedRegion}
               onClose={() => setSelectedRegion(null)}
