@@ -52,7 +52,7 @@ const SummaryView = ({
 
     {/* Top regions list */}
     <div className="flex-1 flex flex-col min-h-0">
-      <h4 className="font-hrsd-semibold text-gray-700 text-right mb-1.5 text-sm">
+      <h4 className="font-hrsd-semibold text-gray-700 text-right mb-1.5 text-base">
         أعلى المناطق
       </h4>
       <div className="space-y-1">
