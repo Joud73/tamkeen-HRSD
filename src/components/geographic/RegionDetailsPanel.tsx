@@ -69,7 +69,7 @@ const SummaryView = ({ startCounting }: { startCounting: boolean }) => (
       <div className="space-y-2">
         {[...regions]
           .sort((a, b) => b.count - a.count)
-          .slice(0, 5)
+          .slice(0, 3)
           .map((region, idx) => (
             <div
               key={region.id}
