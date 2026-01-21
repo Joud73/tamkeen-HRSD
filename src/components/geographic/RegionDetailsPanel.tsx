@@ -89,7 +89,7 @@ const RegionDetailView = ({
     </div>
 
     {/* Main stat */}
-    <div className="bg-gradient-to-br from-[#1D4D37] to-[#14573A] rounded-2xl p-8 text-center text-white">
+    <div className="bg-gradient-to-br from-[#1D4D37] to-[#14573A] rounded-2xl p-8 text-center text-white py-[25px] px-[25px]">
       <div className="text-5xl font-hrsd-bold mb-2">{region.count}</div>
       <div className="text-lg font-hrsd-medium opacity-90">منظمة أهلية</div>
     </div>
