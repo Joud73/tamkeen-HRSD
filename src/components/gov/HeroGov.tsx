@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 export default function HeroGov() {
   return <section dir="rtl" className="relative min-h-[85vh] bg-[#1D4D37]">
-      {/* Pin the content to the right regardless of parent centering */}
-      <div className="absolute inset-0 flex items-center justify-end">
-        <div className="max-w-[900px] w-full text-right pr-0 mr-0 ml-auto">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="max-w-[900px] w-full text-center px-8">
           <h1 className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-[56px] leading-[1.35] mb-6" style={{
           fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
           fontWeight: 700
@@ -11,7 +10,7 @@ export default function HeroGov() {
             مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
           </h1>
 
-          <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed mb-8 max-w-2xl" style={{
+          <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed mb-8 mx-auto max-w-2xl" style={{
           fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
           fontWeight: 400
         }}>
