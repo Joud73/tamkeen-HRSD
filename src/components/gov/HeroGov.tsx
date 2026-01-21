@@ -1,24 +1,38 @@
+import { Link } from "react-router-dom";
+
 export default function HeroGov() {
   return (
     <section dir="rtl" className="relative min-h-[85vh] bg-[#1D4D37]">
-      {/* Content Container - Far right aligned */}
-      <div className="h-full min-h-[85vh] flex items-center justify-end w-full">
-        <div className="py-24 md:py-32 lg:py-40 pr-8 md:pr-12 lg:pr-16 xl:pr-20 text-right">
-          {/* Main Headline */}
-          <h1 className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-[56px] leading-[1.4] font-hrsd-bold mb-6">
-            الريادة عالمياً في تمكين الإنسان
-            <br />
-            والمجتمع، وتعزيز تنافسية سوق
-            <br />
-            العمل
+      <div className="min-h-[85vh] flex items-center">
+        <div className="w-fit max-w-[900px] py-24 md:py-32 lg:py-40 pr-0 text-right mr-auto">
+          <h1
+            className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-[56px] leading-[1.35] mb-6"
+            style={{
+              fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
+              fontWeight: 700,
+            }}
+          >
+            مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
           </h1>
-          
-          {/* Subtitle */}
-          <p className="text-white/90 text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl font-hrsd-regular">
-            تمكين الفرد والمجتمع والمؤسسات وخلق سوق عمل يحفز الابتكار والاستدامة ومواكبة التحولات
-            <br />
-            من خلال سياسات وتشريعات مرنة وفاعلة
+
+          <p
+            className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed mb-8 max-w-2xl"
+            style={{
+              fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
+              fontWeight: 400,
+            }}
+          >
+            تأهيل ، تدريب ، تمكين ، تقييم الأداء الفني
           </p>
+
+          <Link
+            to="/login"
+            className="inline-flex items-center justify-center bg-white text-[#1D4D37]
+                       px-8 py-3 rounded-lg text-base font-hrsd-medium
+                       hover:bg-gray-100 transition-colors duration-200"
+          >
+            المزيد
+          </Link>
         </div>
       </div>
     </section>
