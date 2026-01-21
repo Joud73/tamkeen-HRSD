@@ -56,8 +56,8 @@ const SaudiHeatmapMap = ({
     }
   }, [handleRegionClick]);
   return <TooltipProvider delayDuration={100}>
-      <div className="relative w-full aspect-[730/600] max-w-[600px] mx-auto">
-        <svg viewBox="0 0 730 600" className="w-full h-full" role="img" aria-label="خريطة المملكة العربية السعودية التفاعلية">
+      <div className="relative w-full h-full flex items-center justify-center">
+        <svg viewBox="0 0 730 600" className="w-full h-full max-h-full" preserveAspectRatio="xMidYMid meet" role="img" aria-label="خريطة المملكة العربية السعودية التفاعلية">
           {/* Background */}
           <rect x="0" y="0" width="730" height="600" fill="#F9FAFB" rx="8" />
 
