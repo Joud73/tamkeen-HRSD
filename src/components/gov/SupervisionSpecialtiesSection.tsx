@@ -1,4 +1,5 @@
 import { TrendingUp, BadgeCheck, Lightbulb, RefreshCw } from "lucide-react";
+
 const specialties = [
   {
     id: 1,
@@ -21,6 +22,7 @@ const specialties = [
     icon: Lightbulb,
   },
 ];
+
 export default function SupervisionSpecialtiesSection() {
   return (
     <section dir="rtl" className="relative bg-[#f8f9fa] py-16 overflow-hidden">
@@ -32,33 +34,47 @@ export default function SupervisionSpecialtiesSection() {
         {/* Section Header */}
         <div className="mb-12">
           <h2
-            className="text-3xl md:text-4xl font-bold mb-4 text-right text-black"
+            className="text-3xl md:text-4xl font-bold mb-2 text-right text-black"
             style={{
               fontFamily: "'HRSDGov-Bold', 'Cairo', system-ui, sans-serif",
             }}
           >
             اختصاصات الإشراف الفني
           </h2>
-          {/* Decorative lines */}
-          <div className="flex justify-end gap-2"></div>
+          {/* Micro-copy subtitle */}
+          <p
+            className="text-sm md:text-base text-gray-600 text-right mt-2"
+            style={{
+              fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
+            }}
+          >
+            نهدف من خلالها إلى تمكين منظمات القطاع غير الربحي وتعزيز أثرها التنموي
+          </p>
         </div>
 
         {/* Cards Grid - 2x2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {specialties.map((item, index) => {
+          {specialties.map((item) => {
             const Icon = item.icon;
-            // Determine icon position: right column (index 0, 2) = icon on right, left column (index 1, 3) = icon on left
-            const isRightColumn = index % 2 === 0;
             return (
               <div
                 key={item.id}
-                className="relative bg-white border border-gray-100 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-200"
+                className="group relative rounded-lg p-8 border border-gray-100 shadow-sm 
+                           hover:shadow-md hover:-translate-y-0.5 
+                           transition-all duration-150 ease-out overflow-hidden"
+                style={{
+                  background: "linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)",
+                }}
               >
                 <div className="flex items-center gap-6 flex-row">
-                  {/* Icon - always on the right in RTL */}
+                  {/* Icon - softer green, reduced size, consistent stroke */}
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 flex items-center justify-center">
-                      <Icon className="w-12 h-12" style={{ color: "#14573A" }} strokeWidth={1.5} />
+                    <div className="w-14 h-14 flex items-center justify-center">
+                      <Icon 
+                        className="w-10 h-10 transition-colors duration-150 group-hover:text-[#1B8354]" 
+                        style={{ color: "#2D8B5E" }} 
+                        strokeWidth={1.25} 
+                      />
                     </div>
                   </div>
 
@@ -72,6 +88,11 @@ export default function SupervisionSpecialtiesSection() {
                     {item.text}
                   </p>
                 </div>
+
+                {/* Partial accent line - RTL aligned (right side) */}
+                <div 
+                  className="absolute bottom-0 right-0 h-[2px] w-[28%] bg-[#2D8B5E] rounded-full"
+                />
               </div>
             );
           })}
