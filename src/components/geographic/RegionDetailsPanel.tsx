@@ -27,44 +27,44 @@ const SummaryView = ({
   startCounting
 }: {
   startCounting: boolean;
-}) => <div className="space-y-3">
-    <h3 className="font-hrsd-bold text-lg text-[#1D4D37] text-right mb-3">
+}) => <div className="h-full flex flex-col">
+    <h3 className="font-hrsd-bold text-base text-[#1D4D37] text-right mb-2">
       ملخص الإحصائيات
     </h3>
 
     {/* Total */}
-    <div className="bg-[#1D4D37] rounded-xl p-4 text-center text-white">
-      <div className="text-3xl font-hrsd-bold mb-0.5">
+    <div className="bg-[#1D4D37] rounded-lg p-3 text-center text-white mb-2">
+      <div className="text-2xl font-hrsd-bold">
         +<AnimatedCount value={totalCount} startCounting={startCounting} />
       </div>
-      <div className="text-sm font-hrsd-medium">الإجمالي</div>
+      <div className="text-xs font-hrsd-medium">الإجمالي</div>
     </div>
 
     {/* Summary Stats */}
-    <div className="grid grid-cols-2 gap-2">
-      {summaryStats.map((stat, idx) => <div key={idx} className="bg-[#1D4D37] rounded-xl p-3 text-center text-white">
-          <div className="text-xl font-hrsd-bold mb-0.5">
+    <div className="grid grid-cols-2 gap-2 mb-2">
+      {summaryStats.map((stat, idx) => <div key={idx} className="bg-[#1D4D37] rounded-lg p-2 text-center text-white">
+          <div className="text-lg font-hrsd-bold">
             +<AnimatedCount value={stat.count} startCounting={startCounting} />
           </div>
-          <div className="text-xs font-hrsd-medium">{stat.label}</div>
+          <div className="text-[10px] font-hrsd-medium">{stat.label}</div>
         </div>)}
     </div>
 
     {/* Top regions list */}
-    <div className="mt-3">
-      <h4 className="font-hrsd-semibold text-gray-700 text-right mb-2 text-sm">
+    <div className="flex-1 flex flex-col min-h-0">
+      <h4 className="font-hrsd-semibold text-gray-700 text-right mb-1.5 text-sm">
         أعلى المناطق
       </h4>
-      <div className="space-y-1.5">
-        {[...regions].sort((a, b) => b.count - a.count).slice(0, 3).map((region, idx) => <div key={region.id} className="flex items-center justify-between bg-gray-50 rounded-lg p-2 border border-gray-100">
-              <span className="font-hrsd-bold text-[#1B8354] text-base">
+      <div className="space-y-1">
+        {[...regions].sort((a, b) => b.count - a.count).slice(0, 3).map((region, idx) => <div key={region.id} className="flex items-center justify-between bg-gray-50 rounded-lg py-1.5 px-2 border border-gray-100">
+              <span className="font-hrsd-bold text-[#1B8354] text-sm">
                 {region.count}
               </span>
               <div className="flex items-center gap-2">
                 <span className="font-hrsd-medium text-gray-700 text-sm">
                   {region.name}
                 </span>
-                <span className="w-5 h-5 rounded-full bg-[#1D4D37] text-white text-xs flex items-center justify-center font-hrsd-bold">
+                <span className="w-4 h-4 rounded-full bg-[#1D4D37] text-white text-[10px] flex items-center justify-center font-hrsd-bold">
                   {idx + 1}
                 </span>
               </div>
@@ -138,7 +138,7 @@ const RegionDetailsPanel = ({
   }
 
   // Desktop: Side panel
-  return <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 h-full overflow-auto">
+  return <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-3 h-full">
       {selectedRegion ? <RegionDetailView region={selectedRegion} onClose={onClose} /> : <SummaryView startCounting={startCounting} />}
     </div>;
 };
