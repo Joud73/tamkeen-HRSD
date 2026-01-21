@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 export default function HeroGov() {
   return (
     <section dir="rtl" className="relative min-h-[85vh] bg-[#1D4D37]">
-      <div className="min-h-[85vh] flex items-center">
-        <div className="w-fit max-w-[900px] py-24 md:py-32 lg:py-40 pr-0 text-right mr-auto">
+      {/* Pin the content to the right regardless of parent centering */}
+      <div className="absolute inset-0 flex items-center justify-end">
+        <div className="max-w-[900px] w-full text-right pr-0 mr-0 ml-auto">
           <h1
             className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-[56px] leading-[1.35] mb-6"
             style={{
