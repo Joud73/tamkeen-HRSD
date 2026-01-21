@@ -56,18 +56,20 @@ const SummaryView = ({
         أعلى المناطق
       </h4>
       <div className="space-y-1">
-        {[...regions].sort((a, b) => b.count - a.count).slice(0, 3).map((region, idx) => <div key={region.id} className="flex items-center justify-between bg-gray-50 rounded-lg py-1.5 px-2 border border-gray-100">
-              <span className="font-hrsd-bold text-[#1B8354] text-sm">
-                {region.count}
-              </span>
+        {[...regions].sort((a, b) => b.count - a.count).slice(0, 3).map((region, idx) => <div key={region.id} className="flex items-center justify-between w-full bg-gray-50 rounded-lg py-1.5 px-2 border border-gray-100" dir="rtl">
+              {/* RIGHT side - City name and badge */}
               <div className="flex items-center gap-2">
-                <span className="font-hrsd-medium text-gray-700 text-sm">
-                  {region.name}
-                </span>
                 <span className="w-4 h-4 rounded-full bg-[#1D4D37] text-white text-[10px] flex items-center justify-center font-hrsd-bold">
                   {idx + 1}
                 </span>
+                <span className="font-hrsd-medium text-gray-700 text-sm">
+                  {region.name}
+                </span>
               </div>
+              {/* LEFT side - Count */}
+              <span className="font-hrsd-bold text-[#1B8354] text-sm">
+                {region.count}
+              </span>
             </div>)}
       </div>
     </div>
