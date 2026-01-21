@@ -1,11 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { RegionData, getHeatmapColor } from "./types";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Accurate SVG paths for Saudi Arabia administrative regions
 // Source: @svg-maps/saudi-arabia
@@ -22,107 +17,64 @@ const regionPaths: Record<string, string> = {
   najran: "m 399.93718,569.40041 -17.23,-2.36 -6.25,-0.42 -6.25,-4.03 -19.73,0 -1.39,0.98 -1.95,0.27 -2.64,-1.39 -2.7,0.12 -8.79,1.12 -0.82,1.52 -1.08,-1.34 -2.95,0.53 -1.37,1.92 -2.61,-0.72 -1.6,0.43 -1.97,-0.29 -0.68,-0.89 -2.02,0.36 -2.59,-2.7 0.07,-1.04 0,0 1.15,-3.24 -1.3,-5.93 0.67,-1.47 0.77,-8.37 -1.38,-6.12 0.08,-1.66 0.88,-1.69 3.08,-3.43 8.21,-7.56 1.08,-1.48 1.06,-3.02 0.95,-1.05 6.32,-2.02 2.38,-1.42 1.22,-1.41 0.97,-2.22 0.17,-2.12 -1.76,-8.57 0.69,-1.59 3.85,-1.94 1.12,-1.39 0.04,-6.08 0,0 8.51,5.59 5.22,2.39 3.24,0.72 8.85,0.7 58.85,-5.04 16.39,-2.39 10.13,-2.63 0,0 -7.99,63.49 -2.59,24.45 0,0 -7.48,4.72 -7.03,-0.36 -8.18,-11.04 -10.7,1.53 z",
   baha: "m 260.01718,447.12041 -2.15,6.42 0.23,0.79 2.05,1.97 0.11,1.59 -1.04,1.45 -5.82,3.97 -0.84,1.79 0.23,3.55 -4.26,8.69 0,0 -0.79,0.51 -4.62,0.04 -1.52,0.58 -2.4,4.46 -2.58,8.99 -2.21,1.08 -2.58,0 -1.59,-1.05 -2.06,-3.06 -3.68,-2.13 -1.3,-1.54 0.26,-4.43 -0.91,-3.89 0.31,-5.29 -0.97,-1.52 -3.65,-1.1 -0.67,-0.7 -0.18,-1.41 4.01,-4.1 7.73,-1.86 1.37,-3.56 2.69,-4.63 0.12,-2.35 -1.11,-4.55 0.7,-2.11 1.36,-1.42 2.26,-0.31 1.43,0.61 1.21,1.45 1.28,3.78 1.92,1.46 4.61,-1.77 4.17,0.2 5.41,-2.75 1.49,0.22 z",
   jawf: "m 13.437176,126.05041 0.66,-2.82 0.74,-0.76 -0.18,-0.82 1.04,-0.61 -0.48,-1.92 0.81,-0.46 -0.24,-0.86 0.61,-1.36 38.21,6.79 14.65,-12.07 8.85,-14.779995 25.760004,-5.16 5.78,-13.18 11.32,-6.78 -34.260004,-39.72 33.690004,-9.9 0,0 -1.27,6.06 -2.84,8.34 0.58,6.72 4.7,3.69 3.89,6.96 2.19,1.9 2.31,0.62 3.42,0.04 13.58,-1.49 7.25,-1.36 8.05,-0.14 19.01,3.45 4.38,0.08 1.78,0.77 3.98,3.44 3.7,1.12 17.95,0.62 7.01,-0.88 2.7,1.26 7.57,6.08 3.23,0.65 5.45,-0.04 3.6,1.59 2.09,2.5 3.13,6.39 7.78,6.26 0.1,1.57 -5.26,4.73 -27.27,16.849995 -6.16,4.72 -1.4,2.47 -0.39,9.36 -0.89,6.06 -5.62,5.69 0,0 -3.04,-0.66 -12.9,5.53 -13.07,7.6 -4.29,0.69 -9.93,4.38 -6.27,3.54 -3.69,4.2 0,0 -1.41,-1.21 -1.63,-0.49 -3.39,1 0,0 -3.56,1.88 -1.73,0.08 0,0 -1.3,-1.08 -0.78,-2.47 -0.75,-0.21 0,0 -1.64,0.32 0,0 -0.77,-0.47 0,0 -1.54,-1.26 0,0 -0.8,0.04 -2.4,1.75 0,0 -10.13,-1.18 0,0 -3.32,-1.1 0,0 -2.42,-1.21 -3.47,-3.55 0,0 -0.75,-1.63 0,0 -0.57,-2.65 0,0 -0.31,-4.39 0.45,-7.19 0,0 -0.46,-1.64 0,0 -1.57,-0.94 -0.77,0.41 0,0 -2.87,2.88 0,0 -1.58,0.72 0,0 -1.26,1.47 0,0 -2.58,6.06 0,0 -1.57,0.57 0,0 -8.550004,-0.71 -4.62,-1.8 -5.16,-0.72 0,0 -4.47,0.84 0,0 -4.39,1.03 -3.28,1.37 0,0 -1.81,0.33 -1.72,-0.64 0,0 -6.23,-8.13 0,0 -1.17,-1.64 0,0 -1.99,-2.37 -2.51,-1.93 0,0 -5.08,-1.54 0,0 -2.61,-0.51 0,0 -3.38,0.17 0,0 -3.31,0.69 0,0 -2.35,-0.22 0,0 -6.03,1.09 0,0 -3.27,0.83 0,0 -2.3,2.26 -1.93,0.12 0,0 -5.24,-0.69 0,0 -2.49,-0.78 -1.64,0.61 -3.23,-0.16 0,0 0.39,-2.96 0.64,-1.27 -0.41,-1.66 0.82,-1.35 z",
-  asir: "m 303.24718,558.19041 -1.98,-3.01 -2.95,-0.6 -0.68,-0.57 -2.65,-4.63 -3.6,-1.82 0.14,-4.42 -1,-1.12 -2.21,0.88 -2.87,2.16 -1.21,2.1 -1.66,6.75 -0.57,0.66 -1.4,0.14 -1.52,-0.63 -3.25,-3.16 -1.59,-3.73 -1.28,-1.24 -8.28,-0.4 -0.73,-0.64 -0.85,-2.89 -1.08,-1.35 -2.16,-0.23 -2.94,0.45 -0.74,-0.47 -0.28,-1.5 0.83,-7.27 -1.27,-1.03 -4.46,0.47 0,0 1.5,-6.41 -2.97,-9.14 -2.11,-1.2 -6.71,-0.21 -1.43,-0.49 -1.03,-1.47 -0.61,-2.97 0.49,-10 1.97,1.88 0.75,-0.06 3.87,-2.82 2.24,-0.38 4.74,0.44 1.52,-0.75 0.76,-1.42 1.27,-4.6 -2.19,-4.44 1.31,-6.92 -0.21,-1.51 -1.85,-1.89 -2.29,-0.13 -1.5,0.74 0,0 4.26,-8.69 -0.23,-3.55 0.84,-1.79 5.82,-3.97 1.04,-1.45 -0.11,-1.59 -2.05,-1.97 -0.23,-0.79 2.15,-6.42 0,0 4.67,9.08 1.4,1.02 2.28,0.24 2.31,-1.13 10.11,-9.25 6.41,-3.06 4.26,-3.8 4.55,-0.28 3.16,-1.52 2.26,-0.24 5.21,1.3 5.72,-3.77 4.02,-1.46 0,0 5.76,5.01 3.07,4.93 3.6,3.6 1.06,1.73 -0.08,2.96 -3.34,6.09 -1.23,6.11 0.22,1.6 2.75,2.96 3.91,6.36 13.54,12.09 0,0 -0.04,6.08 -1.12,1.39 -3.85,1.94 -0.69,1.59 1.76,8.57 -0.17,2.12 -0.97,2.22 -1.22,1.41 -2.38,1.42 -6.32,2.02 -0.95,1.05 -1.06,3.02 -1.08,1.48 -8.21,7.56 -3.08,3.43 -0.88,1.69 -0.08,1.66 1.38,6.12 -0.77,8.37 -0.67,1.47 1.3,5.93 -1.15,3.24 0,0 -0.11,1.8 -2.37,-2.3 -5.29,-3.37 -2.46,-0.34 z",
+  asir: "m 303.24718,558.19041 -1.98,-3.01 -2.95,-0.6 -0.68,-0.57 -2.65,-4.63 -3.6,-1.82 0.14,-4.42 -1,-1.12 -2.21,0.88 -2.87,2.16 -1.21,2.1 -1.66,6.75 -0.57,0.66 -1.4,0.14 -1.52,-0.63 -3.25,-3.16 -1.59,-3.73 -1.28,-1.24 -8.28,-0.4 -0.73,-0.64 -0.85,-2.89 -1.08,-1.35 -2.16,-0.23 -2.94,0.45 -0.74,-0.47 -0.28,-1.5 0.83,-7.27 -1.27,-1.03 -4.46,0.47 0,0 1.5,-6.41 -2.97,-9.14 -2.11,-1.2 -6.71,-0.21 -1.43,-0.49 -1.03,-1.47 -0.61,-2.97 0.49,-10 1.97,1.88 0.75,-0.06 3.87,-2.82 2.24,-0.38 4.74,0.44 1.52,-0.75 0.76,-1.42 1.27,-4.6 -2.19,-4.44 1.31,-6.92 -0.21,-1.51 -1.85,-1.89 -2.29,-0.13 -1.5,0.74 0,0 4.26,-8.69 -0.23,-3.55 0.84,-1.79 5.82,-3.97 1.04,-1.45 -0.11,-1.59 -2.05,-1.97 -0.23,-0.79 2.15,-6.42 0,0 4.67,9.08 1.4,1.02 2.28,0.24 2.31,-1.13 10.11,-9.25 6.41,-3.06 4.26,-3.8 4.55,-0.28 3.16,-1.52 2.26,-0.24 5.21,1.3 5.72,-3.77 4.02,-1.46 0,0 5.76,5.01 3.07,4.93 3.6,3.6 1.06,1.73 -0.08,2.96 -3.34,6.09 -1.23,6.11 0.22,1.6 2.75,2.96 3.91,6.36 13.54,12.09 0,0 -0.04,6.08 -1.12,1.39 -3.85,1.94 -0.69,1.59 1.76,8.57 -0.17,2.12 -0.97,2.22 -1.22,1.41 -2.38,1.42 -6.32,2.02 -0.95,1.05 -1.06,3.02 -1.08,1.48 -8.21,7.56 -3.08,3.43 -0.88,1.69 -0.08,1.66 1.38,6.12 -0.77,8.37 -0.67,1.47 1.3,5.93 -1.15,3.24 0,0 -0.11,1.8 -2.37,-2.3 -5.29,-3.37 -2.46,-0.34 z"
 };
-
 interface SaudiHeatmapMapProps {
   regions: RegionData[];
   selectedRegion: RegionData | null;
   onRegionSelect: (region: RegionData | null) => void;
 }
-
 const SaudiHeatmapMap = ({
   regions,
   selectedRegion,
-  onRegionSelect,
+  onRegionSelect
 }: SaudiHeatmapMapProps) => {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
-
-  const { min, max } = useMemo(() => {
-    const counts = regions.map((r) => r.count);
-    return { min: Math.min(...counts), max: Math.max(...counts) };
+  const {
+    min,
+    max
+  } = useMemo(() => {
+    const counts = regions.map(r => r.count);
+    return {
+      min: Math.min(...counts),
+      max: Math.max(...counts)
+    };
   }, [regions]);
-
   const regionMap = useMemo(() => {
-    return new Map(regions.map((r) => [r.id, r]));
+    return new Map(regions.map(r => [r.id, r]));
   }, [regions]);
-
-  const handleRegionClick = useCallback(
-    (regionId: string) => {
-      const region = regionMap.get(regionId);
-      if (region) {
-        onRegionSelect(selectedRegion?.id === regionId ? null : region);
-      }
-    },
-    [regionMap, onRegionSelect, selectedRegion]
-  );
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent, regionId: string) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleRegionClick(regionId);
-      }
-    },
-    [handleRegionClick]
-  );
-
-  return (
-    <TooltipProvider delayDuration={100}>
+  const handleRegionClick = useCallback((regionId: string) => {
+    const region = regionMap.get(regionId);
+    if (region) {
+      onRegionSelect(selectedRegion?.id === regionId ? null : region);
+    }
+  }, [regionMap, onRegionSelect, selectedRegion]);
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, regionId: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleRegionClick(regionId);
+    }
+  }, [handleRegionClick]);
+  return <TooltipProvider delayDuration={100}>
       <div className="relative w-full aspect-[730/600] max-w-[600px] mx-auto">
-        <svg
-          viewBox="0 0 730 600"
-          className="w-full h-full"
-          role="img"
-          aria-label="خريطة المملكة العربية السعودية التفاعلية"
-        >
+        <svg viewBox="0 0 730 600" className="w-full h-full" role="img" aria-label="خريطة المملكة العربية السعودية التفاعلية">
           {/* Background */}
-          <rect
-            x="0"
-            y="0"
-            width="730"
-            height="600"
-            fill="#F9FAFB"
-            rx="8"
-          />
+          <rect x="0" y="0" width="730" height="600" fill="#F9FAFB" rx="8" />
 
           {/* Regions */}
           {Object.entries(regionPaths).map(([id, path]) => {
-            const region = regionMap.get(id);
-            if (!region) return null;
-
-            const fillColor = getHeatmapColor(region.count, min, max);
-            const isHovered = hoveredRegion === id;
-            const isSelected = selectedRegion?.id === id;
-
-            return (
-              <Tooltip key={id}>
+          const region = regionMap.get(id);
+          if (!region) return null;
+          const fillColor = getHeatmapColor(region.count, min, max);
+          const isHovered = hoveredRegion === id;
+          const isSelected = selectedRegion?.id === id;
+          return <Tooltip key={id}>
                 <TooltipTrigger asChild>
-                  <path
-                    d={path}
-                    fill={fillColor}
-                    stroke={isSelected ? "#1D4D37" : isHovered ? "#14573A" : "#FFFFFF"}
-                    strokeWidth={isSelected ? 2.5 : isHovered ? 2 : 1}
-                    className="cursor-pointer transition-all duration-200 outline-none focus:outline-none"
-                    style={{
-                      filter: isHovered || isSelected ? "brightness(0.95)" : "none",
-                    }}
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`${region.name}: ${region.count} إشراف`}
-                    onMouseEnter={() => setHoveredRegion(id)}
-                    onMouseLeave={() => setHoveredRegion(null)}
-                    onClick={() => handleRegionClick(id)}
-                    onKeyDown={(e) => handleKeyDown(e, id)}
-                    onFocus={() => setHoveredRegion(id)}
-                    onBlur={() => setHoveredRegion(null)}
-                  />
+                  <path d={path} fill={fillColor} stroke={isSelected ? "#1D4D37" : isHovered ? "#14573A" : "#FFFFFF"} strokeWidth={isSelected ? 2.5 : isHovered ? 2 : 1} className="cursor-pointer transition-all duration-200 outline-none focus:outline-none" style={{
+                filter: isHovered || isSelected ? "brightness(0.95)" : "none"
+              }} tabIndex={0} role="button" aria-label={`${region.name}: ${region.count} إشراف`} onMouseEnter={() => setHoveredRegion(id)} onMouseLeave={() => setHoveredRegion(null)} onClick={() => handleRegionClick(id)} onKeyDown={e => handleKeyDown(e, id)} onFocus={() => setHoveredRegion(id)} onBlur={() => setHoveredRegion(null)} />
                 </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  className="bg-white border border-gray-200 shadow-lg px-4 py-3 rounded-lg z-50"
-                  dir="rtl"
-                >
+                <TooltipContent side="top" className="bg-white border border-gray-200 shadow-lg px-4 py-3 rounded-lg z-50" dir="rtl">
                   <div className="text-center">
                     <p className="font-hrsd-bold text-[#1D4D37] text-lg mb-1">
                       {region.name}
@@ -135,26 +87,17 @@ const SaudiHeatmapMap = ({
                     </p>
                   </div>
                 </TooltipContent>
-              </Tooltip>
-            );
-          })}
+              </Tooltip>;
+        })}
         </svg>
 
         {/* Legend */}
         <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-md border border-gray-100">
-          <p className="text-xs font-hrsd-medium text-gray-600 mb-2 text-right">
-            مقياس الكثافة
-          </p>
+          
           <div className="flex items-center gap-1">
-            {["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32", "#1B5E20"].map(
-              (color, i) => (
-                <div
-                  key={i}
-                  className="w-6 h-4 rounded-sm"
-                  style={{ backgroundColor: color }}
-                />
-              )
-            )}
+            {["#E8F5E9", "#A5D6A7", "#66BB6A", "#2E7D32", "#1B5E20"].map((color, i) => <div key={i} className="w-6 h-4 rounded-sm" style={{
+            backgroundColor: color
+          }} />)}
           </div>
           <div className="flex justify-between text-[10px] text-gray-500 mt-1 font-hrsd-regular">
             <span>أقل</span>
@@ -162,8 +105,6 @@ const SaudiHeatmapMap = ({
           </div>
         </div>
       </div>
-    </TooltipProvider>
-  );
+    </TooltipProvider>;
 };
-
 export default SaudiHeatmapMap;
