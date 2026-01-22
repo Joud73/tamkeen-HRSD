@@ -12,13 +12,11 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 
 const steps = [
-  { id: 1, title: "التسجيل", description: "إنشاء حساب المنظمة", icon: UserPlus, path: "/register" },
-  { id: 2, title: "التقييم الذاتي", description: "التقييم الذكي", icon: ClipboardCheck, path: "/technical-indicators/altawajuh" },
-  { id: 3, title: "اختيار الدورات", description: "مساقات التقييم الفني", icon: BookOpen, path: "/dashboard" },
-  { id: 4, title: "رفع المتطلبات", description: "تقديم الوثائق", icon: Upload, path: "/settings" },
-  { id: 5, title: "التدريب", description: "حضور الدورات", icon: GraduationCap, path: "/training-stage" },
-  { id: 6, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: "/dashboard" },
-  { id: 7, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: "/dashboard" },
+  { id: 1, title: "التسجيل", description: "تسجيل الدخول", icon: UserPlus, path: "/login" },
+  { id: 2, title: "التقييم الذاتي", description: "التقييم الذكي ورفع الشواهد", icon: ClipboardCheck, path: "/technical-indicators/altawajuh" },
+  { id: 3, title: "اختيار الدورات", description: "اختيار الدورات والتدريب", icon: BookOpen, path: "/training-stage" },
+  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: "/dashboard" },
+  { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: "/dashboard" },
 ];
 
 const OrganizationJourney = () => {
