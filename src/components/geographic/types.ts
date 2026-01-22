@@ -5,27 +5,27 @@ export interface RegionData {
 }
 
 export const regions: RegionData[] = [
-  { id: "riyadh", name: "الرياض", count: 394 },
-  { id: "makkah", name: "مكة المكرمة", count: 424 },
-  { id: "madinah", name: "المدينة المنورة", count: 132 },
-  { id: "qassim", name: "القصيم", count: 203 },
-  { id: "eastern", name: "المنطقة الشرقية", count: 192 },
-  { id: "hail", name: "حائل", count: 151 },
-  { id: "asir", name: "عسير", count: 219 },
-  { id: "najran", name: "نجران", count: 112 },
-  { id: "jazan", name: "جازان", count: 112 },
-  { id: "jawf", name: "الجوف", count: 53 },
-  { id: "northern", name: "الحدود الشمالية", count: 36 },
-  { id: "baha", name: "الباحة", count: 78 },
-  { id: "tabuk", name: "تبوك", count: 65 },
+  { id: "riyadh", name: "الرياض", count: 452 },
+  { id: "makkah", name: "مكة المكرمة", count: 537 },
+  { id: "madinah", name: "المدينة المنورة", count: 158 },
+  { id: "qassim", name: "القصيم", count: 248 },
+  { id: "eastern", name: "المنطقة الشرقية", count: 223 },
+  { id: "hail", name: "حائل", count: 185 },
+  { id: "asir", name: "عسير", count: 263 },
+  { id: "najran", name: "نجران", count: 55 },
+  { id: "jazan", name: "جازان", count: 134 },
+  { id: "jawf", name: "الجوف", count: 62 },
+  { id: "northern", name: "الحدود الشمالية", count: 51 },
+  { id: "baha", name: "الباحة", count: 94 },
+  { id: "tabuk", name: "تبوك", count: 74 },
 ];
 
 export const summaryStats = [
-  { label: "منظمة اهلية", count: 1938 },
-  { label: "مؤسسة اهلية", count: 41 },
+  { label: "جمعية اهلية", count: 2463 },
+  { label: "مؤسسة اهلية", count: 73 },
 ];
 
-export const totalCount = 1978;
+export const totalCount = 2536;
 
 // Heatmap color scale (light mint to deep teal)
 export const heatmapColors = [
