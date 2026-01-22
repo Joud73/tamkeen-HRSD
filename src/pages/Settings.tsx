@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SettingsHeader from "@/components/SettingsHeader";
 import Footer from "@/components/Footer";
+import OrganizationJourney from "@/components/OrganizationJourney";
 import { Building2, UserCircle } from "lucide-react";
 
 const Settings = () => {
@@ -10,9 +11,15 @@ const Settings = () => {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <SettingsHeader />
+      
+      {/* Spacer for fixed header */}
+      <div className="h-20" />
+      
+      {/* Organization Journey */}
+      <OrganizationJourney />
 
       {/* Main Content */}
-      <main className="flex-1 pt-24 pb-12 relative z-10">
+      <main className="flex-1 pb-12 relative z-10">
         <div className="max-w-[1100px] mx-auto px-8">
           {/* Breadcrumb */}
           <div className="mb-6">

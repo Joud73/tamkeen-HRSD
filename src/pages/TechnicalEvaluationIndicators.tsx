@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Upload, Check, FileText, Eye, MessageSquare, Trash2, EyeOff, Pencil, Plus, X, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import OrganizationJourney from "@/components/OrganizationJourney";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -930,7 +931,13 @@ const TechnicalEvaluationIndicators = () => {
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       
-      <main className="flex-1 pt-24 pb-12">
+      {/* Spacer for fixed header */}
+      <div className="h-20" />
+      
+      {/* Organization Journey */}
+      <OrganizationJourney />
+      
+      <main className="flex-1 pb-12">
         {/* Side Patterns - Curved Lines */}
         <div 
           className="fixed left-0 top-0 bottom-0 w-24 pointer-events-none z-0"
