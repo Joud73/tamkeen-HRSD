@@ -15,7 +15,7 @@ const steps = [
   { id: 1, title: "التسجيل", description: "تسجيل الدخول", icon: UserPlus, path: "/login" },
   { id: 2, title: "التقييم الذاتي", description: "التقييم الذكي ورفع الشواهد", icon: ClipboardCheck, path: "/dashboard" },
   { id: 3, title: "اختيار الدورات", description: "اختيار الدورات والتدريب", icon: BookOpen, path: "/training-stage" },
-  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: "/dashboard" },
+  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: null },
   { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: "/dashboard" },
 ];
 
@@ -31,8 +31,10 @@ const OrganizationJourney = () => {
 
   const currentStep = getCurrentStepFromPath();
 
-  const handleStepClick = (path: string) => {
-    navigate(path);
+  const handleStepClick = (path: string | null) => {
+    if (path) {
+      navigate(path);
+    }
   };
 
   return (
@@ -68,7 +70,7 @@ const OrganizationJourney = () => {
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col items-center relative cursor-pointer group"
+                  className={`flex flex-col items-center relative group ${step.path ? 'cursor-pointer' : 'cursor-default'}`}
                   style={{ width: `${100 / steps.length}%` }}
                   onClick={() => handleStepClick(step.path)}
                 >
