@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Headphones, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import OrganizationJourney from "@/components/OrganizationJourney";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import loginBg from "@/assets/hero-bg.png";
@@ -502,10 +503,16 @@ const Register = () => {
     <div className="min-h-screen flex flex-col">
       {/* Header - reused from homepage */}
       <Header />
+      
+      {/* Spacer for fixed header */}
+      <div className="h-20" />
+      
+      {/* Organization Journey */}
+      <OrganizationJourney />
 
       {/* Main content with background */}
       <main
-        className="flex-1 relative pt-20"
+        className="flex-1 relative"
         style={{
           backgroundImage: `url(${loginBg})`,
           backgroundSize: "cover",
