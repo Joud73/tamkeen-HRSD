@@ -93,8 +93,8 @@ const OrganizationJourney = () => {
                     <div 
                       className="absolute inset-0 rounded-full transition-transform group-hover:scale-105"
                       style={{
-                        width: "50px",
-                        height: "50px",
+                        width: "64px",
+                        height: "64px",
                         background: "linear-gradient(145deg, #e6e6e6, #ffffff)",
                         boxShadow: "4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff",
                         top: "50%",
@@ -107,8 +107,8 @@ const OrganizationJourney = () => {
                     <div 
                       className="relative z-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-105"
                       style={{
-                        width: "50px",
-                        height: "50px",
+                        width: "64px",
+                        height: "64px",
                         background: isCurrent 
                           ? "linear-gradient(145deg, hsl(35, 91%, 54%), hsl(35, 91%, 45%))"
                           : isCompleted
@@ -123,13 +123,13 @@ const OrganizationJourney = () => {
                       <div 
                         className="rounded-full flex items-center justify-center bg-white"
                         style={{
-                          width: "38px",
-                          height: "38px",
+                          width: "50px",
+                          height: "50px",
                           boxShadow: "inset 1px 1px 3px rgba(0,0,0,0.05)",
                         }}
                       >
                         <Icon 
-                          className="w-4 h-4"
+                          className="w-5 h-5"
                           style={{ 
                             color: isCurrent 
                               ? "hsl(35, 91%, 54%)" 
