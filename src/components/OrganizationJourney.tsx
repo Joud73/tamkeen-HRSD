@@ -11,7 +11,7 @@ const steps = [
     path: "/dashboard",
   },
   { id: 3, title: "اختيار الدورات", description: "اختيار الدورات والتدريب", icon: BookOpen, path: "/training-stage" },
-  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: null },
+  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: "/under-review" },
   { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: "/certificate/:organizationId" },
 ];
 
