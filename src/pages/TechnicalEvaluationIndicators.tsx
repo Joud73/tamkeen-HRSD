@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Upload, Check, FileText, Eye, MessageSquare, Trash2, EyeOff, Pencil, Plus, X, ChevronDown } from "lucide-react";
-import Header from "@/components/Header";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -929,7 +929,7 @@ const TechnicalEvaluationIndicators = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header />
+      <AppHeader />
       
       {/* Spacer for fixed header */}
       <div className="h-20" />
