@@ -11,17 +11,27 @@ import {
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const steps = [
+// Dynamic path function for step 5 (certificate) - needs organizationId
+const getSteps = (organizationId?: string) => [
   { id: 1, title: "التسجيل", description: "تسجيل الدخول", icon: UserPlus, path: "/login" },
   { id: 2, title: "التقييم الذاتي", description: "التقييم الذكي ورفع الشواهد", icon: ClipboardCheck, path: "/dashboard" },
   { id: 3, title: "اختيار الدورات", description: "اختيار الدورات والتدريب", icon: BookOpen, path: "/training-stage" },
   { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: null },
-  { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: "/dashboard" },
+  { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: organizationId ? `/certificate/${organizationId}` : null },
 ];
 
-const OrganizationJourney = () => {
+interface OrganizationJourneyProps {
+  organizationId?: string;
+  isCertified?: boolean;
+}
+
+const OrganizationJourney = ({ organizationId, isCertified = false }: OrganizationJourneyProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Only enable certificate link if certified
+  const effectiveOrgId = isCertified ? organizationId : undefined;
+  const steps = getSteps(effectiveOrgId);
 
   const getCurrentStepFromPath = () => {
     const path = location.pathname;
