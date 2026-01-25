@@ -164,20 +164,20 @@ const SelfAssessmentStep = ({ onComplete, onSkip }: SelfAssessmentStepProps) => 
           {options.map((option) => (
             <div
               key={option.value}
-              className={`flex items-center space-x-3 space-x-reverse p-4 rounded-lg border-2 transition-all cursor-pointer ${
+              className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all cursor-pointer ${
                 answers[questions[currentQuestion].id] === option.value
                   ? "border-primary bg-primary/5"
                   : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => handleAnswer(option.value)}
             >
-              <RadioGroupItem value={option.value} id={option.value} />
               <Label 
                 htmlFor={option.value} 
-                className="flex-1 cursor-pointer font-hrsd text-base"
+                className="flex-1 cursor-pointer font-hrsd text-base text-right"
               >
                 {option.label}
               </Label>
+              <RadioGroupItem value={option.value} id={option.value} className="mr-3" />
             </div>
           ))}
         </RadioGroup>
