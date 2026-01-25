@@ -11,21 +11,22 @@ import {
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-// Dynamic path function for step 5 (certificate) - needs organizationId
+// Dynamic path function for steps - certificate needs organizationId
 const getSteps = (organizationId?: string) => [
   { id: 1, title: "التسجيل", description: "تسجيل الدخول", icon: UserPlus, path: "/login" },
   { id: 2, title: "التقييم الذاتي", description: "التقييم الذكي ورفع الشواهد", icon: ClipboardCheck, path: "/dashboard" },
   { id: 3, title: "اختيار الدورات", description: "اختيار الدورات والتدريب", icon: BookOpen, path: "/training-stage" },
-  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: null },
+  { id: 4, title: "مراجعة الإدارة", description: "اعتماد النتائج", icon: Users, path: "/under-review" },
   { id: 5, title: "النتيجة النهائية", description: "إصدار الشهادة", icon: Award, path: organizationId ? `/certificate/${organizationId}` : null },
 ];
 
 interface OrganizationJourneyProps {
   organizationId?: string;
   isCertified?: boolean;
+  assessmentStatus?: 'not_started' | 'in_progress' | 'under_review' | 'certified' | 'rejected';
 }
 
-const OrganizationJourney = ({ organizationId, isCertified = false }: OrganizationJourneyProps) => {
+const OrganizationJourney = ({ organizationId, isCertified = false, assessmentStatus }: OrganizationJourneyProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -34,6 +35,14 @@ const OrganizationJourney = ({ organizationId, isCertified = false }: Organizati
   const steps = getSteps(effectiveOrgId);
 
   const getCurrentStepFromPath = () => {
+    // If assessment_status is under_review, highlight step 4
+    if (assessmentStatus === 'under_review') {
+      return 4;
+    }
+    // If certified, highlight step 5
+    if (assessmentStatus === 'certified' || isCertified) {
+      return 5;
+    }
     const path = location.pathname;
     const matchedStep = steps.find(step => step.path === path);
     return matchedStep?.id || 1;
