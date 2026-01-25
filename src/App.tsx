@@ -18,6 +18,7 @@ import TrainingStage from "./pages/TrainingStage";
 import ContactUs from "./pages/ContactUs";
 import IndividualsJourney from "./pages/IndividualsJourney";
 import UnderReview from "./pages/UnderReview";
+import Certificate from "./pages/Certificate";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -75,6 +76,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <UnderReview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/certificate/:organizationId"
+              element={
+                <ProtectedRoute>
+                  <Certificate />
                 </ProtectedRoute>
               }
             />
