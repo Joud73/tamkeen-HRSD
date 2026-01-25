@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import SettingsHeader from "@/components/SettingsHeader";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import { Building2, UserCircle } from "lucide-react";
@@ -10,7 +10,7 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <SettingsHeader />
+      <AppHeader variant="org" />
       
       {/* Spacer for fixed header */}
       <div className="h-20" />

@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import DashboardHeroSection from "@/components/DashboardHeroSection";
 import OrganizationJourney from "@/components/OrganizationJourney";
@@ -6,7 +6,7 @@ import OrganizationJourney from "@/components/OrganizationJourney";
 const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <AppHeader variant="org" />
       
       {/* Spacer for fixed header */}
       <div className="h-20" />

@@ -10,7 +10,7 @@ import {
   Laptop,
   TrendingUp,
 } from "lucide-react";
-import Header from "@/components/Header";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import TrainingBreadcrumb from "@/components/training/TrainingBreadcrumb";
@@ -206,7 +206,7 @@ const TrainingStage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header - using platform header */}
-      <Header />
+      <AppHeader variant="org" />
       
       {/* Spacer for fixed header */}
       <div className="h-20" />
