@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "@/components/Header";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import IndividualJourney from "@/components/IndividualJourney";
 import LoginStep from "@/components/individual/LoginStep";
@@ -65,7 +65,7 @@ const IndividualsJourneyPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
+      <AppHeader variant="individual" />
       
       {/* Spacer for fixed header */}
       <div className="h-20" />
