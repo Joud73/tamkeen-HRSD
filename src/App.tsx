@@ -17,6 +17,7 @@ import TechnicalEvaluationIndicators from "./pages/TechnicalEvaluationIndicators
 import TrainingStage from "./pages/TrainingStage";
 import ContactUs from "./pages/ContactUs";
 import IndividualsJourney from "./pages/IndividualsJourney";
+import UnderReview from "./pages/UnderReview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,14 @@ const App = () => (
             />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/individuals-journey" element={<IndividualsJourney />} />
+            <Route
+              path="/under-review"
+              element={
+                <ProtectedRoute>
+                  <UnderReview />
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
