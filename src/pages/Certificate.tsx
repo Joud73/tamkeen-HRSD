@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Award, TrendingUp } from "lucide-react";
+import { Download, Printer, Award } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import hrsdLogo from "@/assets/logos/hrsd-colored.png";
 import visionLogo from "@/assets/logos/vision-2030-colored.png";
@@ -141,22 +141,19 @@ const Certificate = () => {
             ref={certificateRef}
             className="relative print:shadow-none"
           >
-            {/* Decorative background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-amber-50/30 rounded-3xl print:rounded-none" />
-            
-            <Card className="relative overflow-hidden border-2 border-[hsl(45,70%,65%)] shadow-2xl rounded-3xl print:shadow-none print:border print:rounded-none">
-              {/* Geometric pattern overlay */}
+            <Card className="relative overflow-hidden border border-emerald-200/60 shadow-xl rounded-2xl print:shadow-none print:border print:rounded-none bg-white">
+              {/* Subtle geometric pattern overlay */}
               <div 
-                className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                className="absolute inset-0 opacity-[0.02] pointer-events-none"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23065f46' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
 
-              {/* Top decorative border */}
-              <div className="h-3 bg-gradient-to-r from-emerald-600 via-[hsl(45,70%,55%)] to-emerald-600" />
+              {/* Top decorative border - thin elegant line */}
+              <div className="h-1.5 bg-gradient-to-r from-emerald-500/80 via-[hsl(45,65%,60%)]/70 to-emerald-500/80" />
 
-              <CardContent className="relative p-8 md:p-12 lg:p-16 bg-white">
+              <CardContent className="relative p-8 md:p-12 lg:p-16">
                 {/* Header with logos */}
                 <div className="flex items-start justify-between mb-10">
                   {/* Vision 2030 logo - left */}
@@ -181,9 +178,9 @@ const Certificate = () => {
                       شهادة اعتماد
                     </h1>
                     <div className="flex items-center justify-center gap-2">
-                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-[hsl(45,70%,55%)] to-transparent" />
-                      <div className="w-3 h-3 rotate-45 bg-[hsl(45,70%,55%)]" />
-                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-[hsl(45,70%,55%)] to-transparent" />
+                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent" />
+                      <div className="w-2 h-2 rotate-45 bg-emerald-500/60" />
+                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent" />
                     </div>
                   </div>
                 </div>
@@ -209,18 +206,50 @@ const Certificate = () => {
                   </p>
                 </div>
 
-                {/* Final Result Badge - Dynamic percentage or score */}
+                {/* Final Result - Soft green gradient with wave background */}
                 {finalResultValue && (
                   <div className="flex justify-center mb-12">
-                    <div className="relative bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-2xl px-10 py-6 shadow-lg">
-                      <div className="absolute inset-0 bg-white/10 rounded-2xl" />
-                      <div className="relative flex items-center gap-4">
-                        <TrendingUp className="w-7 h-7" />
-                        <div className="text-center">
-                          <p className="text-sm opacity-90 font-hrsd-medium mb-1">النتيجة النهائية</p>
-                          <p className="text-4xl font-hrsd-bold tracking-wide">{finalResultValue}</p>
-                        </div>
-                        <TrendingUp className="w-7 h-7" />
+                    <div className="relative overflow-hidden rounded-2xl shadow-md w-full max-w-sm">
+                      {/* Wave background pattern */}
+                      <div className="absolute inset-0">
+                        <svg 
+                          className="absolute bottom-0 left-0 w-full h-full" 
+                          viewBox="0 0 400 200" 
+                          preserveAspectRatio="none"
+                        >
+                          <defs>
+                            <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor="hsl(152, 60%, 92%)" />
+                              <stop offset="100%" stopColor="hsl(152, 55%, 88%)" />
+                            </linearGradient>
+                          </defs>
+                          <rect fill="url(#waveGrad1)" width="100%" height="100%" />
+                          <path 
+                            d="M0,120 C80,160 160,100 240,130 C320,160 400,100 400,120 L400,200 L0,200 Z" 
+                            fill="hsl(152, 50%, 85%)" 
+                            opacity="0.5"
+                          />
+                          <path 
+                            d="M0,150 C100,180 200,120 300,160 C350,180 400,150 400,170 L400,200 L0,200 Z" 
+                            fill="hsl(152, 45%, 80%)" 
+                            opacity="0.4"
+                          />
+                          <path 
+                            d="M0,170 C120,190 240,150 360,180 C380,185 400,175 400,180 L400,200 L0,200 Z" 
+                            fill="hsl(152, 40%, 75%)" 
+                            opacity="0.3"
+                          />
+                        </svg>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="relative py-10 px-8 text-center">
+                        <p className="text-sm text-emerald-700/80 font-hrsd-medium mb-3">
+                          النتيجة النهائية
+                        </p>
+                        <p className="text-5xl md:text-6xl font-hrsd-bold text-emerald-800 tracking-wide">
+                          {finalResultValue}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -228,13 +257,13 @@ const Certificate = () => {
 
                 {/* Decorative divider */}
                 <div className="flex items-center justify-center gap-4 mb-10">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border" />
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <div className="w-2 h-2 rounded-full bg-[hsl(45,70%,55%)]" />
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-emerald-200/60" />
+                  <div className="flex gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/60" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
                   </div>
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border" />
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-200/60" />
                 </div>
 
                 {/* Bottom Section - Three Columns */}
@@ -243,7 +272,7 @@ const Certificate = () => {
                   <div className="space-y-2">
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 mb-2">
                       <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <p className="text-sm text-muted-foreground font-hrsd-medium">تاريخ الإصدار</p>
@@ -252,9 +281,9 @@ const Certificate = () => {
 
                   {/* Certificate ID */}
                   <div className="space-y-2">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[hsl(45,70%,92%)] mb-2">
-                      <svg className="w-6 h-6 text-[hsl(45,70%,40%)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 mb-2">
+                      <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
                     <p className="text-sm text-muted-foreground font-hrsd-medium">رقم الشهادة</p>
@@ -265,7 +294,7 @@ const Certificate = () => {
                   <div className="space-y-2">
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 mb-2">
                       <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                       </svg>
                     </div>
                     <p className="text-sm text-muted-foreground font-hrsd-medium">كود التحقق</p>
@@ -275,7 +304,7 @@ const Certificate = () => {
 
                 {/* Official seal placeholder */}
                 <div className="flex justify-center mt-10">
-                  <div className="w-24 h-24 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full border-2 border-dashed border-emerald-300/50 flex items-center justify-center">
                     <span className="text-xs text-muted-foreground text-center px-2 font-hrsd-medium">
                       ختم الجهة
                       <br />
@@ -285,8 +314,8 @@ const Certificate = () => {
                 </div>
               </CardContent>
 
-              {/* Bottom decorative border */}
-              <div className="h-3 bg-gradient-to-r from-emerald-600 via-[hsl(45,70%,55%)] to-emerald-600" />
+              {/* Bottom decorative border - thin elegant line */}
+              <div className="h-1.5 bg-gradient-to-r from-emerald-500/80 via-[hsl(45,65%,60%)]/70 to-emerald-500/80" />
             </Card>
           </div>
 
