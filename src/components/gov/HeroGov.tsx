@@ -10,7 +10,7 @@ export default function HeroGov() {
             مركز التمكين الفني للمنظمات غير الربحية تحت إشراف وزارة الموارد البشرية والتنمية الاجتماعية فنياً
           </h1>
 
-          <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed mb-8 mx-auto max-w-2xl" style={{
+          <p className="text-white/80 text-sm lg:text-lg leading-relaxed mb-8 mx-auto max-w-2xl md:text-xl" style={{
           fontFamily: "'HRSDGov-Regular', 'Cairo', system-ui, sans-serif",
           fontWeight: 400
         }}>
