@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, ArrowRight, Clock, AlertCircle } from "lucide-react";
+import { FileText, ArrowRight, Hourglass, AlertCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const UnderReview = () => {
@@ -28,7 +28,7 @@ const UnderReview = () => {
       <div className="h-20" />
       
       <main className="flex-1" dir="rtl">
-        <OrganizationJourney />
+        <OrganizationJourney assessmentStatus="under_review" />
         
         {/* Light green background section */}
         <div className="bg-[hsl(150,40%,97%)] py-12">
@@ -36,17 +36,38 @@ const UnderReview = () => {
             <div className="max-w-2xl mx-auto">
               <Card className="shadow-xl border-2 border-[hsl(160,40%,85%)] bg-white">
                 <CardContent className="p-10 text-center">
-                  {/* Animated Clock Icon with Title */}
+                  {/* Animated Hourglass Icon with Title */}
                   <div className="flex items-center justify-center gap-4 mb-8">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Clock className="w-8 h-8 text-primary animate-pulse" />
-                    </div>
                     <h1 className="text-2xl font-hrsd-bold text-foreground">
                       تحت التدقيق
                     </h1>
-                    {/* Spinning indicator */}
-                    <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Hourglass 
+                        className="w-7 h-7 text-primary" 
+                        style={{
+                          animation: 'hourglassFlip 2s ease-in-out infinite'
+                        }}
+                      />
+                    </div>
                   </div>
+                  
+                  {/* Custom hourglass animation */}
+                  <style>{`
+                    @keyframes hourglassFlip {
+                      0%, 100% { 
+                        transform: rotate(0deg); 
+                      }
+                      25% { 
+                        transform: rotate(180deg); 
+                      }
+                      50% { 
+                        transform: rotate(180deg); 
+                      }
+                      75% { 
+                        transform: rotate(360deg); 
+                      }
+                    }
+                  `}</style>
                   
                   {/* Message */}
                   <p className="text-muted-foreground font-hrsd mb-3 leading-relaxed text-lg">
