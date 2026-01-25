@@ -1,10 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import OrganizationJourney from "@/components/OrganizationJourney";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Award, CheckCircle2 } from "lucide-react";
+import { Download, Printer, Award, TrendingUp } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import hrsdLogo from "@/assets/logos/hrsd-colored.png";
 import visionLogo from "@/assets/logos/vision-2030-colored.png";
@@ -13,11 +16,16 @@ const Certificate = () => {
   const { organizationId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   // Mock data - in production, this would come from the database
   const isCertified = true;
   const organizationName = "شركة التقنية المتقدمة";
-  const certificationGrade = "أ";
+  
+  // Final result data - supports percentage OR score format
+  const finalPercentage: number | null = 87; // Example: 87%
+  const finalScore: number | null = null; // Example: 87 / 100
+  
   const issueDate = new Date().toLocaleDateString("ar-SA", {
     year: "numeric",
     month: "long",
@@ -25,6 +33,19 @@ const Certificate = () => {
   });
   const certificateId = `CERT-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, "0")}`;
   const verificationCode = `VRF-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+  // Get display value for final result
+  const getFinalResultDisplay = () => {
+    if (finalPercentage !== null && finalPercentage !== undefined) {
+      return `${finalPercentage}%`;
+    }
+    if (finalScore !== null && finalScore !== undefined) {
+      return `${finalScore} / 100`;
+    }
+    return null;
+  };
+
+  const finalResultValue = getFinalResultDisplay();
 
   if (!isCertified) {
     return (
@@ -51,41 +72,53 @@ const Certificate = () => {
     );
   }
 
-  const handleDownloadPDF = () => {
-    const certificateContent = `
-شهادة الاعتماد
-${organizationName}
-درجة الاعتماد: ${certificationGrade}
-تاريخ الإصدار: ${issueDate}
-رقم الشهادة: ${certificateId}
-    `;
-    
-    const blob = new Blob([certificateContent], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `certificate-${certificateId}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const handleDownloadPDF = async () => {
+    if (!certificateRef.current) return;
+
+    try {
+      // Create canvas from the certificate card
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+      });
+
+      // Calculate dimensions for A4 PDF
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: imgHeight > imgWidth ? "portrait" : "landscape",
+        unit: "mm",
+        format: "a4",
+      });
+
+      // Add the canvas as image
+      const imgData = canvas.toDataURL("image/png");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Center the image on the page
+      const scaleFactor = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight) * 0.9;
+      const scaledWidth = imgWidth * scaleFactor;
+      const scaledHeight = imgHeight * scaleFactor;
+      const xOffset = (pdfWidth - scaledWidth) / 2;
+      const yOffset = (pdfHeight - scaledHeight) / 2;
+
+      pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
+      
+      // Download the PDF
+      pdf.save(`Certificate-${certificateId}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
   };
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const getGradeColor = (grade: string) => {
-    switch (grade) {
-      case "أ":
-        return "from-emerald-500 to-emerald-600";
-      case "ب":
-        return "from-blue-500 to-blue-600";
-      case "ج":
-        return "from-amber-500 to-amber-600";
-      default:
-        return "from-gray-500 to-gray-600";
-    }
   };
 
   return (
@@ -93,21 +126,25 @@ ${organizationName}
       <Header />
       
       {/* Fixed header spacer */}
-      <div className="h-20" />
+      <div className="h-20 print:hidden" />
       
       {/* Organization Journey */}
       <div className="print:hidden">
         <OrganizationJourney />
       </div>
 
-      <main className="flex-1 py-12 px-4 md:px-6 print:py-0">
-        <div className="max-w-4xl mx-auto">
+      <main className="flex-1 py-12 px-4 md:px-6 print:py-0 print:px-0">
+        <div className="max-w-4xl mx-auto print:max-w-none print:w-full">
           {/* Certificate Card */}
-          <div className="relative">
+          <div 
+            id="certificate-card" 
+            ref={certificateRef}
+            className="relative print:shadow-none"
+          >
             {/* Decorative background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-amber-50/30 rounded-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-amber-50/30 rounded-3xl print:rounded-none" />
             
-            <Card className="relative overflow-hidden border-2 border-[hsl(45,70%,65%)] shadow-2xl rounded-3xl print:shadow-none print:border">
+            <Card className="relative overflow-hidden border-2 border-[hsl(45,70%,65%)] shadow-2xl rounded-3xl print:shadow-none print:border print:rounded-none">
               {/* Geometric pattern overlay */}
               <div 
                 className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -119,7 +156,7 @@ ${organizationName}
               {/* Top decorative border */}
               <div className="h-3 bg-gradient-to-r from-emerald-600 via-[hsl(45,70%,55%)] to-emerald-600" />
 
-              <CardContent className="relative p-8 md:p-12 lg:p-16">
+              <CardContent className="relative p-8 md:p-12 lg:p-16 bg-white">
                 {/* Header with logos */}
                 <div className="flex items-start justify-between mb-10">
                   {/* Vision 2030 logo - left */}
@@ -172,18 +209,18 @@ ${organizationName}
                   </p>
                 </div>
 
-                {/* Grade Badge */}
-                {certificationGrade && (
+                {/* Final Result Badge - Dynamic percentage or score */}
+                {finalResultValue && (
                   <div className="flex justify-center mb-12">
-                    <div className={`relative bg-gradient-to-br ${getGradeColor(certificationGrade)} text-white rounded-2xl px-8 py-4 shadow-lg`}>
+                    <div className="relative bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-2xl px-10 py-6 shadow-lg">
                       <div className="absolute inset-0 bg-white/10 rounded-2xl" />
                       <div className="relative flex items-center gap-4">
-                        <CheckCircle2 className="w-6 h-6" />
+                        <TrendingUp className="w-7 h-7" />
                         <div className="text-center">
-                          <p className="text-sm opacity-90 font-hrsd-medium">درجة الاعتماد</p>
-                          <p className="text-3xl font-hrsd-bold">{certificationGrade}</p>
+                          <p className="text-sm opacity-90 font-hrsd-medium mb-1">النتيجة النهائية</p>
+                          <p className="text-4xl font-hrsd-bold tracking-wide">{finalResultValue}</p>
                         </div>
-                        <CheckCircle2 className="w-6 h-6" />
+                        <TrendingUp className="w-7 h-7" />
                       </div>
                     </div>
                   </div>
@@ -280,22 +317,66 @@ ${organizationName}
         <Footer />
       </div>
 
-      {/* Print Styles */}
+      {/* Print Styles - Critical for proper A4 printing */}
       <style>{`
         @media print {
-          body * {
-            visibility: hidden;
+          @page {
+            size: A4 portrait;
+            margin: 15mm;
           }
-          .print\\:shadow-none,
-          .print\\:shadow-none * {
-            visibility: visible;
+          
+          html, body {
+            height: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
+          
+          /* Hide everything by default */
+          body > * {
+            visibility: hidden !important;
+          }
+          
+          /* Show only the certificate container */
+          #certificate-card,
+          #certificate-card * {
+            visibility: visible !important;
+          }
+          
+          #certificate-card {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+          
+          /* Ensure background colors print */
+          #certificate-card * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
+          /* Hide print:hidden elements */
           .print\\:hidden {
             display: none !important;
           }
-          .print\\:py-0 {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
+          
+          /* Remove shadows and rounded corners for print */
+          .shadow-2xl, .shadow-lg {
+            box-shadow: none !important;
+          }
+          
+          .rounded-3xl, .rounded-2xl, .rounded-xl {
+            border-radius: 0 !important;
           }
         }
       `}</style>
