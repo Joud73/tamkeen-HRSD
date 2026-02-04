@@ -10,10 +10,22 @@ import {
   LucideIcon,
 } from "lucide-react";
 
+export interface CourseMaterial {
+  name: string;
+  type: string;
+  size?: string;
+}
+
+export interface CourseDay {
+  title: string;
+  materials: CourseMaterial[];
+}
+
 export interface TrainingProgram {
   id: number;
   title: string;
   description: string;
+  fullDescription: string;
   duration: string;
   type: string;
   deliveryMode: string;
@@ -23,21 +35,14 @@ export interface TrainingProgram {
   requirements: string[];
   instructor: string;
   startDate: string;
+  endDate: string;
+  time: string;
   schedule?: {
     days: string[];
     time: string;
     sessions: number;
   };
-  materials?: {
-    name: string;
-    type: string;
-    size?: string;
-  }[];
-  modules?: {
-    title: string;
-    duration: string;
-    topics: string[];
-  }[];
+  courseDays: CourseDay[];
 }
 
 export interface TrainingOutput {
@@ -62,7 +67,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 1,
     title: "أساسيات القيادة الإدارية",
     description:
-      "برنامج شامل يغطي المفاهيم الأساسية للقيادة الفعالة وإدارة الفرق في بيئة العمل الحديثة. يتضمن البرنامج تدريبات عملية ودراسات حالة.",
+      "برنامج شامل يغطي المفاهيم الأساسية للقيادة الفعالة وإدارة الفرق في بيئة العمل الحديثة.",
+    fullDescription:
+      "المشاريع تحسب الحياة العملية والشخصية، ولكي تنجز وترتقي في أماكن العمل، وفي مشاريعنا وأعمالنا الخاصة فحن بحاجة ماسة لتعلم هذا الفن. هذه الدورة هي عبارة عن برنامج متكامل لإدارة المشاريع يعتمد بشكل رئيسي على منهجية إدارة المشاريع الخاصة بالمعهد العالمي لإدارة المشاريع والمسمى 'الدليل المعرفي لإدارة المشاريع'. الإصدار الأخير (PMP) وهو الإصدار المعتمد الجديد، وهو بالتالي يقوم بتغطية كل ما يتعلق بشهادة 'مدير المشاريع المحترف'.",
     duration: "4 أسابيع",
     type: "تفاعلي",
     deliveryMode: "عن بُعد",
@@ -76,32 +83,38 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["إتمام مرحلة التسجيل", "الالتزام بالحضور"],
     instructor: "د. أحمد الفهد",
-    startDate: "15 يناير 2026",
+    startDate: "الأحد الموافق 27 أبريل",
+    endDate: "يوم الخميس الموافق 1 مايو",
+    time: "6م وحتى 9م",
     schedule: {
       days: ["الأحد", "الثلاثاء", "الخميس"],
       time: "6:00 م - 8:00 م",
       sessions: 12,
     },
-    materials: [
-      { name: "دليل المتدرب", type: "PDF", size: "2.5 MB" },
-      { name: "العروض التقديمية", type: "PPTX", size: "15 MB" },
-      { name: "ملفات التمارين", type: "ZIP", size: "5 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "مقدمة في القيادة",
-        duration: "أسبوع واحد",
-        topics: ["تعريف القيادة", "أنماط القيادة", "الفرق بين القيادة والإدارة"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "عرض تقديمي أساسيات القيادة الإدارية اليوم الأول", type: "PPTX" },
+        ],
       },
       {
-        title: "مهارات اتخاذ القرار",
-        duration: "أسبوع واحد",
-        topics: ["عملية اتخاذ القرار", "التفكير النقدي", "إدارة المخاطر"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "أساسيات القيادة الإدارية اليوم التدريبي الثاني", type: "PPTX" },
+        ],
       },
       {
-        title: "بناء الفريق",
-        duration: "أسبوعان",
-        topics: ["ديناميكيات الفريق", "حل النزاعات", "تحفيز الفريق"],
+        title: "اليوم الثالث",
+        materials: [],
+      },
+      {
+        title: "اليوم الرابع",
+        materials: [],
+      },
+      {
+        title: "اليوم الخامس",
+        materials: [],
       },
     ],
   },
@@ -109,7 +122,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 2,
     title: "مهارات التواصل المهني",
     description:
-      "تعلم فنون التواصل الفعال في بيئة العمل، بما في ذلك العروض التقديمية والتفاوض وإدارة الاجتماعات بكفاءة عالية.",
+      "تعلم فنون التواصل الفعال في بيئة العمل، بما في ذلك العروض التقديمية والتفاوض وإدارة الاجتماعات.",
+    fullDescription:
+      "يهدف هذا البرنامج إلى تطوير مهارات التواصل الفعال في بيئة العمل المهنية. يتضمن البرنامج تدريبات عملية على العروض التقديمية، فنون الاستماع الفعال، التفاوض المهني، وإدارة الاجتماعات بكفاءة عالية. سيتمكن المشاركون من تطبيق هذه المهارات مباشرة في بيئة عملهم.",
     duration: "3 أسابيع",
     type: "تطبيقي",
     deliveryMode: "حضوري",
@@ -122,31 +137,33 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["لا يوجد متطلبات مسبقة"],
     instructor: "أ. سارة المحمد",
-    startDate: "22 يناير 2026",
+    startDate: "الأحد الموافق 22 يناير",
+    endDate: "يوم الأربعاء الموافق 10 فبراير",
+    time: "4م وحتى 7م",
     schedule: {
       days: ["الاثنين", "الأربعاء"],
       time: "4:00 م - 7:00 م",
       sessions: 9,
     },
-    materials: [
-      { name: "كتاب التواصل الفعال", type: "PDF", size: "3 MB" },
-      { name: "تسجيلات الجلسات", type: "MP4", size: "500 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "أساسيات التواصل",
-        duration: "أسبوع واحد",
-        topics: ["عناصر التواصل", "الاستماع الفعال", "لغة الجسد"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "مقدمة في التواصل المهني", type: "PPTX" },
+          { name: "دليل المتدرب", type: "PDF" },
+        ],
       },
       {
-        title: "العروض التقديمية",
-        duration: "أسبوع واحد",
-        topics: ["تصميم العرض", "مهارات الإلقاء", "التعامل مع الأسئلة"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "العروض التقديمية الفعالة", type: "PPTX" },
+        ],
       },
       {
-        title: "التفاوض المهني",
-        duration: "أسبوع واحد",
-        topics: ["استراتيجيات التفاوض", "حل النزاعات", "بناء العلاقات"],
+        title: "اليوم الثالث",
+        materials: [
+          { name: "فنون التفاوض", type: "PPTX" },
+        ],
       },
     ],
   },
@@ -154,7 +171,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 3,
     title: "التخطيط الاستراتيجي",
     description:
-      "برنامج متقدم في التخطيط الاستراتيجي وتحديد الأهداف وقياس مؤشرات الأداء الرئيسية للمؤسسات الحكومية والخاصة.",
+      "برنامج متقدم في التخطيط الاستراتيجي وتحديد الأهداف وقياس مؤشرات الأداء الرئيسية.",
+    fullDescription:
+      "برنامج متقدم ومتخصص في التخطيط الاستراتيجي للمؤسسات الحكومية والخاصة. يغطي البرنامج كيفية وضع الخطط الاستراتيجية، تحديد الأهداف الذكية، بناء مؤشرات الأداء الرئيسية، وتحليل البيئة الداخلية والخارجية باستخدام أدوات التحليل المختلفة مثل SWOT وPESTEL.",
     duration: "5 أسابيع",
     type: "تفاعلي",
     deliveryMode: "مدمج",
@@ -167,31 +186,41 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["إتمام برنامج أساسيات القيادة"],
     instructor: "د. خالد العمري",
-    startDate: "1 فبراير 2026",
+    startDate: "السبت الموافق 1 فبراير",
+    endDate: "يوم الثلاثاء الموافق 5 مارس",
+    time: "5م وحتى 8م",
     schedule: {
       days: ["السبت", "الثلاثاء"],
       time: "5:00 م - 8:00 م",
       sessions: 15,
     },
-    materials: [
-      { name: "نماذج التخطيط", type: "XLSX", size: "1 MB" },
-      { name: "دراسات حالة", type: "PDF", size: "8 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "مقدمة في التخطيط الاستراتيجي",
-        duration: "أسبوع واحد",
-        topics: ["مفهوم الاستراتيجية", "الرؤية والرسالة", "التحليل البيئي"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "مقدمة في التخطيط الاستراتيجي", type: "PPTX" },
+        ],
       },
       {
-        title: "تحديد الأهداف",
-        duration: "أسبوعان",
-        topics: ["SMART Goals", "مؤشرات الأداء", "الأهداف التشغيلية"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "تحليل SWOT", type: "PPTX" },
+          { name: "نموذج التحليل", type: "XLSX" },
+        ],
       },
       {
-        title: "التنفيذ والمتابعة",
-        duration: "أسبوعان",
-        topics: ["خطط العمل", "المراجعة الدورية", "التحسين المستمر"],
+        title: "اليوم الثالث",
+        materials: [
+          { name: "بناء مؤشرات الأداء", type: "PPTX" },
+        ],
+      },
+      {
+        title: "اليوم الرابع",
+        materials: [],
+      },
+      {
+        title: "اليوم الخامس",
+        materials: [],
       },
     ],
   },
@@ -199,7 +228,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 4,
     title: "إدارة المشاريع الاحترافية",
     description:
-      "برنامج معتمد في إدارة المشاريع وفق أفضل الممارسات والمعايير العالمية مع شهادة معتمدة عند الإتمام.",
+      "برنامج معتمد في إدارة المشاريع وفق أفضل الممارسات والمعايير العالمية مع شهادة معتمدة.",
+    fullDescription:
+      "المشاريع تحسب الحياة العملية والشخصية، ولكي تنجز وترتقي في أماكن العمل، وفي مشاريعنا وأعمالنا الخاصة فحن بحاجة ماسة لتعلم هذا الفن. هذه الدورة هي عبارة عن برنامج متكامل لإدارة المشاريع (PMI) يعتمد بشكل رئيسي على منهجية إدارة المشاريع الخاصة بالمعهد العالمي لإدارة المشاريع والمسمى 'الدليل المعرفي لإدارة المشاريع'. الإصدار الأخير (PMP) وهو الإصدار المعتمد الجديد، وهو بالتالي يقوم بتغطية كل ما يتعلق بشهادة 'مدير المشاريع المحترف'.",
     duration: "6 أسابيع",
     type: "تطبيقي",
     deliveryMode: "عن بُعد",
@@ -212,32 +243,38 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["خبرة سابقة في العمل المؤسسي"],
     instructor: "م. فاطمة الزهراني",
-    startDate: "15 فبراير 2026",
+    startDate: "الأحد الموافق 15 فبراير",
+    endDate: "يوم الخميس الموافق 28 مارس",
+    time: "7م وحتى 9م",
     schedule: {
       days: ["الأحد", "الثلاثاء", "الخميس"],
       time: "7:00 م - 9:00 م",
       sessions: 18,
     },
-    materials: [
-      { name: "دليل PMBOK", type: "PDF", size: "12 MB" },
-      { name: "قوالب المشاريع", type: "ZIP", size: "3 MB" },
-      { name: "أدوات التخطيط", type: "XLSX", size: "2 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "أساسيات إدارة المشاريع",
-        duration: "أسبوعان",
-        topics: ["دورة حياة المشروع", "أصحاب المصلحة", "ميثاق المشروع"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "عرض تقديمي إدارة المشاريع الاحترافية اليوم الأول", type: "PPTX" },
+        ],
       },
       {
-        title: "التخطيط والجدولة",
-        duration: "أسبوعان",
-        topics: ["هيكل تجزئة العمل", "مخطط جانت", "إدارة الموارد"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "إدارة المشاريع الاحترافية اليوم التدريبي الثاني", type: "PPTX" },
+        ],
       },
       {
-        title: "التنفيذ والإغلاق",
-        duration: "أسبوعان",
-        topics: ["إدارة المخاطر", "ضبط الجودة", "إغلاق المشروع"],
+        title: "اليوم الثالث",
+        materials: [],
+      },
+      {
+        title: "اليوم الرابع",
+        materials: [],
+      },
+      {
+        title: "اليوم الخامس",
+        materials: [],
       },
     ],
   },
@@ -245,7 +282,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 5,
     title: "الابتكار وريادة الأعمال",
     description:
-      "اكتشف عالم الابتكار والريادة وتعلم كيفية تحويل الأفكار إلى مشاريع ناجحة ومستدامة في السوق.",
+      "اكتشف عالم الابتكار والريادة وتعلم كيفية تحويل الأفكار إلى مشاريع ناجحة ومستدامة.",
+    fullDescription:
+      "برنامج شامل يهدف إلى تطوير مهارات الابتكار والتفكير الإبداعي وريادة الأعمال. يتعلم المشاركون كيفية توليد الأفكار الإبداعية، بناء نماذج العمل الناجحة، وجذب الاستثمارات. البرنامج يتضمن ورشات عمل تطبيقية ودراسات حالة من مشاريع ناشئة ناجحة.",
     duration: "4 أسابيع",
     type: "تفاعلي",
     deliveryMode: "حضوري",
@@ -258,31 +297,39 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["شغف بالابتكار والتطوير"],
     instructor: "أ. محمد الدوسري",
-    startDate: "1 مارس 2026",
+    startDate: "السبت الموافق 1 مارس",
+    endDate: "يوم الأربعاء الموافق 26 مارس",
+    time: "5م وحتى 7م",
     schedule: {
       days: ["السبت", "الاثنين", "الأربعاء"],
       time: "5:00 م - 7:00 م",
       sessions: 12,
     },
-    materials: [
-      { name: "Business Model Canvas", type: "PDF", size: "1 MB" },
-      { name: "ورشات العمل", type: "PDF", size: "5 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "التفكير الإبداعي",
-        duration: "أسبوع واحد",
-        topics: ["تقنيات العصف الذهني", "Design Thinking", "حل المشكلات"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "مقدمة في الابتكار", type: "PPTX" },
+          { name: "Business Model Canvas", type: "PDF" },
+        ],
       },
       {
-        title: "نموذج العمل",
-        duration: "أسبوعان",
-        topics: ["Canvas Model", "دراسة السوق", "التسعير"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "التفكير التصميمي", type: "PPTX" },
+        ],
       },
       {
-        title: "التمويل والنمو",
-        duration: "أسبوع واحد",
-        topics: ["مصادر التمويل", "عرض المستثمرين", "استراتيجيات النمو"],
+        title: "اليوم الثالث",
+        materials: [
+          { name: "بناء نموذج العمل", type: "PPTX" },
+        ],
+      },
+      {
+        title: "اليوم الرابع",
+        materials: [
+          { name: "جذب الاستثمارات", type: "PPTX" },
+        ],
       },
     ],
   },
@@ -290,7 +337,9 @@ export const trainingPrograms: TrainingProgram[] = [
     id: 6,
     title: "التحول الرقمي",
     description:
-      "برنامج متخصص في فهم التحول الرقمي وتطبيقاته في المؤسسات الحكومية والخاصة مع أمثلة عملية.",
+      "برنامج متخصص في فهم التحول الرقمي وتطبيقاته في المؤسسات الحكومية والخاصة.",
+    fullDescription:
+      "برنامج متخصص ومتقدم في فهم وتطبيق التحول الرقمي في المؤسسات. يغطي البرنامج استراتيجيات التحول الرقمي، التقنيات الناشئة، إدارة التغيير التقني، والبنية التحتية الرقمية. يتضمن أمثلة عملية ودراسات حالة من تجارب تحول رقمي ناجحة.",
     duration: "4 أسابيع",
     type: "نظري وتطبيقي",
     deliveryMode: "مدمج",
@@ -303,32 +352,40 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     requirements: ["معرفة أساسية بالتقنية"],
     instructor: "د. نورة السعيد",
-    startDate: "15 مارس 2026",
+    startDate: "الأحد الموافق 15 مارس",
+    endDate: "يوم الأربعاء الموافق 9 أبريل",
+    time: "6م وحتى 9م",
     schedule: {
       days: ["الأحد", "الأربعاء"],
       time: "6:00 م - 9:00 م",
       sessions: 12,
     },
-    materials: [
-      { name: "استراتيجيات التحول", type: "PDF", size: "4 MB" },
-      { name: "دراسات حالة رقمية", type: "PDF", size: "6 MB" },
-      { name: "أدوات التقييم", type: "XLSX", size: "1 MB" },
-    ],
-    modules: [
+    courseDays: [
       {
-        title: "مقدمة في التحول الرقمي",
-        duration: "أسبوع واحد",
-        topics: ["مفهوم التحول الرقمي", "التقنيات الناشئة", "البنية التحتية"],
+        title: "اليوم الأول",
+        materials: [
+          { name: "مقدمة في التحول الرقمي", type: "PPTX" },
+          { name: "دراسات حالة رقمية", type: "PDF" },
+        ],
       },
       {
-        title: "استراتيجيات التحول",
-        duration: "أسبوعان",
-        topics: ["خارطة الطريق", "إدارة التغيير", "قياس النجاح"],
+        title: "اليوم الثاني",
+        materials: [
+          { name: "استراتيجيات التحول", type: "PPTX" },
+        ],
       },
       {
-        title: "التطبيق العملي",
-        duration: "أسبوع واحد",
-        topics: ["مشاريع التحول", "أفضل الممارسات", "الدروس المستفادة"],
+        title: "اليوم الثالث",
+        materials: [
+          { name: "إدارة التغيير", type: "PPTX" },
+        ],
+      },
+      {
+        title: "اليوم الرابع",
+        materials: [
+          { name: "التطبيق العملي", type: "PPTX" },
+          { name: "أدوات التقييم", type: "XLSX" },
+        ],
       },
     ],
   },
