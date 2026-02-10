@@ -84,7 +84,7 @@ const SuggestedCoursesStep = ({ assessmentScore, onEnroll }: SuggestedCoursesSte
                     className="w-full h-11 font-hrsd-semibold bg-primary hover:bg-primary/90 text-white"
                     onClick={() => {
                       handleEnroll(course.id);
-                      navigate(`/course/${course.id}`);
+                      navigate(`/individual-course/${course.id}`);
                     }}
                   >
                     الالتحاق بالدورة

@@ -16,6 +16,7 @@ import Settings from "./pages/Settings";
 import TechnicalEvaluationIndicators from "./pages/TechnicalEvaluationIndicators";
 import TrainingStage from "./pages/TrainingStage";
 import CourseDetail from "./pages/CourseDetail";
+import IndividualCourseDetail from "./pages/IndividualCourseDetail";
 import ContactUs from "./pages/ContactUs";
 import IndividualsJourney from "./pages/IndividualsJourney";
 import UnderReview from "./pages/UnderReview";
@@ -80,6 +81,7 @@ const App = () => (
             />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/individuals-journey" element={<IndividualsJourney />} />
+            <Route path="/individual-course/:courseId" element={<IndividualCourseDetail />} />
             <Route
               path="/under-review"
               element={
