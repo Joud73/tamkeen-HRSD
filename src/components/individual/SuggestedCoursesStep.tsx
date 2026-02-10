@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Clock, Users, CheckCircle2 } from "lucide-react";
 
@@ -66,7 +67,7 @@ const allCourses = [
 
 const SuggestedCoursesStep = ({ assessmentScore, onEnroll }: SuggestedCoursesStepProps) => {
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
-
+  const navigate = useNavigate();
   // Filter courses based on assessment score
   const getSuggestedCourses = () => {
     if (!assessmentScore) return allCourses;
@@ -169,14 +170,15 @@ const SuggestedCoursesStep = ({ assessmentScore, onEnroll }: SuggestedCoursesSte
                     تم الالتحاق
                   </Button>
                 ) : (
-                  <a href="https://phpstack-1518564-5838964.cloudwaysapps.com/">
-                    <Button
-                      className="w-full h-11 font-hrsd-semibold bg-primary hover:bg-primary/90"
-                      onClick={() => handleEnroll(course.id)}
-                    >
-                      الالتحاق بالدورة
-                    </Button>
-                  </a>
+                  <Button
+                    className="w-full h-11 font-hrsd-semibold bg-primary hover:bg-primary/90"
+                    onClick={() => {
+                      handleEnroll(course.id);
+                      navigate(`/course/${course.id}`);
+                    }}
+                  >
+                    الالتحاق بالدورة
+                  </Button>
                 )}
               </div>
             </div>
