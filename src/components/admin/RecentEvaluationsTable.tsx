@@ -21,21 +21,21 @@ export interface EvaluationRow {
 }
 
 const RecentEvaluationsTable = ({ rows }: { rows: EvaluationRow[] }) => (
-  <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
-    <div className="px-5 py-4 border-b border-border">
-      <h3 className="text-base font-hrsd-semibold text-foreground">آخر التقييمات</h3>
+  <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+    <div className="px-6 py-4 border-b border-border">
+      <h3 className="text-sm font-hrsd-semibold text-foreground">آخر التقييمات</h3>
     </div>
     <Table>
       <TableHeader>
-        <TableRow className="bg-muted/40">
-          <TableHead className="text-right font-hrsd-medium text-xs">الجمعية</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">السنة</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">المساق</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">الحالة</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">نسبة الإنجاز</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">المقيم</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">تاريخ التقديم</TableHead>
-          <TableHead className="text-right font-hrsd-medium text-xs">الإجراءات</TableHead>
+        <TableRow className="bg-muted/30">
+          <TableHead className="text-start font-hrsd-medium text-xs">الجمعية</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">السنة</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">المساق</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">الحالة</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">نسبة الإنجاز</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">المقيم</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">تاريخ التقديم</TableHead>
+          <TableHead className="text-start font-hrsd-medium text-xs">الإجراءات</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -52,7 +52,7 @@ const RecentEvaluationsTable = ({ rows }: { rows: EvaluationRow[] }) => (
               <div className="flex items-center gap-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="rounded p-1 text-muted-foreground hover:text-primary hover:bg-muted transition-colors">
+                    <button className="rounded-lg p-1.5 text-muted-foreground hover:text-primary hover:bg-muted transition-colors">
                       <Eye className="h-4 w-4" />
                     </button>
                   </TooltipTrigger>
@@ -60,7 +60,7 @@ const RecentEvaluationsTable = ({ rows }: { rows: EvaluationRow[] }) => (
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="rounded p-1 text-muted-foreground hover:text-primary hover:bg-muted transition-colors">
+                    <button className="rounded-lg p-1.5 text-muted-foreground hover:text-primary hover:bg-muted transition-colors">
                       <FileBarChart className="h-4 w-4" />
                     </button>
                   </TooltipTrigger>
