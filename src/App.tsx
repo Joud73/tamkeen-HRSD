@@ -21,6 +21,7 @@ import ContactUs from "./pages/ContactUs";
 import IndividualsJourney from "./pages/IndividualsJourney";
 import UnderReview from "./pages/UnderReview";
 import Certificate from "./pages/Certificate";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -98,6 +99,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route path="/admin" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
