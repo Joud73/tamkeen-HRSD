@@ -38,7 +38,6 @@ import RecentEvaluationsTable, {
 
 /* ── Mock datasets keyed by year ── */
 
-const courseNames = ["التوجه", "الفريق", "الشراكات", "التأثير", "البرامج"] as const;
 const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
 interface YearData {
@@ -136,24 +135,25 @@ const AdminDashboard = () => {
     toast({ title: "قريبًا", description: "سيتم توفير هذه الميزة لاحقًا" });
 
   return (
-    <div className="flex min-h-screen flex-row-reverse bg-background">
-      {/* Sidebar on right (RTL) */}
+    <div dir="rtl" className="flex min-h-screen bg-background">
+      {/* Sidebar on the RIGHT (naturally in RTL) */}
       <AdminSidebar />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <AdminHeader />
 
-        <main className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <main className="flex-1 overflow-y-auto px-8 py-7 space-y-7">
           {/* Page title */}
           <div>
             <h1 className="text-xl font-hrsd-title text-foreground">لوحة التحكم</h1>
-            <p className="text-sm font-hrsd text-muted-foreground mt-0.5">
+            <p className="text-sm font-hrsd text-muted-foreground mt-1">
               نظرة شاملة وفورية عن حالة المنصة
             </p>
           </div>
 
           {/* ── Filters / Actions ── */}
           <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Filters on the right (start in RTL) */}
             <div className="flex items-center gap-3">
               <Select
                 value={String(year)}
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
               </Select>
 
               <Select value={courseFilter} onValueChange={setCourseFilter}>
-                <SelectTrigger className="w-40 text-sm font-hrsd-medium">
+                <SelectTrigger className="w-44 text-sm font-hrsd-medium">
                   <SelectValue placeholder="المساق" />
                 </SelectTrigger>
                 <SelectContent>
@@ -182,21 +182,22 @@ const AdminDashboard = () => {
               </Select>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={comingSoon} className="gap-1.5 text-xs font-hrsd-medium">
-                <FileSpreadsheet className="h-3.5 w-3.5" /> تصدير Excel
+            {/* Action buttons on the left (end in RTL) */}
+            <div className="flex items-center gap-0 rounded-[10px] border border-border overflow-hidden">
+              <Button variant="ghost" size="sm" onClick={comingSoon} className="rounded-none border-e border-border gap-2 text-xs font-hrsd-medium px-4 h-9">
+                تصدير Excel <FileSpreadsheet className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="outline" size="sm" onClick={comingSoon} className="gap-1.5 text-xs font-hrsd-medium">
-                <FileText className="h-3.5 w-3.5" /> تصدير PDF
+              <Button variant="ghost" size="sm" onClick={comingSoon} className="rounded-none border-e border-border gap-2 text-xs font-hrsd-medium px-4 h-9">
+                تصدير PDF <FileText className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="outline" size="sm" onClick={comingSoon} className="gap-1.5 text-xs font-hrsd-medium">
-                <Printer className="h-3.5 w-3.5" /> طباعة
+              <Button variant="ghost" size="sm" onClick={comingSoon} className="rounded-none gap-2 text-xs font-hrsd-medium px-4 h-9">
+                طباعة <Printer className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
 
           {/* ── KPI Cards ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <KpiCard title="إجمالي الجمعيات المسجلة" value={data.kpis.orgs} icon={<Building2 className="h-5 w-5" />} />
             <KpiCard title="عدد المقيمين" value={data.kpis.evaluators} icon={<Users className="h-5 w-5" />} />
             <KpiCard title="عدد التقييمات الجارية" value={data.kpis.ongoing} icon={<ClipboardList className="h-5 w-5" />} />
@@ -211,8 +212,8 @@ const AdminDashboard = () => {
           </div>
 
           {/* ── Status Distribution ── */}
-          <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
-            <h3 className="text-sm font-hrsd-semibold text-foreground mb-3">حالة الجمعيات</h3>
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h3 className="text-sm font-hrsd-semibold text-foreground mb-4">حالة الجمعيات</h3>
             <div className="flex flex-wrap gap-3">
               {data.statuses.map((s) => (
                 <StatusBadge key={s.label} status={s.label} count={s.count} />
@@ -221,40 +222,40 @@ const AdminDashboard = () => {
           </div>
 
           {/* ── Charts ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Bar chart */}
-            <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
-              <h3 className="text-sm font-hrsd-semibold text-foreground mb-4">الأداء حسب المساقات</h3>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <h3 className="text-sm font-hrsd-semibold text-foreground mb-5">الأداء حسب المساقات</h3>
               <ResponsiveContainer width="100%" height={260}>
-                <BarChart data={filteredCoursePerf} barSize={32}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(210,20%,92%)" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fontFamily: "HRSDGov-Regular" }} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} unit="%" />
+                <BarChart data={filteredCoursePerf} barSize={28}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(210,15%,93%)" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fontFamily: "HRSDGov-Regular" }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} unit="%" axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ fontFamily: "HRSDGov-Medium", fontSize: 12, borderRadius: 8 }}
+                    contentStyle={{ fontFamily: "HRSDGov-Medium", fontSize: 12, borderRadius: 10, border: "1px solid hsl(210,15%,90%)" }}
                     formatter={(v: number) => [`${v}%`, "الأداء"]}
                   />
-                  <Bar dataKey="value" fill="hsl(175,75%,30%)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="value" fill="hsl(175,75%,30%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Area chart */}
-            <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
-              <h3 className="text-sm font-hrsd-semibold text-foreground mb-4">الأداء الشهري</h3>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <h3 className="text-sm font-hrsd-semibold text-foreground mb-5">الأداء الشهري</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={data.monthly}>
                   <defs>
                     <linearGradient id="tealGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(175,75%,30%)" stopOpacity={0.25} />
+                      <stop offset="0%" stopColor="hsl(175,75%,30%)" stopOpacity={0.2} />
                       <stop offset="100%" stopColor="hsl(175,75%,30%)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(210,20%,92%)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 10, fontFamily: "HRSDGov-Regular" }} />
-                  <YAxis tick={{ fontSize: 11 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(210,15%,93%)" vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fontFamily: "HRSDGov-Regular" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ fontFamily: "HRSDGov-Medium", fontSize: 12, borderRadius: 8 }}
+                    contentStyle={{ fontFamily: "HRSDGov-Medium", fontSize: 12, borderRadius: 10, border: "1px solid hsl(210,15%,90%)" }}
                   />
                   <Area
                     type="monotone"
