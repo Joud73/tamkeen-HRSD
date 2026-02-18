@@ -49,7 +49,7 @@ const AdminSidebar = () => {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
 
   return (
-    <aside className="sticky top-0 h-screen w-60 shrink-0 border-s border-border bg-card overflow-y-auto py-6 px-3">
+    <aside className="sticky top-0 h-[calc(100vh-3.5rem)] w-60 shrink-0 border-s border-border bg-card overflow-y-auto py-6 px-3">
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => (
           <div key={item.label}>

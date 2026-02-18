@@ -135,12 +135,12 @@ const AdminDashboard = () => {
     toast({ title: "قريبًا", description: "سيتم توفير هذه الميزة لاحقًا" });
 
   return (
-    <div dir="rtl" className="flex min-h-screen bg-background">
-      {/* Sidebar on the RIGHT (naturally in RTL) */}
-      <AdminSidebar />
+    <div dir="rtl" className="flex min-h-screen flex-col bg-[hsl(220,20%,97%)]">
+      <AdminHeader />
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <AdminHeader />
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar on the RIGHT (naturally in RTL) */}
+        <AdminSidebar />
 
         <main className="flex-1 overflow-y-auto px-8 py-7 space-y-7">
           {/* Page title */}
