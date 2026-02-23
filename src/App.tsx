@@ -22,6 +22,9 @@ import IndividualsJourney from "./pages/IndividualsJourney";
 import UnderReview from "./pages/UnderReview";
 import Certificate from "./pages/Certificate";
 import AdminDashboard from "./pages/AdminDashboard";
+import EvaluatorDashboard from "./pages/EvaluatorDashboard";
+import EvaluatorAssignments from "./pages/EvaluatorAssignments";
+import EvaluationDetails from "./pages/EvaluationDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -100,6 +103,30 @@ const App = () => (
               }
             />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route
+              path="/evaluator"
+              element={
+                <ProtectedRoute>
+                  <EvaluatorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/assignments"
+              element={
+                <ProtectedRoute>
+                  <EvaluatorAssignments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/evaluator/assignment/:assignmentId"
+              element={
+                <ProtectedRoute>
+                  <EvaluationDetails />
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

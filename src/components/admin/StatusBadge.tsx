@@ -5,6 +5,8 @@ const colorMap: Record<string, { dot: string; bg: string; text: string }> = {
   "قيد التقييم": { dot: "bg-amber-400", bg: "bg-amber-50", text: "text-amber-700" },
   "تسليم جزئي": { dot: "bg-blue-400", bg: "bg-blue-50", text: "text-blue-700" },
   "تسليم كامل": { dot: "bg-emerald-500", bg: "bg-emerald-50", text: "text-emerald-700" },
+  "بانتظار رد الجمعية": { dot: "bg-purple-400", bg: "bg-purple-50", text: "text-purple-700" },
+  "مكتمل": { dot: "bg-emerald-500", bg: "bg-emerald-50", text: "text-emerald-700" },
 };
 
 interface StatusBadgeProps {
