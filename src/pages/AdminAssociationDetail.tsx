@@ -229,7 +229,7 @@ const AdminAssociationDetail = () => {
 
           {/* ── Tabs ── */}
           <Tabs defaultValue="overview" className="space-y-5">
-            <TabsList className="bg-card border border-border h-auto p-1 gap-1">
+            <TabsList className="bg-card border border-border h-auto p-1 gap-1 w-fit ms-auto">
               {[
                 { value: "overview", label: "نظرة عامة" },
                 { value: "evidence", label: "الشواهد" },
