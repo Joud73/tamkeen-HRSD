@@ -349,14 +349,14 @@ const AdminAssociationDetail = () => {
                   <TableHeader>
                     <TableRow className="bg-muted/30">
                       {["اسم الشاهد", "المسار", "المعيار", "تاريخ الرفع", "المرفوع بواسطة", "الحالة", "إجراء"].map((h) => (
-                        <TableHead key={h} className="text-start font-hrsd-medium text-xs">{h}</TableHead>
+                         <TableHead key={h} className="text-right font-hrsd-medium text-xs">{h}</TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {evidenceRows.map((e) => (
                       <TableRow key={e.id} className="text-sm font-hrsd">
-                        <TableCell className="font-hrsd-medium">{e.name}</TableCell>
+                        <TableCell className="font-hrsd-medium text-right">{e.name}</TableCell>
                         <TableCell>{e.track}</TableCell>
                         <TableCell>{e.criterion}</TableCell>
                         <TableCell>{e.date}</TableCell>
@@ -437,10 +437,10 @@ const AdminAssociationDetail = () => {
                             <TableHeader>
                               <TableRow className="bg-muted/20">
                                 {["المعيار / البند", "حالة المعيار", "تقييم المقيم", "ملاحظة المقيم", "إجراء"].map((h) => (
-                                  <TableHead key={h} className="text-start font-hrsd-medium text-xs">{h}</TableHead>
-                                ))}
-                              </TableRow>
-                            </TableHeader>
+                                   <TableHead key={h} className="text-right font-hrsd-medium text-xs">{h}</TableHead>
+                                 ))}
+                               </TableRow>
+                             </TableHeader>
                             <TableBody>
                               {criteria.map((c) => (
                                 <TableRow key={c.criterion} className="text-sm font-hrsd">
@@ -523,8 +523,8 @@ const AdminAssociationDetail = () => {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/30">
-                      {["التاريخ والوقت", "المستخدم", "الإجراء", "تفاصيل مختصرة"].map((h) => (
-                        <TableHead key={h} className="text-start font-hrsd-medium text-xs">{h}</TableHead>
+                       {["التاريخ والوقت", "المستخدم", "الإجراء", "تفاصيل مختصرة"].map((h) => (
+                         <TableHead key={h} className="text-right font-hrsd-medium text-xs">{h}</TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
