@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -12,21 +13,28 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface NavChild {
+  label: string;
+  icon: React.ElementType;
+  path?: string;
+}
+
 interface NavItem {
   label: string;
   icon: React.ElementType;
-  active?: boolean;
-  children?: { label: string; icon: React.ElementType }[];
+  path?: string;
+  children?: NavChild[];
 }
 
 const navItems: NavItem[] = [
-  { label: "لوحة التحكم", icon: LayoutDashboard, active: true },
+  { label: "لوحة التحكم", icon: LayoutDashboard, path: "/admin" },
   {
     label: "الإدارة",
     icon: Users,
     children: [
       { label: "إدارة المستخدمين", icon: Users },
       { label: "إدارة الصلاحيات", icon: ShieldCheck },
+      { label: "إدارة الجمعيات", icon: Building2, path: "/admin/associations" },
     ],
   },
   {
@@ -43,10 +51,26 @@ const navItems: NavItem[] = [
 ];
 
 const AdminSidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  const isActive = (path?: string) => {
+    if (!path) return false;
+    if (path === "/admin") return location.pathname === "/admin";
+    return location.pathname.startsWith(path);
+  };
 
   const toggle = (label: string) =>
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
+
+  const handleClick = (item: NavItem | NavChild) => {
+    if ("children" in item && (item as NavItem).children) {
+      toggle(item.label);
+    } else if (item.path) {
+      navigate(item.path);
+    }
+  };
 
   return (
     <aside className="sticky top-0 h-[calc(100vh-3.5rem)] w-60 shrink-0 border-s border-border bg-card overflow-y-auto py-6 px-3">
@@ -54,10 +78,10 @@ const AdminSidebar = () => {
         {navItems.map((item) => (
           <div key={item.label}>
             <button
-              onClick={() => item.children && toggle(item.label)}
+              onClick={() => handleClick(item)}
               className={cn(
                 "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-hrsd-medium transition-colors",
-                item.active
+                isActive(item.path)
                   ? "bg-primary text-primary-foreground"
                   : "text-foreground hover:bg-muted"
               )}
@@ -79,7 +103,13 @@ const AdminSidebar = () => {
                 {item.children.map((child) => (
                   <button
                     key={child.label}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-hrsd text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                    onClick={() => handleClick(child)}
+                    className={cn(
+                      "flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-hrsd transition-colors",
+                      isActive(child.path)
+                        ? "bg-primary/10 text-primary font-hrsd-medium"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
                   >
                     <child.icon className="h-3.5 w-3.5" />
                     <span>{child.label}</span>
