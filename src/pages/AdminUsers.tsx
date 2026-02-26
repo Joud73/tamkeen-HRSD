@@ -158,9 +158,9 @@ const AdminUsers = () => {
   return (
     <div dir="rtl" className="min-h-screen" style={{ background: "hsl(220,20%,97%)" }}>
       <AdminHeader />
-      <div className="flex flex-row-reverse">
+      <div className="flex flex-1 overflow-hidden">
         <AdminSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-x-hidden">
+        <main className="flex-1 overflow-y-auto px-8 py-7 space-y-6">
           {/* header */}
           <div>
             <h1 className="text-2xl font-hrsd-bold text-foreground">إدارة المستخدمين</h1>
