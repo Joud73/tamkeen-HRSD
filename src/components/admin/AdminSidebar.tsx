@@ -48,7 +48,7 @@ const navItems: NavItem[] = [
       { label: "تقييم الجهات", icon: ClipboardCheck },
     ],
   },
-  { label: "التقارير", icon: FileBarChart },
+  { label: "التقارير", icon: FileBarChart, path: "/admin/reports" },
 ];
 
 const AdminSidebar = () => {
