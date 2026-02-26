@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     label: "الإدارة",
     icon: Users,
     children: [
-      { label: "إدارة المستخدمين", icon: Users },
+      { label: "إدارة المستخدمين", icon: Users, path: "/admin/users" },
       { label: "إدارة الصلاحيات", icon: ShieldCheck },
       { label: "إدارة الجمعيات", icon: Building2, path: "/admin/associations" },
       { label: "إدارة المقيمين", icon: ClipboardCheck, path: "/admin/reviewers" },
