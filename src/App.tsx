@@ -28,6 +28,7 @@ import AdminReviewers from "./pages/AdminReviewers";
 import AdminReviewerDetail from "./pages/AdminReviewerDetail";
 import AdminReports from "./pages/AdminReports";
 import AdminUsers from "./pages/AdminUsers";
+import AdminRoles from "./pages/AdminRoles";
 import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
@@ -110,6 +111,7 @@ const App = () => (
             />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/roles" element={<AdminRoles />} />
             <Route path="/admin/associations" element={<AdminAssociations />} />
             <Route path="/admin/associations/:id" element={<AdminAssociationDetail />} />
             <Route path="/admin/reviewers" element={<AdminReviewers />} />
