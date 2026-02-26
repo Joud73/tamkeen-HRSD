@@ -35,6 +35,7 @@ const navItems: NavItem[] = [
       { label: "إدارة المستخدمين", icon: Users },
       { label: "إدارة الصلاحيات", icon: ShieldCheck },
       { label: "إدارة الجمعيات", icon: Building2, path: "/admin/associations" },
+      { label: "إدارة المقيمين", icon: ClipboardCheck, path: "/admin/reviewers" },
     ],
   },
   {

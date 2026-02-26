@@ -24,6 +24,8 @@ import Certificate from "./pages/Certificate";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminAssociations from "./pages/AdminAssociations";
 import AdminAssociationDetail from "./pages/AdminAssociationDetail";
+import AdminReviewers from "./pages/AdminReviewers";
+import AdminReviewerDetail from "./pages/AdminReviewerDetail";
 import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
@@ -107,6 +109,8 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/associations" element={<AdminAssociations />} />
             <Route path="/admin/associations/:id" element={<AdminAssociationDetail />} />
+            <Route path="/admin/reviewers" element={<AdminReviewers />} />
+            <Route path="/admin/reviewers/:id" element={<AdminReviewerDetail />} />
             <Route
               path="/evaluator"
               element={
