@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: "تهيئة التقييم",
+    label: "الأداء",
     icon: ClipboardCheck,
     children: [
       { label: "تعريف الجهات", icon: Building2 },
