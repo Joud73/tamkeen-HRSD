@@ -10,8 +10,8 @@ import {
   Share2,
   Filter,
   Copy,
-  Check,
-} from "lucide-react";
+  Check } from
+"lucide-react";
 import {
   BarChart,
   Bar,
@@ -22,15 +22,15 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  Legend,
-} from "recharts";
+  Legend } from
+"recharts";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  SelectValue } from
+"@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -39,27 +39,27 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  DialogTitle } from
+"@/components/ui/dialog";
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  CollapsibleTrigger } from
+"@/components/ui/collapsible";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  TableRow } from
+"@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -90,48 +90,48 @@ interface EvaluatorReport {
 const tracks = ["التوجه", "الفريق", "الشراكات", "التأثير", "البرامج"];
 
 const assocReports2026: AssocReport[] = [
-  { id: "a1", name: "جمعية البر الخيرية", year: 2026, track: "التوجه", progress: 85, avgScore: 78, compliance: 90, status: "قيد التقييم" },
-  { id: "a2", name: "جمعية إنسان", year: 2026, track: "الفريق", progress: 100, avgScore: 92, compliance: 95, status: "تسليم كامل" },
-  { id: "a3", name: "جمعية تكافل", year: 2026, track: "الشراكات", progress: 45, avgScore: 61, compliance: 55, status: "تسليم جزئي" },
-  { id: "a4", name: "مؤسسة العطاء", year: 2026, track: "التأثير", progress: 0, avgScore: 0, compliance: 20, status: "لم تبدأ" },
-  { id: "a5", name: "جمعية رعاية", year: 2026, track: "البرامج", progress: 60, avgScore: 70, compliance: 75, status: "قيد التقييم" },
-  { id: "a6", name: "جمعية إحسان", year: 2026, track: "التوجه", progress: 100, avgScore: 95, compliance: 98, status: "تسليم كامل" },
-  { id: "a7", name: "مؤسسة الأمل", year: 2026, track: "الفريق", progress: 30, avgScore: 50, compliance: 40, status: "قيد التقييم" },
-  { id: "a8", name: "جمعية الوفاء", year: 2026, track: "الشراكات", progress: 75, avgScore: 82, compliance: 80, status: "تسليم جزئي" },
-  { id: "a9", name: "جمعية السلام", year: 2026, track: "التأثير", progress: 90, avgScore: 88, compliance: 92, status: "تسليم كامل" },
-  { id: "a10", name: "مؤسسة التنمية", year: 2026, track: "البرامج", progress: 20, avgScore: 35, compliance: 30, status: "قيد التقييم" },
-];
+{ id: "a1", name: "جمعية البر الخيرية", year: 2026, track: "التوجه", progress: 85, avgScore: 78, compliance: 90, status: "قيد التقييم" },
+{ id: "a2", name: "جمعية إنسان", year: 2026, track: "الفريق", progress: 100, avgScore: 92, compliance: 95, status: "تسليم كامل" },
+{ id: "a3", name: "جمعية تكافل", year: 2026, track: "الشراكات", progress: 45, avgScore: 61, compliance: 55, status: "تسليم جزئي" },
+{ id: "a4", name: "مؤسسة العطاء", year: 2026, track: "التأثير", progress: 0, avgScore: 0, compliance: 20, status: "لم تبدأ" },
+{ id: "a5", name: "جمعية رعاية", year: 2026, track: "البرامج", progress: 60, avgScore: 70, compliance: 75, status: "قيد التقييم" },
+{ id: "a6", name: "جمعية إحسان", year: 2026, track: "التوجه", progress: 100, avgScore: 95, compliance: 98, status: "تسليم كامل" },
+{ id: "a7", name: "مؤسسة الأمل", year: 2026, track: "الفريق", progress: 30, avgScore: 50, compliance: 40, status: "قيد التقييم" },
+{ id: "a8", name: "جمعية الوفاء", year: 2026, track: "الشراكات", progress: 75, avgScore: 82, compliance: 80, status: "تسليم جزئي" },
+{ id: "a9", name: "جمعية السلام", year: 2026, track: "التأثير", progress: 90, avgScore: 88, compliance: 92, status: "تسليم كامل" },
+{ id: "a10", name: "مؤسسة التنمية", year: 2026, track: "البرامج", progress: 20, avgScore: 35, compliance: 30, status: "قيد التقييم" }];
+
 
 const assocReports2025: AssocReport[] = [
-  { id: "a1", name: "جمعية البر الخيرية", year: 2025, track: "التوجه", progress: 100, avgScore: 88, compliance: 95, status: "تسليم كامل" },
-  { id: "a2", name: "جمعية إنسان", year: 2025, track: "الفريق", progress: 100, avgScore: 79, compliance: 85, status: "تسليم كامل" },
-  { id: "a3", name: "جمعية تكافل", year: 2025, track: "الشراكات", progress: 100, avgScore: 71, compliance: 78, status: "تسليم كامل" },
-  { id: "a4", name: "مؤسسة العطاء", year: 2025, track: "التأثير", progress: 78, avgScore: 65, compliance: 60, status: "تسليم جزئي" },
-  { id: "a5", name: "جمعية رعاية", year: 2025, track: "البرامج", progress: 100, avgScore: 67, compliance: 70, status: "تسليم كامل" },
-];
+{ id: "a1", name: "جمعية البر الخيرية", year: 2025, track: "التوجه", progress: 100, avgScore: 88, compliance: 95, status: "تسليم كامل" },
+{ id: "a2", name: "جمعية إنسان", year: 2025, track: "الفريق", progress: 100, avgScore: 79, compliance: 85, status: "تسليم كامل" },
+{ id: "a3", name: "جمعية تكافل", year: 2025, track: "الشراكات", progress: 100, avgScore: 71, compliance: 78, status: "تسليم كامل" },
+{ id: "a4", name: "مؤسسة العطاء", year: 2025, track: "التأثير", progress: 78, avgScore: 65, compliance: 60, status: "تسليم جزئي" },
+{ id: "a5", name: "جمعية رعاية", year: 2025, track: "البرامج", progress: 100, avgScore: 67, compliance: 70, status: "تسليم كامل" }];
+
 
 const evalReports: EvaluatorReport[] = [
-  { id: "e1", name: "أحمد محمد", assignedCount: 12, avgDuration: 5, avgScore: 82, compliance: 90 },
-  { id: "e2", name: "سارة علي", assignedCount: 10, avgDuration: 3, avgScore: 91, compliance: 95 },
-  { id: "e3", name: "خالد عمر", assignedCount: 8, avgDuration: 7, avgScore: 74, compliance: 80 },
-  { id: "e4", name: "نورة سعد", assignedCount: 15, avgDuration: 4, avgScore: 88, compliance: 92 },
-  { id: "e5", name: "فهد ناصر", assignedCount: 6, avgDuration: 9, avgScore: 65, compliance: 70 },
-  { id: "e6", name: "ريم خالد", assignedCount: 11, avgDuration: 4, avgScore: 85, compliance: 88 },
-  { id: "e7", name: "عمر يوسف", assignedCount: 9, avgDuration: 6, avgScore: 77, compliance: 82 },
-];
+{ id: "e1", name: "أحمد محمد", assignedCount: 12, avgDuration: 5, avgScore: 82, compliance: 90 },
+{ id: "e2", name: "سارة علي", assignedCount: 10, avgDuration: 3, avgScore: 91, compliance: 95 },
+{ id: "e3", name: "خالد عمر", assignedCount: 8, avgDuration: 7, avgScore: 74, compliance: 80 },
+{ id: "e4", name: "نورة سعد", assignedCount: 15, avgDuration: 4, avgScore: 88, compliance: 92 },
+{ id: "e5", name: "فهد ناصر", assignedCount: 6, avgDuration: 9, avgScore: 65, compliance: 70 },
+{ id: "e6", name: "ريم خالد", assignedCount: 11, avgDuration: 4, avgScore: 85, compliance: 88 },
+{ id: "e7", name: "عمر يوسف", assignedCount: 9, avgDuration: 6, avgScore: 77, compliance: 82 }];
+
 
 const yearCompData = [
-  { metric: "متوسط الدرجات", "2025": 74, "2026": 68 },
-  { metric: "نسبة الالتزام", "2025": 78, "2026": 72 },
-  { metric: "نسبة الإنجاز", "2025": 91, "2026": 64 },
-];
+{ metric: "متوسط الدرجات", "2025": 74, "2026": 68 },
+{ metric: "نسبة الالتزام", "2025": 78, "2026": 72 },
+{ metric: "نسبة الإنجاز", "2025": 91, "2026": 64 }];
+
 
 const trackCompData2025 = tracks.map((t, i) => ({ track: t, "2025": [88, 79, 71, 92, 67][i] }));
 const trackCompData2026 = tracks.map((t, i) => ({ track: t, "2026": [78, 65, 58, 80, 45][i] }));
 const trackCompDataBoth = tracks.map((t, i) => ({
   track: t,
   "2025": [88, 79, 71, 92, 67][i],
-  "2026": [78, 65, 58, 80, 45][i],
+  "2026": [78, 65, 58, 80, 45][i]
 }));
 
 /* ── Status Badge ── */
@@ -139,14 +139,14 @@ const statusColors: Record<string, string> = {
   "تسليم كامل": "bg-emerald-100 text-emerald-700",
   "قيد التقييم": "bg-blue-100 text-blue-700",
   "تسليم جزئي": "bg-amber-100 text-amber-700",
-  "لم تبدأ": "bg-gray-100 text-gray-500",
+  "لم تبدأ": "bg-gray-100 text-gray-500"
 };
 
 const chartStyle = {
   fontFamily: "HRSDGov-Medium",
   fontSize: 12,
   borderRadius: 10,
-  border: "1px solid hsl(210,15%,90%)",
+  border: "1px solid hsl(210,15%,90%)"
 };
 
 /* ── Component ── */
@@ -167,7 +167,7 @@ const AdminReports = () => {
   const [trackCompMode, setTrackCompMode] = useState<"single" | "dual">("dual");
 
   const comingSoon = () =>
-    toast({ title: "قريبًا", description: "سيتم توفير هذه الميزة لاحقًا" });
+  toast({ title: "قريبًا", description: "سيتم توفير هذه الميزة لاحقًا" });
 
   const allAssocReports = year === 2026 ? assocReports2026 : assocReports2025;
 
@@ -184,12 +184,12 @@ const AdminReports = () => {
   }, [allAssocReports, trackFilter, typeFilter, statusFilter, scoreRange, progressRange]);
 
   // KPIs
-  const avgCompliance = filteredAssoc.length
-    ? Math.round(filteredAssoc.reduce((s, r) => s + r.compliance, 0) / filteredAssoc.length)
-    : 0;
-  const avgScore = filteredAssoc.length
-    ? Math.round(filteredAssoc.reduce((s, r) => s + r.avgScore, 0) / filteredAssoc.length)
-    : 0;
+  const avgCompliance = filteredAssoc.length ?
+  Math.round(filteredAssoc.reduce((s, r) => s + r.compliance, 0) / filteredAssoc.length) :
+  0;
+  const avgScore = filteredAssoc.length ?
+  Math.round(filteredAssoc.reduce((s, r) => s + r.avgScore, 0) / filteredAssoc.length) :
+  0;
   const topPerformer = [...filteredAssoc].sort((a, b) => b.avgScore - a.avgScore)[0];
   const bottomPerformer = [...filteredAssoc].sort((a, b) => a.avgScore - b.avgScore)[0];
 
@@ -198,7 +198,7 @@ const AdminReports = () => {
     const subset = filteredAssoc.filter((r) => r.track === t);
     return {
       name: t,
-      value: subset.length ? Math.round(subset.reduce((s, r) => s + r.avgScore, 0) / subset.length) : 0,
+      value: subset.length ? Math.round(subset.reduce((s, r) => s + r.avgScore, 0) / subset.length) : 0
     };
   });
 
@@ -215,11 +215,11 @@ const AdminReports = () => {
   };
 
   const currentTrackComp =
-    trackCompMode === "dual"
-      ? trackCompDataBoth
-      : year === 2026
-      ? trackCompData2026
-      : trackCompData2025;
+  trackCompMode === "dual" ?
+  trackCompDataBoth :
+  year === 2026 ?
+  trackCompData2026 :
+  trackCompData2025;
 
   return (
     <div dir="rtl" className="flex min-h-screen flex-col bg-[hsl(220,20%,97%)]">
@@ -313,19 +313,19 @@ const AdminReports = () => {
               icon={<TrendingUp className="h-5 w-5" />}
               highlight
               showProgress
-              progressValue={avgCompliance}
-            />
+              progressValue={avgCompliance} />
+
             <KpiCard title="متوسط الدرجات" value={`${avgScore}%`} icon={<Award className="h-5 w-5" />} />
             <KpiCard
               title="أعلى أداء"
               value={topPerformer ? `${topPerformer.avgScore}%` : "-"}
-              icon={<TrendingUp className="h-5 w-5" />}
-            />
+              icon={<TrendingUp className="h-5 w-5" />} />
+
             <KpiCard
               title="أدنى أداء"
               value={bottomPerformer ? `${bottomPerformer.avgScore}%` : "-"}
-              icon={<AlertTriangle className="h-5 w-5" />}
-            />
+              icon={<AlertTriangle className="h-5 w-5" />} />
+
           </div>
 
           {/* Tabs */}
@@ -364,21 +364,21 @@ const AdminReports = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-hrsd-medium text-emerald-600 mb-3">أعلى 5</p>
-                      {top5.map((r) => (
-                        <div key={r.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
+                      {top5.map((r) =>
+                      <div key={r.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                           <span className="text-xs font-hrsd">{r.name}</span>
                           <span className="text-xs font-hrsd-bold text-primary">{r.avgScore}%</span>
                         </div>
-                      ))}
+                      )}
                     </div>
                     <div>
                       <p className="text-xs font-hrsd-medium text-red-500 mb-3">أدنى 5</p>
-                      {bottom5.map((r) => (
-                        <div key={r.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
+                      {bottom5.map((r) =>
+                      <div key={r.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                           <span className="text-xs font-hrsd">{r.name}</span>
                           <span className="text-xs font-hrsd-bold text-destructive">{r.avgScore}%</span>
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -401,8 +401,8 @@ const AdminReports = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredAssoc.map((r) => (
-                        <TableRow key={r.id}>
+                      {filteredAssoc.map((r) =>
+                      <TableRow key={r.id}>
                           <TableCell className="font-hrsd-medium text-sm">{r.name}</TableCell>
                           <TableCell className="text-sm">{r.year}</TableCell>
                           <TableCell className="text-sm">{r.track}</TableCell>
@@ -427,7 +427,7 @@ const AdminReports = () => {
                             </Button>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </div>
@@ -477,8 +477,8 @@ const AdminReports = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {evalReports.map((e) => (
-                        <TableRow key={e.id}>
+                      {evalReports.map((e) =>
+                      <TableRow key={e.id}>
                           <TableCell className="font-hrsd-medium text-sm">{e.name}</TableCell>
                           <TableCell className="text-sm">{e.assignedCount}</TableCell>
                           <TableCell className="text-sm">{e.avgDuration} يوم</TableCell>
@@ -497,7 +497,7 @@ const AdminReports = () => {
                             </Button>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </div>
@@ -527,18 +527,18 @@ const AdminReports = () => {
                 </Card>
                 <Card className="p-6">
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="text-sm font-hrsd-semibold text-foreground">مقارنة بين المسارات</h3>
+                    <h3 className="text-sm font-hrsd-semibold text-foreground">مقارنة بين المساقات</h3>
                     <div className="flex items-center gap-1 rounded-lg border border-border overflow-hidden">
                       <button
                         className={`px-3 py-1 text-[10px] font-hrsd-medium transition-colors ${trackCompMode === "single" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`}
-                        onClick={() => setTrackCompMode("single")}
-                      >
+                        onClick={() => setTrackCompMode("single")}>
+
                         سنة واحدة
                       </button>
                       <button
                         className={`px-3 py-1 text-[10px] font-hrsd-medium transition-colors ${trackCompMode === "dual" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`}
-                        onClick={() => setTrackCompMode("dual")}
-                      >
+                        onClick={() => setTrackCompMode("dual")}>
+
                         سنتين
                       </button>
                     </div>
@@ -550,12 +550,12 @@ const AdminReports = () => {
                       <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} unit="%" axisLine={false} tickLine={false} />
                       <Tooltip contentStyle={chartStyle} />
                       <Legend wrapperStyle={{ fontFamily: "HRSDGov-Medium", fontSize: 11 }} />
-                      {(trackCompMode === "dual" || year === 2025) && (
-                        <Bar dataKey="2025" fill="hsl(210,15%,80%)" radius={[6, 6, 0, 0]} name="2025" />
-                      )}
-                      {(trackCompMode === "dual" || year === 2026) && (
-                        <Bar dataKey="2026" fill="hsl(175,75%,30%)" radius={[6, 6, 0, 0]} name="2026" />
-                      )}
+                      {(trackCompMode === "dual" || year === 2025) &&
+                      <Bar dataKey="2025" fill="hsl(210,15%,80%)" radius={[6, 6, 0, 0]} name="2025" />
+                      }
+                      {(trackCompMode === "dual" || year === 2026) &&
+                      <Bar dataKey="2026" fill="hsl(175,75%,30%)" radius={[6, 6, 0, 0]} name="2026" />
+                      }
                     </BarChart>
                   </ResponsiveContainer>
                 </Card>
@@ -589,8 +589,8 @@ const AdminReports = () => {
           <DialogHeader>
             <DialogTitle className="font-hrsd-title">ملخص تقرير الجمعية</DialogTitle>
           </DialogHeader>
-          {reportModal && (
-            <div className="space-y-4">
+          {reportModal &&
+          <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div><span className="text-muted-foreground font-hrsd">الجمعية:</span> <span className="font-hrsd-medium">{reportModal.name}</span></div>
                 <div><span className="text-muted-foreground font-hrsd">السنة:</span> <span className="font-hrsd-medium">{reportModal.year}</span></div>
@@ -599,21 +599,21 @@ const AdminReports = () => {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "نسبة الإنجاز", val: `${reportModal.progress}%` },
-                  { label: "متوسط الدرجة", val: `${reportModal.avgScore}%` },
-                  { label: "نسبة الالتزام", val: `${reportModal.compliance}%` },
-                ].map((k) => (
-                  <div key={k.label} className="rounded-lg border border-border p-3 text-center">
+              { label: "نسبة الإنجاز", val: `${reportModal.progress}%` },
+              { label: "متوسط الدرجة", val: `${reportModal.avgScore}%` },
+              { label: "نسبة الالتزام", val: `${reportModal.compliance}%` }].
+              map((k) =>
+              <div key={k.label} className="rounded-lg border border-border p-3 text-center">
                     <p className="text-[10px] font-hrsd text-muted-foreground">{k.label}</p>
                     <p className="text-lg font-hrsd-bold text-foreground mt-1">{k.val}</p>
                   </div>
-                ))}
+              )}
               </div>
               <Button variant="outline" size="sm" onClick={comingSoon} className="gap-2 text-xs font-hrsd-medium w-full">
                 تحميل التقرير <Download className="h-3.5 w-3.5" />
               </Button>
             </div>
-          )}
+          }
         </DialogContent>
       </Dialog>
 
@@ -623,33 +623,33 @@ const AdminReports = () => {
           <DialogHeader>
             <DialogTitle className="font-hrsd-title">ملخص أداء المقيم</DialogTitle>
           </DialogHeader>
-          {evalModal && (
-            <div className="space-y-4">
+          {evalModal &&
+          <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div><span className="text-muted-foreground font-hrsd">المقيم:</span> <span className="font-hrsd-medium">{evalModal.name}</span></div>
                 <div><span className="text-muted-foreground font-hrsd">عدد التقييمات:</span> <span className="font-hrsd-medium">{evalModal.assignedCount}</span></div>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "متوسط المدة", val: `${evalModal.avgDuration} يوم` },
-                  { label: "متوسط الدرجات", val: `${evalModal.avgScore}%` },
-                  { label: "نسبة الالتزام", val: `${evalModal.compliance}%` },
-                ].map((k) => (
-                  <div key={k.label} className="rounded-lg border border-border p-3 text-center">
+              { label: "متوسط المدة", val: `${evalModal.avgDuration} يوم` },
+              { label: "متوسط الدرجات", val: `${evalModal.avgScore}%` },
+              { label: "نسبة الالتزام", val: `${evalModal.compliance}%` }].
+              map((k) =>
+              <div key={k.label} className="rounded-lg border border-border p-3 text-center">
                     <p className="text-[10px] font-hrsd text-muted-foreground">{k.label}</p>
                     <p className="text-lg font-hrsd-bold text-foreground mt-1">{k.val}</p>
                   </div>
-                ))}
+              )}
               </div>
               <Button variant="outline" size="sm" onClick={comingSoon} className="gap-2 text-xs font-hrsd-medium w-full">
                 تحميل <Download className="h-3.5 w-3.5" />
               </Button>
             </div>
-          )}
+          }
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>);
+
 };
 
 export default AdminReports;
