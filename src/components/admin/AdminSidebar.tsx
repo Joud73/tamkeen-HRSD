@@ -44,7 +44,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "تعريف الجهات", icon: Building2 },
       { label: "تهيئة التقييم", icon: BookOpen, path: "/admin/performance/evaluation-setup" },
-      { label: "إدارة سنوات التقييم", icon: CalendarDays },
+      { label: "إدارة سنوات التقييم", icon: CalendarDays, path: "/admin/performance/evaluation-years" },
       { label: "تقييم الجهات", icon: ClipboardCheck },
     ],
   },
