@@ -25,6 +25,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminEvaluationSetup from "./pages/AdminEvaluationSetup";
 import AdminEntities from "./pages/AdminEntities";
 import AdminRubric from "./pages/AdminRubric";
+import AdminEvaluationYears from "./pages/AdminEvaluationYears";
+import AdminEvaluationYearDetail from "./pages/AdminEvaluationYearDetail";
 import AdminAssociations from "./pages/AdminAssociations";
 import AdminAssociationDetail from "./pages/AdminAssociationDetail";
 import AdminReviewers from "./pages/AdminReviewers";
@@ -116,6 +118,8 @@ const App = () => (
             <Route path="/admin/performance/evaluation-setup" element={<AdminEvaluationSetup />} />
             <Route path="/admin/performance/evaluation-setup/entities" element={<AdminEntities />} />
             <Route path="/admin/performance/evaluation-setup/rubric" element={<AdminRubric />} />
+            <Route path="/admin/performance/evaluation-years" element={<AdminEvaluationYears />} />
+            <Route path="/admin/performance/evaluation-years/:yearId" element={<AdminEvaluationYearDetail />} />
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/roles" element={<AdminRoles />} />
             <Route path="/admin/associations" element={<AdminAssociations />} />
