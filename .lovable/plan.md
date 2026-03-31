@@ -1,99 +1,81 @@
-# Integration Plan: Admin ↔ Evaluator
 
-## Current State
 
-**Admin side** (all mock/client-side data):
+# خطة: ربط إدارة المستخدمين بالبيانات الحقيقية
 
-- **إدارة المقيمين** (`/admin/reviewers`): Lists reviewers with mock data, has "توزيع التقييمات" and "إعادة إسناد" dialogs that show toasts only
-- **إدارة الجمعيات** (`/admin/associations`): Lists associations with mock data, shows evaluator name per association but no real assignment logic
+## ملخص
+تحويل صفحة "إدارة المستخدمين" من البيانات التجريبية إلى بيانات حقيقية، مع إمكانية إنشاء حسابات جديدة يستطيع أصحابها تسجيل الدخول بكلمة مرور افتراضية `Aa123456`.
 
-**Evaluator side** (connected to database):
+## المشكلة
+إنشاء مستخدم جديد يتطلب `supabase.auth.admin.createUser()` الذي يحتاج `service_role_key` — وهذا المفتاح سري ولا يمكن استخدامه من المتصفح. الحل: إنشاء Edge Function تعمل بصلاحيات الخادم.
 
-- **EvaluatorDashboard** (`/evaluator`): Reads from `evaluator_assignments` table via Supabase, shows KPIs
-- **EvaluatorAssignments** (`/evaluator/assignments`): Lists real assignments from DB
-- **EvaluationDetails** (`/evaluator/assignment/:id`): Full scoring/messaging flow against real DB tables
+## خطوات التنفيذ
 
-**Gap**: The admin pages use hardcoded mock data and toast-only actions. The evaluator pages read from real DB tables (`evaluator_assignments`, `evaluation_criteria`, etc.) but no admin UI writes to them.
+### 1. إنشاء Edge Function: `create-user`
+**ملف جديد:** `supabase/functions/create-user/index.ts`
 
----
+- تستقبل: `email`, `role` (admin / evaluator / user), `organization_name` (اختياري)
+- تتحقق أن الطالب لديه دور `admin` عبر JWT
+- تنفذ:
+  1. إنشاء مستخدم في Auth بكلمة مرور `Aa123456` مع تأكيد الإيميل تلقائيًا
+  2. إدراج صف في `profiles` (email, organization_name, status: active)
+  3. إدراج صف في `user_roles` (user_id, role)
+- ترجع بيانات المستخدم الجديد
 
-## Integration Steps
-
-### Step 1: Connect Admin Reviewers to Real Users
-
-- Update **إدارة المقيمين** to fetch actual users who have the `evaluator` role from `user_roles` + `profiles` tables instead of mock data
-- Show real assignment counts by querying `evaluator_assignments`
-- Keep the add/edit reviewer flow (create user + assign `evaluator` role)
-
-### Step 2: Build Assignment Workflow in Admin
-
-- In **إدارة المقيمين** or **إدارة الجمعيات**, replace the mock "توزيع التقييمات" dialog with a real form that:
-  - Lets admin select an association (from profiles with org role) and an evaluator
-  - Picks an evaluation year
-  - Inserts a row into `evaluator_assignments` table with status `not_started`
-- This is the core link: admin creates assignment → evaluator sees it in their dashboard
-
-### Step 3: Connect Admin Associations to Real Data
-
-- Update **إدارة الجمعيات** to read associations from `profiles` (orgs) and their assignment status from `evaluator_assignments`
-- The "تغيير المقيم" action would update `evaluator_assignments.evaluator_id`
-- The "إيقاف تقييم" action would update `evaluator_assignments.status`
-
-### Step 4: Admin Monitoring
-
-- Admin dashboard KPIs pull from `evaluator_assignments` (total, in-progress, completed)
-- Admin can view evaluation progress per association (read from `criterion_evaluations`)
-
----
-
-## Database Changes Needed
-
-No new tables required. Existing tables support the flow:
-
-```text
-Admin creates assignment
-        ↓
-evaluator_assignments (evaluator_id, association_id, year, status)
-        ↓
-Evaluator sees it in dashboard, starts scoring
-        ↓
-criterion_evaluations (scores per criteria)
-evaluation_evidences (uploaded files)
-evaluation_messages (communication)
-```
-
-**RLS**: Admin policies already exist (`has_role(auth.uid(), 'admin')`) for all relevant tables. The admin user just needs the `admin` role in `user_roles`.
-
-**Optional migration**: Add a `profiles` RLS policy so admins can read all profiles (currently users can only read their own). This is needed for the admin to list associations and evaluators.
+### 2. إضافة سياسة RLS على profiles للتعديل
+**Migration:** السياسة الحالية تسمح للـ admin بالـ SELECT فقط. نحتاج إضافة UPDATE حتى يتمكن المدير من تعديل حالة المستخدمين.
 
 ```sql
-CREATE POLICY "Admins can view all profiles"
-ON public.profiles FOR SELECT TO authenticated
+CREATE POLICY "Admins can update all profiles"
+ON public.profiles FOR UPDATE TO authenticated
 USING (has_role(auth.uid(), 'admin'::app_role));
 ```
 
----
+### 3. إضافة `useAdminUsers` hook
+**تعديل:** `src/hooks/useAdminData.ts`
 
-## Implementation Order
+- جلب جميع `profiles` + أدوارهم من `user_roles`
+- بناء قائمة: id, email, organization_name, role (عربي), status, created_at
 
-1. **Add admin RLS policy on profiles** (migration) so admin can query all users
-2. **Update AdminReviewers** to fetch real evaluators from DB instead of mock data
-3. **Build real assignment creation** dialog (admin picks evaluator + association + year → inserts into `evaluator_assignments`)
-4. **Update AdminAssociations** to show real data from DB
-5. **Update AdminDashboard** KPIs to pull from real tables
+### 4. تحديث `AdminUsers.tsx`
+**تعديل:** `src/pages/AdminUsers.tsx`
 
----
+- استبدال البيانات التجريبية بـ `useAdminUsers()`
+- عند "إنشاء مستخدم جديد": استدعاء Edge Function `create-user`
+- عند "تعديل": تحديث `profiles` مباشرة عبر Supabase SDK
+- عند "تعطيل/تفعيل": تحديث `profiles.status`
+- عند "إعادة تعيين كلمة المرور": استخدام `resetPasswordForEmail`
+- KPIs تعتمد على البيانات الحقيقية
 
-## Technical Details
+## التفاصيل التقنية
 
+```text
+Client (AdminUsers.tsx)
+  │
+  ├─ GET: useAdminUsers() → profiles + user_roles (Supabase SDK)
+  │
+  ├─ CREATE: supabase.functions.invoke('create-user', { email, role, ... })
+  │           → Edge Function uses service_role to create auth user + profile + role
+  │
+  ├─ UPDATE: supabase.from('profiles').update({...}).eq('id', userId)
+  │
+  └─ TOGGLE STATUS: supabase.from('profiles').update({ status }).eq('id', userId)
+```
 
-| What               | How                                                                                              |
-| ------------------ | ------------------------------------------------------------------------------------------------ |
-| Fetch evaluators   | `supabase.from('user_roles').select('user_id').eq('role','evaluator')` then join with `profiles` |
-| Fetch associations | `supabase.from('profiles').select('*').not('organization_name','is',null)`                       |
-| Create assignment  | `supabase.from('evaluator_assignments').insert({evaluator_id, association_id, year})`            |
-| Reassign evaluator | `supabase.from('evaluator_assignments').update({evaluator_id: newId}).eq('id', assignmentId)`    |
-| Admin auth guard   | Verify user has `admin` role before rendering admin pages                                        |
+### الأدوار المدعومة
+| دور عربي | قيمة قاعدة البيانات |
+|----------|---------------------|
+| مدير النظام | admin |
+| مقيم | evaluator |
+| أفراد | user |
 
+> ملاحظة: `app_role` enum يحتوي على `admin`, `evaluator`, `user` فقط. دور "مفوض الجمعية" غير موجود حاليًا في الـ enum — سيتم التعامل معه كـ `user` مع وجود `organization_name`.
 
-Each step can be implemented incrementally. The evaluator side requires zero changes -- it already reads from the correct tables.
+### ملفات سيتم إنشاؤها/تعديلها
+
+| ملف | عملية |
+|-----|-------|
+| `supabase/functions/create-user/index.ts` | إنشاء |
+| `src/hooks/useAdminData.ts` | إضافة `useAdminUsers` |
+| `src/pages/AdminUsers.tsx` | تحديث كامل |
+| Migration (RLS update) | إنشاء |
+
