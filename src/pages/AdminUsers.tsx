@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAdminUsers, AdminUserRow } from "@/hooks/useAdminData";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import KpiCard from "@/components/admin/KpiCard";
@@ -26,134 +29,106 @@ import {
 import { Label } from "@/components/ui/label";
 import {
   Search, Plus, FileDown, MoreHorizontal, Users, UserCheck, UserX,
-  Pencil, Ban, CheckCircle2, Trash2, KeyRound,
+  Pencil, Ban, CheckCircle2, KeyRound, Loader2,
 } from "lucide-react";
 
-/* ── types ── */
-type UserRole = "مدير النظام" | "مقيم" | "مفوض الجمعية" | "أفراد";
-type UserStatus = "نشط" | "معطل";
+type DbRole = "admin" | "evaluator" | "user";
 
-interface AppUser {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: UserRole;
-  entity: string;
-  status: UserStatus;
-  createdAt: string;
-  lastLogin: string;
-}
-
-/* ── mock data ── */
-const roles: UserRole[] = ["مدير النظام", "مقيم", "مفوض الجمعية", "أفراد"];
-
-const initialUsers: AppUser[] = [
-  { id: "u1", name: "عبدالله المطيري", email: "a.mutairi@hrsd.gov.sa", phone: "0551234567", role: "مدير النظام", entity: "—", status: "نشط", createdAt: "2025-01-10", lastLogin: "2026-02-25" },
-  { id: "u2", name: "نورة الشمري", email: "n.shamri@hrsd.gov.sa", phone: "0559876543", role: "مدير النظام", entity: "—", status: "نشط", createdAt: "2025-02-01", lastLogin: "2026-02-24" },
-  { id: "u3", name: "فهد العتيبي", email: "f.otaibi@eval.sa", phone: "0541112233", role: "مقيم", entity: "—", status: "نشط", createdAt: "2025-03-15", lastLogin: "2026-02-20" },
-  { id: "u4", name: "سارة القحطاني", email: "s.qahtani@eval.sa", phone: "0547778899", role: "مقيم", entity: "—", status: "نشط", createdAt: "2025-04-01", lastLogin: "2026-02-18" },
-  { id: "u5", name: "خالد الدوسري", email: "k.dosari@eval.sa", phone: "0533334444", role: "مقيم", entity: "—", status: "معطل", createdAt: "2025-05-20", lastLogin: "2025-12-10" },
-  { id: "u6", name: "منى الحربي", email: "m.harbi@jam1.org", phone: "0562223344", role: "مفوض الجمعية", entity: "جمعية البر بالرياض", status: "نشط", createdAt: "2025-06-01", lastLogin: "2026-02-22" },
-  { id: "u7", name: "أحمد الزهراني", email: "a.zahrani@jam2.org", phone: "0571112233", role: "مفوض الجمعية", entity: "جمعية إنسان", status: "نشط", createdAt: "2025-06-15", lastLogin: "2026-02-21" },
-  { id: "u8", name: "هند السبيعي", email: "h.subai@jam3.org", phone: "0589998877", role: "مفوض الجمعية", entity: "جمعية نماء الأهلية", status: "معطل", createdAt: "2025-07-01", lastLogin: "2025-11-05" },
-  { id: "u9", name: "عمر الغامدي", email: "o.ghamdi@jam4.org", phone: "0506665544", role: "مفوض الجمعية", entity: "جمعية بناء لرعاية الأيتام", status: "نشط", createdAt: "2025-08-10", lastLogin: "2026-01-30" },
-  { id: "u10", name: "ريم العنزي", email: "r.anazi@ind.sa", phone: "0521114455", role: "أفراد", entity: "فرد مستقل", status: "نشط", createdAt: "2025-09-01", lastLogin: "2026-02-23" },
-  { id: "u11", name: "سلطان الشهري", email: "s.shahri@ind.sa", phone: "0534447788", role: "أفراد", entity: "فرد مستقل", status: "نشط", createdAt: "2025-09-15", lastLogin: "2026-02-19" },
-  { id: "u12", name: "لمياء الرشيدي", email: "l.rashidi@ind.sa", phone: "0567773322", role: "أفراد", entity: "فرد مستقل", status: "معطل", createdAt: "2025-10-01", lastLogin: "2025-10-20" },
-  { id: "u13", name: "ماجد القرني", email: "m.qarni@eval.sa", phone: "0543332211", role: "مقيم", entity: "—", status: "نشط", createdAt: "2025-10-15", lastLogin: "2026-02-15" },
-  { id: "u14", name: "عائشة البلوي", email: "a.balawi@jam5.org", phone: "0558889900", role: "مفوض الجمعية", entity: "جمعية عناية الصحية", status: "نشط", createdAt: "2025-11-01", lastLogin: "2026-02-10" },
-  { id: "u15", name: "يوسف المالكي", email: "y.malki@ind.sa", phone: "0512224466", role: "أفراد", entity: "فرد مستقل", status: "نشط", createdAt: "2025-11-20", lastLogin: "2026-02-14" },
+const roleOptions: { value: DbRole; label: string }[] = [
+  { value: "admin", label: "مدير النظام" },
+  { value: "evaluator", label: "مقيم" },
+  { value: "user", label: "أفراد" },
 ];
 
-const emptyForm = {
-  name: "", email: "", phone: "", role: "مقيم" as UserRole, entity: "", status: "نشط" as UserStatus,
-};
+const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "" };
 
-/* ── component ── */
 const AdminUsers = () => {
   const { toast } = useToast();
-  const [users, setUsers] = useState<AppUser[]>(initialUsers);
+  const queryClient = useQueryClient();
+  const { data: users = [], isLoading } = useAdminUsers();
 
-  /* filters */
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("الكل");
   const [statusFilter, setStatusFilter] = useState("الكل");
 
-  /* dialogs */
   const [formOpen, setFormOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<AppUser | null>(null);
   const [formFields, setFormFields] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
 
-  const [toggleTarget, setToggleTarget] = useState<AppUser | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<AppUser | null>(null);
-  const [resetTarget, setResetTarget] = useState<AppUser | null>(null);
+  const [toggleTarget, setToggleTarget] = useState<AdminUserRow | null>(null);
+  const [resetTarget, setResetTarget] = useState<AdminUserRow | null>(null);
 
-  /* filtered list */
   const filtered = useMemo(() =>
     users.filter((u) => {
-      if (roleFilter !== "الكل" && u.role !== roleFilter) return false;
-      if (statusFilter !== "الكل" && u.status !== statusFilter) return false;
-      if (search && !u.name.includes(search) && !u.email.includes(search)) return false;
+      if (roleFilter !== "الكل" && u.roleAr !== roleFilter) return false;
+      if (statusFilter === "نشط" && u.status !== "active") return false;
+      if (statusFilter === "معطل" && u.status === "active") return false;
+      if (search && !u.email.includes(search) && !u.organization_name?.includes(search)) return false;
       return true;
     }), [users, roleFilter, statusFilter, search]);
 
-  /* KPIs */
   const total = users.length;
-  const active = users.filter((u) => u.status === "نشط").length;
-  const disabled = users.filter((u) => u.status === "معطل").length;
+  const active = users.filter((u) => u.status === "active").length;
+  const disabled = total - active;
 
-  /* helpers */
-  const openAdd = () => { setEditTarget(null); setFormFields(emptyForm); setFormOpen(true); };
-  const openEdit = (u: AppUser) => {
-    setEditTarget(u);
-    setFormFields({ name: u.name, email: u.email, phone: u.phone, role: u.role, entity: u.entity === "—" ? "" : u.entity, status: u.status });
-    setFormOpen(true);
+  const openAdd = () => { setFormFields(emptyForm); setFormOpen(true); };
+
+  const saveForm = async () => {
+    if (!formFields.email) {
+      toast({ title: "يرجى إدخال البريد الإلكتروني", variant: "destructive" });
+      return;
+    }
+    setSaving(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-user", {
+        body: {
+          email: formFields.email,
+          role: formFields.role,
+          organization_name: formFields.organization_name || null,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast({ title: "تم إنشاء المستخدم بنجاح", description: `كلمة المرور الافتراضية: Aa123456` });
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      setFormOpen(false);
+    } catch (err: any) {
+      toast({ title: "خطأ في إنشاء المستخدم", description: err.message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const saveForm = () => {
-    if (!formFields.name || !formFields.email) {
-      toast({ title: "يرجى تعبئة الحقول المطلوبة", variant: "destructive" }); return;
-    }
-    if (editTarget) {
-      setUsers((prev) => prev.map((u) => u.id === editTarget.id ? {
-        ...u, name: formFields.name, email: formFields.email, phone: formFields.phone,
-        role: formFields.role, entity: (formFields.role === "مفوض الجمعية" || formFields.role === "أفراد") ? (formFields.entity || "—") : "—",
-        status: formFields.status,
-      } : u));
-      toast({ title: "تم تحديث بيانات المستخدم (تجريبيًا)" });
-    } else {
-      const newUser: AppUser = {
-        id: `u${Date.now()}`, name: formFields.name, email: formFields.email, phone: formFields.phone,
-        role: formFields.role, entity: (formFields.role === "مفوض الجمعية" || formFields.role === "أفراد") ? (formFields.entity || "—") : "—",
-        status: formFields.status, createdAt: new Date().toISOString().slice(0, 10), lastLogin: "—",
-      };
-      setUsers((prev) => [newUser, ...prev]);
-      toast({ title: "تم إنشاء المستخدم (تجريبيًا)" });
-    }
-    setFormOpen(false);
-  };
-
-  const confirmToggle = () => {
+  const confirmToggle = async () => {
     if (!toggleTarget) return;
-    setUsers((prev) => prev.map((u) => u.id === toggleTarget.id ? { ...u, status: u.status === "نشط" ? "معطل" : "نشط" } : u));
-    toast({ title: toggleTarget.status === "نشط" ? "تم تعطيل المستخدم (تجريبيًا)" : "تم تفعيل المستخدم (تجريبيًا)" });
+    const newStatus = toggleTarget.status === "active" ? "profile_incomplete" : "active";
+    const { error } = await supabase.from("profiles").update({ status: newStatus }).eq("id", toggleTarget.id);
+    if (error) {
+      toast({ title: "خطأ", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: newStatus === "active" ? "تم تفعيل المستخدم" : "تم تعطيل المستخدم" });
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    }
     setToggleTarget(null);
   };
 
-  const confirmDelete = () => {
-    if (!deleteTarget) return;
-    setUsers((prev) => prev.filter((u) => u.id !== deleteTarget.id));
-    toast({ title: "تم حذف المستخدم (تجريبيًا)" });
-    setDeleteTarget(null);
-  };
-
-  const confirmReset = () => {
-    toast({ title: "تم إرسال رابط إعادة التعيين (تجريبيًا)" });
+  const confirmReset = async () => {
+    if (!resetTarget) return;
+    const { error } = await supabase.auth.resetPasswordForEmail(resetTarget.email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast({ title: "خطأ", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "تم إرسال رابط إعادة التعيين" });
+    }
     setResetTarget(null);
   };
 
-  const needsEntity = formFields.role === "مفوض الجمعية" || formFields.role === "أفراد";
+  const statusBadge = (status: string) => {
+    if (status === "active") return "مكتمل";
+    return "لم تبدأ";
+  };
 
   return (
     <div dir="rtl" className="min-h-screen" style={{ background: "hsl(220,20%,97%)" }}>
@@ -161,24 +136,22 @@ const AdminUsers = () => {
       <div className="flex flex-1 overflow-hidden">
         <AdminSidebar />
         <main className="flex-1 overflow-y-auto px-8 py-7 space-y-6">
-          {/* header */}
           <div>
             <h1 className="text-2xl font-hrsd-bold text-foreground">إدارة المستخدمين</h1>
             <p className="text-sm text-muted-foreground font-hrsd mt-1">إضافة المستخدمين وإدارة بياناتهم وصلاحياتهم</p>
           </div>
 
-          {/* toolbar */}
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative">
                 <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="ابحث بالاسم أو البريد..." className="pr-9 w-56 text-sm font-hrsd" value={search} onChange={(e) => setSearch(e.target.value)} />
+                <Input placeholder="ابحث بالبريد أو اسم الجهة..." className="pr-9 w-56 text-sm font-hrsd" value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
                 <SelectTrigger className="w-40 text-sm font-hrsd"><SelectValue /></SelectTrigger>
                 <SelectContent align="end">
                   <SelectItem value="الكل">الدور: الكل</SelectItem>
-                  {roles.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                  {roleOptions.map((r) => <SelectItem key={r.value} value={r.label}>{r.label}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -200,121 +173,101 @@ const AdminUsers = () => {
             </div>
           </div>
 
-          {/* KPIs */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <KpiCard title="إجمالي المستخدمين" value={total} icon={<Users className="h-5 w-5" />} />
             <KpiCard title="المستخدمون النشطون" value={active} icon={<UserCheck className="h-5 w-5" />} />
             <KpiCard title="المستخدمون المعطلون" value={disabled} icon={<UserX className="h-5 w-5" />} />
           </div>
 
-          {/* table */}
           <Card>
             <CardHeader className="pb-3"><CardTitle className="text-base font-hrsd-semibold">قائمة المستخدمين</CardTitle></CardHeader>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    {["الاسم", "البريد الإلكتروني", "الدور", "الجهة / الجمعية", "الحالة", "تاريخ الإنشاء", "آخر دخول", "الإجراءات"].map((h) => (
-                      <TableHead key={h} className="text-right text-xs font-hrsd-medium whitespace-nowrap">{h}</TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.length === 0 && (
-                    <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground font-hrsd">لا توجد نتائج</TableCell></TableRow>
-                  )}
-                  {filtered.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell className="font-hrsd-medium text-sm whitespace-nowrap">{u.name}</TableCell>
-                      <TableCell className="text-sm font-hrsd ltr text-right" dir="ltr">{u.email}</TableCell>
-                      <TableCell className="text-sm font-hrsd">{u.role}</TableCell>
-                      <TableCell className="text-sm font-hrsd text-muted-foreground">{u.entity}</TableCell>
-                      <TableCell><StatusBadge status={u.status === "نشط" ? "مكتمل" : "لم تبدأ"} /><span className="sr-only">{u.status}</span></TableCell>
-                      <TableCell className="text-sm font-hrsd text-muted-foreground whitespace-nowrap">{u.createdAt}</TableCell>
-                      <TableCell className="text-sm font-hrsd text-muted-foreground whitespace-nowrap">{u.lastLogin}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="font-hrsd text-sm min-w-[180px]">
-                            <DropdownMenuItem className="gap-2" onClick={() => openEdit(u)}><Pencil className="h-3.5 w-3.5" /> تعديل البيانات</DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2" onClick={() => setToggleTarget(u)}>
-                              {u.status === "نشط" ? <><Ban className="h-3.5 w-3.5" /> تعطيل المستخدم</> : <><CheckCircle2 className="h-3.5 w-3.5" /> تفعيل المستخدم</>}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-destructive" onClick={() => setDeleteTarget(u)}><Trash2 className="h-3.5 w-3.5" /> حذف المستخدم</DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2" onClick={() => setResetTarget(u)}><KeyRound className="h-3.5 w-3.5" /> إعادة تعيين كلمة المرور</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              {isLoading ? (
+                <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {["البريد الإلكتروني", "الدور", "الجهة / الجمعية", "الحالة", "تاريخ الإنشاء", "الإجراءات"].map((h) => (
+                        <TableHead key={h} className="text-right text-xs font-hrsd-medium whitespace-nowrap">{h}</TableHead>
+                      ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.length === 0 && (
+                      <TableRow><TableCell colSpan={6} className="text-center py-10 text-muted-foreground font-hrsd">لا توجد نتائج</TableCell></TableRow>
+                    )}
+                    {filtered.map((u) => (
+                      <TableRow key={u.id}>
+                        <TableCell className="text-sm font-hrsd ltr text-right" dir="ltr">{u.email}</TableCell>
+                        <TableCell className="text-sm font-hrsd">{u.roleAr}</TableCell>
+                        <TableCell className="text-sm font-hrsd text-muted-foreground">{u.organization_name || "—"}</TableCell>
+                        <TableCell><StatusBadge status={statusBadge(u.status)} /><span className="sr-only">{u.statusAr}</span></TableCell>
+                        <TableCell className="text-sm font-hrsd text-muted-foreground whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("ar-SA")}</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="font-hrsd text-sm min-w-[180px]">
+                              <DropdownMenuItem className="gap-2" onClick={() => setToggleTarget(u)}>
+                                {u.status === "active" ? <><Ban className="h-3.5 w-3.5" /> تعطيل المستخدم</> : <><CheckCircle2 className="h-3.5 w-3.5" /> تفعيل المستخدم</>}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="gap-2" onClick={() => setResetTarget(u)}><KeyRound className="h-3.5 w-3.5" /> إعادة تعيين كلمة المرور</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </main>
       </div>
 
-      {/* ── Create / Edit Dialog ── */}
+      {/* Create User Dialog */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
         <DialogContent className="sm:max-w-lg font-hrsd" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="font-hrsd-bold">{editTarget ? "تعديل بيانات المستخدم" : "إنشاء مستخدم جديد"}</DialogTitle>
-            <DialogDescription>{editTarget ? "قم بتعديل البيانات ثم اضغط حفظ" : "أدخل بيانات المستخدم الجديد"}</DialogDescription>
+            <DialogTitle className="font-hrsd-bold">إنشاء مستخدم جديد</DialogTitle>
+            <DialogDescription>أدخل بيانات المستخدم الجديد — كلمة المرور الافتراضية: Aa123456</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-2">
-            <div className="grid gap-1.5">
-              <Label className="font-hrsd-medium text-sm">الاسم الكامل *</Label>
-              <Input className="font-hrsd text-sm" value={formFields.name} onChange={(e) => setFormFields((p) => ({ ...p, name: e.target.value }))} />
-            </div>
             <div className="grid gap-1.5">
               <Label className="font-hrsd-medium text-sm">البريد الإلكتروني *</Label>
               <Input className="font-hrsd text-sm" type="email" dir="ltr" value={formFields.email} onChange={(e) => setFormFields((p) => ({ ...p, email: e.target.value }))} />
             </div>
             <div className="grid gap-1.5">
-              <Label className="font-hrsd-medium text-sm">رقم الجوال</Label>
-              <Input className="font-hrsd text-sm" dir="ltr" value={formFields.phone} onChange={(e) => setFormFields((p) => ({ ...p, phone: e.target.value }))} />
+              <Label className="font-hrsd-medium text-sm">الدور</Label>
+              <Select value={formFields.role} onValueChange={(v) => setFormFields((p) => ({ ...p, role: v as DbRole }))}>
+                <SelectTrigger className="font-hrsd text-sm"><SelectValue /></SelectTrigger>
+                <SelectContent align="end">
+                  {roleOptions.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-1.5">
-                <Label className="font-hrsd-medium text-sm">الدور</Label>
-                <Select value={formFields.role} onValueChange={(v) => setFormFields((p) => ({ ...p, role: v as UserRole }))}>
-                  <SelectTrigger className="font-hrsd text-sm"><SelectValue /></SelectTrigger>
-                  <SelectContent align="end">{roles.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-1.5">
-                <Label className="font-hrsd-medium text-sm">الحالة</Label>
-                <Select value={formFields.status} onValueChange={(v) => setFormFields((p) => ({ ...p, status: v as UserStatus }))}>
-                  <SelectTrigger className="font-hrsd text-sm"><SelectValue /></SelectTrigger>
-                  <SelectContent align="end">
-                    <SelectItem value="نشط">نشط</SelectItem>
-                    <SelectItem value="معطل">معطل</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="grid gap-1.5">
+              <Label className="font-hrsd-medium text-sm">اسم الجهة (اختياري)</Label>
+              <Input className="font-hrsd text-sm" value={formFields.organization_name} onChange={(e) => setFormFields((p) => ({ ...p, organization_name: e.target.value }))} />
             </div>
-            {needsEntity && (
-              <div className="grid gap-1.5">
-                <Label className="font-hrsd-medium text-sm">الجهة / الجمعية</Label>
-                <Input className="font-hrsd text-sm" value={formFields.entity} onChange={(e) => setFormFields((p) => ({ ...p, entity: e.target.value }))} />
-              </div>
-            )}
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setFormOpen(false)} className="font-hrsd-medium">إلغاء</Button>
-            <Button onClick={saveForm} className="font-hrsd-medium">حفظ</Button>
+            <Button onClick={saveForm} disabled={saving} className="font-hrsd-medium gap-2">
+              {saving && <Loader2 className="h-4 w-4 animate-spin" />} إنشاء
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* ── Toggle AlertDialog ── */}
+      {/* Toggle AlertDialog */}
       <AlertDialog open={!!toggleTarget} onOpenChange={() => setToggleTarget(null)}>
         <AlertDialogContent dir="rtl" className="font-hrsd">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-hrsd-bold">{toggleTarget?.status === "نشط" ? "تعطيل المستخدم" : "تفعيل المستخدم"}</AlertDialogTitle>
-            <AlertDialogDescription>{toggleTarget?.status === "نشط" ? "هل أنت متأكد من تعطيل المستخدم؟" : "هل تريد تفعيل المستخدم؟"}</AlertDialogDescription>
+            <AlertDialogTitle className="font-hrsd-bold">{toggleTarget?.status === "active" ? "تعطيل المستخدم" : "تفعيل المستخدم"}</AlertDialogTitle>
+            <AlertDialogDescription>{toggleTarget?.status === "active" ? "هل أنت متأكد من تعطيل المستخدم؟" : "هل تريد تفعيل المستخدم؟"}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0">
             <AlertDialogCancel className="font-hrsd-medium">إلغاء</AlertDialogCancel>
@@ -323,21 +276,7 @@ const AdminUsers = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* ── Delete AlertDialog ── */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <AlertDialogContent dir="rtl" className="font-hrsd">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-hrsd-bold">حذف المستخدم</AlertDialogTitle>
-            <AlertDialogDescription>سيتم حذف المستخدم نهائيًا. هل تريد المتابعة؟</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 sm:gap-0">
-            <AlertDialogCancel className="font-hrsd-medium">إلغاء</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-hrsd-medium">حذف</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* ── Reset Password Dialog ── */}
+      {/* Reset Password Dialog */}
       <Dialog open={!!resetTarget} onOpenChange={() => setResetTarget(null)}>
         <DialogContent className="sm:max-w-md font-hrsd" dir="rtl">
           <DialogHeader>
