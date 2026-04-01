@@ -42,7 +42,7 @@ const LoginLocal = () => {
       }
 
       // Role-based redirect
-      const { data: { user: authUser } } = await (await import("@/integrations/supabase/client")).supabase.auth.getUser();
+      const { data: { user: authUser } } = await supabase.auth.getUser();
       const role = authUser ? await fetchUserRole(authUser.id) : null;
       navigate(getDefaultRouteForRole(role), { replace: true });
     } catch {
