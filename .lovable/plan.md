@@ -1,81 +1,103 @@
 
 
-# خطة: ربط إدارة المستخدمين بالبيانات الحقيقية
+# Phase 1: Role System, Route Protection, Login Redirect
 
-## ملخص
-تحويل صفحة "إدارة المستخدمين" من البيانات التجريبية إلى بيانات حقيقية، مع إمكانية إنشاء حسابات جديدة يستطيع أصحابها تسجيل الدخول بكلمة مرور افتراضية `Aa123456`.
+## Scope
+Only roles, route protection, and login redirect. No UI redesign, no workflow changes.
 
-## المشكلة
-إنشاء مستخدم جديد يتطلب `supabase.auth.admin.createUser()` الذي يحتاج `service_role_key` — وهذا المفتاح سري ولا يمكن استخدامه من المتصفح. الحل: إنشاء Edge Function تعمل بصلاحيات الخادم.
+## Changes
 
-## خطوات التنفيذ
-
-### 1. إنشاء Edge Function: `create-user`
-**ملف جديد:** `supabase/functions/create-user/index.ts`
-
-- تستقبل: `email`, `role` (admin / evaluator / user), `organization_name` (اختياري)
-- تتحقق أن الطالب لديه دور `admin` عبر JWT
-- تنفذ:
-  1. إنشاء مستخدم في Auth بكلمة مرور `Aa123456` مع تأكيد الإيميل تلقائيًا
-  2. إدراج صف في `profiles` (email, organization_name, status: active)
-  3. إدراج صف في `user_roles` (user_id, role)
-- ترجع بيانات المستخدم الجديد
-
-### 2. إضافة سياسة RLS على profiles للتعديل
-**Migration:** السياسة الحالية تسمح للـ admin بالـ SELECT فقط. نحتاج إضافة UPDATE حتى يتمكن المدير من تعديل حالة المستخدمين.
-
+### 1. Database Migration — Expand `app_role` enum
 ```sql
-CREATE POLICY "Admins can update all profiles"
-ON public.profiles FOR UPDATE TO authenticated
-USING (has_role(auth.uid(), 'admin'::app_role));
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'organization';
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'individual';
+```
+The old `user` value stays in the enum (Postgres cannot remove enum values) but will not be used in new code.
+
+**Manual cleanup needed after migration:**
+```sql
+-- Inspect existing 'user' role records
+SELECT ur.user_id, ur.role, p.email, p.organization_name
+FROM user_roles ur JOIN profiles p ON p.id = ur.user_id
+WHERE ur.role = 'user';
+
+-- Then manually update each based on context:
+-- If they have organization_name → UPDATE SET role = 'organization'
+-- If they are individuals → UPDATE SET role = 'individual'
+-- This CANNOT be safely auto-mapped because some may be ambiguous.
 ```
 
-### 3. إضافة `useAdminUsers` hook
-**تعديل:** `src/hooks/useAdminData.ts`
+### 2. New File: `src/lib/roles.ts` — Centralized role helper
+- Export `AppRole` type: `"admin" | "evaluator" | "organization" | "individual"`
+- Export `roleDefaultRoute` map:
+  - `admin` → `/admin`
+  - `evaluator` → `/evaluator`
+  - `organization` → `/dashboard`
+  - `individual` → `/individuals-journey`
+- Export `getDefaultRouteForRole(role: AppRole | null): string` — returns route or `/login` fallback
+- Export `fetchUserRole(userId: string): Promise<AppRole | null>` — queries `user_roles` table
 
-- جلب جميع `profiles` + أدوارهم من `user_roles`
-- بناء قائمة: id, email, organization_name, role (عربي), status, created_at
+### 3. Edit: `src/context/AuthContext.tsx`
+- Import `AppRole`, `fetchUserRole` from `roles.ts`
+- Add `userRole: AppRole | null` to context state and interface
+- Fetch role alongside `profileStatus` in `initAuth` and `onAuthStateChange`
+- **Fix `signUp`**: after inserting profile, also insert into `user_roles` with role `"organization"` (the registration flow is for organizations only)
+- Clear `userRole` on sign out
 
-### 4. تحديث `AdminUsers.tsx`
-**تعديل:** `src/pages/AdminUsers.tsx`
+### 4. Edit: `src/components/ProtectedRoute.tsx`
+- Accept optional `allowedRoles?: AppRole[]` prop
+- Read `userRole` and `loading` from `useAuth()`
+- If not authenticated → redirect to `/login`
+- If `allowedRoles` specified and user's role not in list → redirect to `getDefaultRouteForRole(userRole)` (sends them to their correct area)
+- If role is still loading, show spinner
+- If authenticated but no role exists at all → show "no access" fallback
 
-- استبدال البيانات التجريبية بـ `useAdminUsers()`
-- عند "إنشاء مستخدم جديد": استدعاء Edge Function `create-user`
-- عند "تعديل": تحديث `profiles` مباشرة عبر Supabase SDK
-- عند "تعطيل/تفعيل": تحديث `profiles.status`
-- عند "إعادة تعيين كلمة المرور": استخدام `resetPasswordForEmail`
-- KPIs تعتمد على البيانات الحقيقية
+### 5. Edit: `src/App.tsx` — Apply role-based protection
+| Routes | `allowedRoles` |
+|--------|---------------|
+| `/dashboard`, `/settings`, `/training-stage`, `/course/:id`, `/under-review`, `/certificate/:id`, `/technical-indicators/:slug` | `["organization"]` |
+| `/evaluator`, `/evaluator/assignments`, `/evaluator/assignment/:id` | `["evaluator"]` |
+| `/admin`, `/admin/*` (all admin routes) | `["admin"]` |
+| `/individuals-journey`, `/individual-course/:id` | remain public (no change) |
+| `/contact-us` | remain public |
 
-## التفاصيل التقنية
+### 6. Edit: `src/pages/LoginLocal.tsx` — Role-based redirect
+- After successful `signIn`, call `fetchUserRole(user.id)` to get role
+- Use `getDefaultRouteForRole(role)` instead of hardcoded `/dashboard`
 
-```text
-Client (AdminUsers.tsx)
-  │
-  ├─ GET: useAdminUsers() → profiles + user_roles (Supabase SDK)
-  │
-  ├─ CREATE: supabase.functions.invoke('create-user', { email, role, ... })
-  │           → Edge Function uses service_role to create auth user + profile + role
-  │
-  ├─ UPDATE: supabase.from('profiles').update({...}).eq('id', userId)
-  │
-  └─ TOGGLE STATUS: supabase.from('profiles').update({ status }).eq('id', userId)
-```
+### 7. Skip: `src/pages/NafathAuth.tsx`
+NafathAuth is a mock flow with no real Supabase session — no role lookup is possible. Leave as-is.
 
-### الأدوار المدعومة
-| دور عربي | قيمة قاعدة البيانات |
-|----------|---------------------|
-| مدير النظام | admin |
-| مقيم | evaluator |
-| أفراد | user |
+### 8. Edit: `src/hooks/useAdminData.ts` — Minimal type update
+- Update `roleArMap` to include `organization: "جمعية"` and `individual: "أفراد"`
+- No query logic changes
 
-> ملاحظة: `app_role` enum يحتوي على `admin`, `evaluator`, `user` فقط. دور "مفوض الجمعية" غير موجود حاليًا في الـ enum — سيتم التعامل معه كـ `user` مع وجود `organization_name`.
+### 9. Edit: `src/pages/AdminUsers.tsx` — Minimal type update
+- Update `DbRole` type to `"admin" | "evaluator" | "organization" | "individual"`
+- Update role dropdown options to match
 
-### ملفات سيتم إنشاؤها/تعديلها
+### 10. Edit: `supabase/functions/create-user/index.ts`
+- Update `validRoles` to `["admin", "evaluator", "organization", "individual"]`
 
-| ملف | عملية |
-|-----|-------|
-| `supabase/functions/create-user/index.ts` | إنشاء |
-| `src/hooks/useAdminData.ts` | إضافة `useAdminUsers` |
-| `src/pages/AdminUsers.tsx` | تحديث كامل |
-| Migration (RLS update) | إنشاء |
+## Files Summary
+
+| File | Action |
+|------|--------|
+| Migration SQL | Add `organization`, `individual` to enum |
+| `src/lib/roles.ts` | **New** — role types + route map + fetch helper |
+| `src/context/AuthContext.tsx` | Add `userRole`, fix `signUp` to insert role |
+| `src/components/ProtectedRoute.tsx` | Add `allowedRoles` check |
+| `src/App.tsx` | Apply `allowedRoles` per route group |
+| `src/pages/LoginLocal.tsx` | Role-based redirect |
+| `src/hooks/useAdminData.ts` | Add role labels only |
+| `src/pages/AdminUsers.tsx` | Update role type + options |
+| `supabase/functions/create-user/index.ts` | Update valid roles |
+
+## Not Changed
+- `NafathAuth.tsx` (mock flow, no real session)
+- `useAdminAssociations` query logic
+- Page layouts, styles, dashboards
+- Registration approval workflow
+- Evaluator assignment workflow
+- Individual journey pages remain public
 
