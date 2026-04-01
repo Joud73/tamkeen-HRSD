@@ -232,6 +232,54 @@ export type Database = {
         }
         Relationships: []
       }
+      organization_requests: {
+        Row: {
+          delegate_email: string | null
+          delegate_id_number: string | null
+          delegate_mobile: string | null
+          delegate_name: string | null
+          email: string
+          id: string
+          notes: string | null
+          organization_name: string
+          registration_number: string
+          request_status: Database["public"]["Enums"]["request_status"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          submitted_at: string
+        }
+        Insert: {
+          delegate_email?: string | null
+          delegate_id_number?: string | null
+          delegate_mobile?: string | null
+          delegate_name?: string | null
+          email: string
+          id?: string
+          notes?: string | null
+          organization_name: string
+          registration_number: string
+          request_status?: Database["public"]["Enums"]["request_status"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          submitted_at?: string
+        }
+        Update: {
+          delegate_email?: string | null
+          delegate_id_number?: string | null
+          delegate_mobile?: string | null
+          delegate_name?: string | null
+          email?: string
+          id?: string
+          notes?: string | null
+          organization_name?: string
+          registration_number?: string
+          request_status?: Database["public"]["Enums"]["request_status"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          submitted_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -296,6 +344,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "evaluator" | "user" | "organization" | "individual"
       profile_status: "pending_verification" | "profile_incomplete" | "active"
+      request_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -425,6 +474,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "evaluator", "user", "organization", "individual"],
       profile_status: ["pending_verification", "profile_incomplete", "active"],
+      request_status: ["pending", "approved", "rejected"],
     },
   },
 } as const
