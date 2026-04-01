@@ -118,8 +118,8 @@ const Register = () => {
         return;
       }
 
-      // Update profile status to active
-      const { error: updateError } = await updateProfileStatus("active");
+      // Keep status as pending_verification — admin must approve
+      const { error: updateError } = await updateProfileStatus("pending_verification");
 
       if (updateError) {
         setError(updateError);
@@ -478,23 +478,23 @@ const Register = () => {
 
       {/* Success Message */}
       <h2 className="font-hrsd-bold text-2xl text-gray-800 mb-4 text-center">
-        تم تفعيل حسابك بنجاح
+        تم استلام طلبك بنجاح
       </h2>
       
       <p className="font-hrsd text-gray-600 text-center mb-8 leading-relaxed max-w-md">
-        لقد قمت بإنشاء حساب ضمن أداة التقييم الفني. يمكنك الآن تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور.
+        تم تسجيل طلب إنشاء حساب المنظمة. سيقوم مدير النظام بمراجعة الطلب وتفعيل الحساب. ستتمكن من تسجيل الدخول بعد الموافقة.
       </p>
 
-      {/* Dashboard Button */}
+      {/* Back to Login Button */}
       <button
         type="button"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/login")}
         className="w-full py-3 rounded-lg text-white font-hrsd-semibold text-lg transition-colors hover:opacity-90"
         style={{
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        الذهاب إلى لوحة التحكم
+        العودة إلى تسجيل الدخول
       </button>
     </div>
   );
