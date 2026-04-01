@@ -49,109 +49,47 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Public routes */}
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login-local" element={<LoginLocal />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/nafath-auth" element={<NafathAuth />} />
             <Route path="/register" element={<Register />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/technical-indicators/:courseSlug"
-              element={
-                <ProtectedRoute>
-                  <TechnicalEvaluationIndicators />
-                </ProtectedRoute>
-              }
-              />
-            <Route
-              path="/training-stage"
-              element={
-                <ProtectedRoute>
-                  <TrainingStage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/course/:courseId"
-              element={
-                <ProtectedRoute>
-                  <CourseDetail />
-                </ProtectedRoute>
-              }
-            />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/individuals-journey" element={<IndividualsJourney />} />
             <Route path="/individual-course/:courseId" element={<IndividualCourseDetail />} />
-            <Route
-              path="/under-review"
-              element={
-                <ProtectedRoute>
-                  <UnderReview />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/certificate/:organizationId"
-              element={
-                <ProtectedRoute>
-                  <Certificate />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/performance/evaluation-setup" element={<AdminEvaluationSetup />} />
-            <Route path="/admin/performance/evaluation-setup/entities" element={<AdminEntities />} />
-            <Route path="/admin/performance/evaluation-setup/rubric" element={<AdminRubric />} />
-            <Route path="/admin/performance/evaluation-years" element={<AdminEvaluationYears />} />
-            <Route path="/admin/performance/evaluation-years/:yearId" element={<AdminEvaluationYearDetail />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/roles" element={<AdminRoles />} />
-            <Route path="/admin/associations" element={<AdminAssociations />} />
-            <Route path="/admin/associations/:id" element={<AdminAssociationDetail />} />
-            <Route path="/admin/reviewers" element={<AdminReviewers />} />
-            <Route path="/admin/reviewers/:id" element={<AdminReviewerDetail />} />
-            <Route path="/admin/reports" element={<AdminReports />} />
-            <Route
-              path="/evaluator"
-              element={
-                <ProtectedRoute>
-                  <EvaluatorDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/evaluator/assignments"
-              element={
-                <ProtectedRoute>
-                  <EvaluatorAssignments />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/evaluator/assignment/:assignmentId"
-              element={
-                <ProtectedRoute>
-                  <EvaluationDetails />
-                </ProtectedRoute>
-              }
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+            {/* Organization routes */}
+            <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["organization"]}><Dashboard /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute allowedRoles={["organization"]}><Settings /></ProtectedRoute>} />
+            <Route path="/technical-indicators/:courseSlug" element={<ProtectedRoute allowedRoles={["organization"]}><TechnicalEvaluationIndicators /></ProtectedRoute>} />
+            <Route path="/training-stage" element={<ProtectedRoute allowedRoles={["organization"]}><TrainingStage /></ProtectedRoute>} />
+            <Route path="/course/:courseId" element={<ProtectedRoute allowedRoles={["organization"]}><CourseDetail /></ProtectedRoute>} />
+            <Route path="/under-review" element={<ProtectedRoute allowedRoles={["organization"]}><UnderReview /></ProtectedRoute>} />
+            <Route path="/certificate/:organizationId" element={<ProtectedRoute allowedRoles={["organization"]}><Certificate /></ProtectedRoute>} />
+
+            {/* Admin routes */}
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/performance/evaluation-setup" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEvaluationSetup /></ProtectedRoute>} />
+            <Route path="/admin/performance/evaluation-setup/entities" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEntities /></ProtectedRoute>} />
+            <Route path="/admin/performance/evaluation-setup/rubric" element={<ProtectedRoute allowedRoles={["admin"]}><AdminRubric /></ProtectedRoute>} />
+            <Route path="/admin/performance/evaluation-years" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEvaluationYears /></ProtectedRoute>} />
+            <Route path="/admin/performance/evaluation-years/:yearId" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEvaluationYearDetail /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute allowedRoles={["admin"]}><AdminUsers /></ProtectedRoute>} />
+            <Route path="/admin/roles" element={<ProtectedRoute allowedRoles={["admin"]}><AdminRoles /></ProtectedRoute>} />
+            <Route path="/admin/associations" element={<ProtectedRoute allowedRoles={["admin"]}><AdminAssociations /></ProtectedRoute>} />
+            <Route path="/admin/associations/:id" element={<ProtectedRoute allowedRoles={["admin"]}><AdminAssociationDetail /></ProtectedRoute>} />
+            <Route path="/admin/reviewers" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReviewers /></ProtectedRoute>} />
+            <Route path="/admin/reviewers/:id" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReviewerDetail /></ProtectedRoute>} />
+            <Route path="/admin/reports" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReports /></ProtectedRoute>} />
+
+            {/* Evaluator routes */}
+            <Route path="/evaluator" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluatorDashboard /></ProtectedRoute>} />
+            <Route path="/evaluator/assignments" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluatorAssignments /></ProtectedRoute>} />
+            <Route path="/evaluator/assignment/:assignmentId" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluationDetails /></ProtectedRoute>} />
+
+            {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

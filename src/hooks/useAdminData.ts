@@ -175,7 +175,9 @@ export interface AdminUserRow {
 const roleArMap: Record<string, string> = {
   admin: "مدير النظام",
   evaluator: "مقيم",
-  user: "أفراد",
+  organization: "جمعية",
+  individual: "أفراد",
+  user: "مستخدم",
 };
 
 export function useAdminUsers() {

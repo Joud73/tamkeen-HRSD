@@ -32,12 +32,13 @@ import {
   Pencil, Ban, CheckCircle2, KeyRound, Loader2,
 } from "lucide-react";
 
-type DbRole = "admin" | "evaluator" | "user";
+type DbRole = "admin" | "evaluator" | "organization" | "individual";
 
 const roleOptions: { value: DbRole; label: string }[] = [
   { value: "admin", label: "مدير النظام" },
   { value: "evaluator", label: "مقيم" },
-  { value: "user", label: "أفراد" },
+  { value: "organization", label: "جمعية" },
+  { value: "individual", label: "أفراد" },
 ];
 
 const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "" };

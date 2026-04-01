@@ -40,7 +40,10 @@ const LoginLocal = () => {
         return;
       }
 
-      navigate("/dashboard", { replace: true });
+      // Role-based redirect
+      const { data: { user: authUser } } = await (await import("@/integrations/supabase/client")).supabase.auth.getUser();
+      const role = authUser ? await fetchUserRole(authUser.id) : null;
+      navigate(getDefaultRouteForRole(role), { replace: true });
     } catch {
       setError("حدث خطأ أثناء تسجيل الدخول");
     } finally {
