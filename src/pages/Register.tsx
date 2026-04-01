@@ -494,7 +494,7 @@ const Register = () => {
           backgroundColor: "hsl(175, 75%, 30%)",
         }}
       >
-        الذهاب إلى لوحة التحكم
+        العودة إلى تسجيل الدخول
       </button>
     </div>
   );

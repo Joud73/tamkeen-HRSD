@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
-  const { user, loading, userRole } = useAuth();
+  const { user, loading, userRole, profileStatus } = useAuth();
 
   if (loading) {
     return (
@@ -20,6 +20,11 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Organization pending admin approval — redirect to pending page
+  if (userRole === "organization" && profileStatus === "pending_verification") {
+    return <Navigate to="/pending-approval" replace />;
   }
 
   // Role check
