@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchUserRole, getDefaultRouteForRole } from "@/lib/roles";
 import loginBg from "@/assets/hero-bg.png";
 
 const LoginLocal = () => {
@@ -39,7 +41,10 @@ const LoginLocal = () => {
         return;
       }
 
-      navigate("/dashboard", { replace: true });
+      // Role-based redirect
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const role = authUser ? await fetchUserRole(authUser.id) : null;
+      navigate(getDefaultRouteForRole(role), { replace: true });
     } catch {
       setError("حدث خطأ أثناء تسجيل الدخول");
     } finally {
