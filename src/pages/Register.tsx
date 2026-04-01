@@ -118,8 +118,8 @@ const Register = () => {
         return;
       }
 
-      // Update profile status to active
-      const { error: updateError } = await updateProfileStatus("active");
+      // Keep status as pending_verification — admin must approve
+      const { error: updateError } = await updateProfileStatus("pending_verification");
 
       if (updateError) {
         setError(updateError);
