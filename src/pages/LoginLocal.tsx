@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
+import { fetchUserRole, getDefaultRouteForRole } from "@/lib/roles";
 import loginBg from "@/assets/hero-bg.png";
 
 const LoginLocal = () => {
