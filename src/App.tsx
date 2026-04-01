@@ -57,8 +57,9 @@ const App = () => (
             <Route path="/nafath-auth" element={<NafathAuth />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/individuals-journey" element={<IndividualsJourney />} />
-            <Route path="/individual-course/:courseId" element={<IndividualCourseDetail />} />
+            {/* Individual routes */}
+            <Route path="/individuals-journey" element={<ProtectedRoute allowedRoles={["individual"]}><IndividualsJourney /></ProtectedRoute>} />
+            <Route path="/individual-course/:courseId" element={<ProtectedRoute allowedRoles={["individual"]}><IndividualCourseDetail /></ProtectedRoute>} />
 
             {/* Organization routes */}
             <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["organization"]}><Dashboard /></ProtectedRoute>} />
