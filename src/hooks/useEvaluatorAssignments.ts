@@ -35,20 +35,32 @@ export function useEvaluatorAssignments() {
 
       if (error) throw error;
 
-      // Fetch association names from profiles
+      // Fetch association names via profiles → organizations
       const associationIds = (assignments || []).map((a: any) => a.association_id);
-      let profilesMap: Record<string, string | null> = {};
+      let nameMap: Record<string, string | null> = {};
 
       if (associationIds.length > 0) {
         const { data: profiles } = await supabase
           .from("profiles")
-          .select("id, organization_name")
+          .select("id, organization_id")
           .in("id", associationIds);
 
-        if (profiles) {
-          profilesMap = Object.fromEntries(
-            profiles.map((p: any) => [p.id, p.organization_name])
-          );
+        const orgIds = (profiles || [])
+          .map((p: any) => p.organization_id)
+          .filter(Boolean);
+
+        if (orgIds.length > 0) {
+          const { data: orgs } = await supabase
+            .from("organizations")
+            .select("id, name")
+            .in("id", orgIds);
+
+          const orgNameMap: Record<string, string> = {};
+          for (const o of orgs || []) orgNameMap[o.id] = o.name;
+
+          for (const p of profiles || []) {
+            nameMap[p.id] = p.organization_id ? (orgNameMap[p.organization_id] || null) : null;
+          }
         }
       }
 
