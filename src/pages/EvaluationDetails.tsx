@@ -269,7 +269,7 @@ const EvaluationDetails = () => {
         <div>
           <h1 className="text-xl font-hrsd-title text-foreground">تفاصيل التقييم</h1>
           <p className="text-sm font-hrsd text-muted-foreground mt-0.5">
-            {association?.organization_name || "جمعية غير معروفة"}
+            {organization?.name || "جمعية غير معروفة"}
           </p>
         </div>
       </div>
