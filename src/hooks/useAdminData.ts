@@ -124,9 +124,15 @@ export function useAdminAssociations() {
 
       const statusMap: Record<string, string> = {
         not_started: "لم تبدأ",
+        draft: "مسودة",
+        submitted: "تم التقديم",
+        under_review: "قيد المراجعة",
+        needs_revision: "يحتاج تعديل",
+        resubmitted: "أعيد التقديم",
+        approved: "معتمد",
+        completed: "مكتمل",
         in_progress: "قيد التقييم",
         waiting_response: "بانتظار الرد",
-        completed: "مكتمل",
       };
 
       // Build rows
