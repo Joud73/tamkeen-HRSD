@@ -78,6 +78,10 @@ const AdminUsers = () => {
       toast({ title: "يرجى إدخال البريد الإلكتروني", variant: "destructive" });
       return;
     }
+    if (formFields.role === "organization" && !formFields.organization_name.trim()) {
+      toast({ title: "يرجى إدخال اسم الجهة", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-user", {
