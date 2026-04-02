@@ -62,15 +62,15 @@ const EvaluationDetails = () => {
     },
   });
 
-  /* ── Fetch association profile ── */
-  const { data: association } = useQuery({
-    queryKey: ["association-profile", assignment?.association_id],
-    enabled: !!assignment?.association_id,
+  /* ── Fetch organization details ── */
+  const { data: organization } = useQuery({
+    queryKey: ["organization-details", assignment?.organization_id],
+    enabled: !!assignment?.organization_id,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from("organizations")
         .select("*")
-        .eq("id", assignment!.association_id)
+        .eq("id", assignment!.organization_id!)
         .maybeSingle();
       if (error) throw error;
       return data;
