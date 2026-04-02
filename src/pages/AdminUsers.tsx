@@ -32,16 +32,15 @@ import {
   Pencil, Ban, CheckCircle2, KeyRound, Loader2,
 } from "lucide-react";
 
-type DbRole = "admin" | "evaluator" | "organization" | "individual";
+type DbRole = "admin" | "evaluator" | "organization";
 
 const roleOptions: { value: DbRole; label: string }[] = [
-  { value: "admin", label: "مدير النظام" },
   { value: "evaluator", label: "مقيم" },
   { value: "organization", label: "جمعية" },
-  { value: "individual", label: "أفراد" },
+  { value: "admin", label: "مدير النظام" },
 ];
 
-const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "" };
+const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "", registration_number: "" };
 
 const AdminUsers = () => {
   const { toast } = useToast();
