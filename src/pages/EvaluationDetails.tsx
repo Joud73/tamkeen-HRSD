@@ -281,7 +281,7 @@ const EvaluationDetails = () => {
           <div>
             <span className="text-xs font-hrsd text-muted-foreground">اسم الجمعية</span>
             <p className="text-sm font-hrsd-medium mt-0.5">
-              {association?.organization_name || "—"}
+              {organization?.name || "—"}
             </p>
           </div>
           <div>
