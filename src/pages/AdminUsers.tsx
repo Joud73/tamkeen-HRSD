@@ -84,7 +84,8 @@ const AdminUsers = () => {
         body: {
           email: formFields.email,
           role: formFields.role,
-          organization_name: formFields.organization_name || null,
+          organization_name: formFields.role === "organization" ? formFields.organization_name || null : null,
+          registration_number: formFields.role === "organization" ? formFields.registration_number || null : null,
         },
       });
       if (error) throw error;
