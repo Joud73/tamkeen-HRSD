@@ -38,7 +38,6 @@ Deno.serve(async (req) => {
 
     const callerId = claimsData.claims.sub as string;
 
-    // Check admin role using service client
     const serviceClient = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -67,7 +66,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Only these roles can be created by admin — individuals self-register
     const validRoles = ["admin", "evaluator", "organization"];
     if (!validRoles.includes(role)) {
       return new Response(
@@ -76,7 +74,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Role-specific validation
     if (role === "organization" && !organization_name) {
       return new Response(
         JSON.stringify({ error: "organization_name is required for organization role" }),
@@ -84,7 +81,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 1. Create auth user with default password
+    // 1. Create auth user
     const defaultPassword = "Aa123456";
     const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
       email,
@@ -101,20 +98,42 @@ Deno.serve(async (req) => {
 
     const userId = authData.user.id;
 
-    // 2. Insert profile with role-specific metadata
+    // 2. For organization role, create organization record first
+    let organizationId: string | null = null;
+    if (role === "organization") {
+      const { data: orgData, error: orgError } = await serviceClient
+        .from("organizations")
+        .insert({
+          name: organization_name,
+          registration_number: registration_number || null,
+        })
+        .select("id")
+        .single();
+
+      if (orgError) {
+        await serviceClient.auth.admin.deleteUser(userId);
+        return new Response(JSON.stringify({ error: orgError.message }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      organizationId = orgData.id;
+    }
+
+    // 3. Insert profile linked to organization
     const profileData: Record<string, unknown> = {
       id: userId,
       email,
       status: "active",
+      organization_id: organizationId,
+      organization_name: role === "organization" ? organization_name : null,
+      registration_number: role === "organization" ? (registration_number || null) : null,
     };
-    if (role === "organization") {
-      profileData.organization_name = organization_name;
-      if (registration_number) profileData.registration_number = registration_number;
-    }
 
     const { error: profileError } = await serviceClient.from("profiles").insert(profileData);
 
     if (profileError) {
+      if (organizationId) await serviceClient.from("organizations").delete().eq("id", organizationId);
       await serviceClient.auth.admin.deleteUser(userId);
       return new Response(JSON.stringify({ error: profileError.message }), {
         status: 500,
@@ -122,13 +141,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 3. Insert role
+    // 4. Insert role
     const { error: roleError } = await serviceClient.from("user_roles").insert({
       user_id: userId,
       role,
     });
 
     if (roleError) {
+      if (organizationId) await serviceClient.from("organizations").delete().eq("id", organizationId);
       await serviceClient.auth.admin.deleteUser(userId);
       return new Response(JSON.stringify({ error: roleError.message }), {
         status: 500,

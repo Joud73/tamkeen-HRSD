@@ -12,7 +12,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Verify caller is admin
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -65,7 +64,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Fetch the request
     const { data: orgReq, error: fetchError } = await serviceClient
       .from("organization_requests")
       .select("*")
@@ -86,7 +84,26 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 1. Create auth user
+    // 1. Create organization record
+    const { data: orgData, error: orgError } = await serviceClient
+      .from("organizations")
+      .insert({
+        name: orgReq.organization_name,
+        registration_number: orgReq.registration_number,
+      })
+      .select("id")
+      .single();
+
+    if (orgError) {
+      return new Response(JSON.stringify({ error: orgError.message }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const organizationId = orgData.id;
+
+    // 2. Create auth user
     const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
       email: orgReq.email,
       password: "Aa123456",
@@ -94,6 +111,7 @@ Deno.serve(async (req) => {
     });
 
     if (authError) {
+      await serviceClient.from("organizations").delete().eq("id", organizationId);
       return new Response(JSON.stringify({ error: authError.message }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -102,16 +120,18 @@ Deno.serve(async (req) => {
 
     const userId = authData.user.id;
 
-    // 2. Insert profile
+    // 3. Insert profile linked to organization
     const { error: profileError } = await serviceClient.from("profiles").insert({
       id: userId,
       email: orgReq.email,
       organization_name: orgReq.organization_name,
       registration_number: orgReq.registration_number,
+      organization_id: organizationId,
       status: "active",
     });
 
     if (profileError) {
+      await serviceClient.from("organizations").delete().eq("id", organizationId);
       await serviceClient.auth.admin.deleteUser(userId);
       return new Response(JSON.stringify({ error: profileError.message }), {
         status: 500,
@@ -119,13 +139,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 3. Assign organization role
+    // 4. Assign organization role
     const { error: roleError } = await serviceClient.from("user_roles").insert({
       user_id: userId,
       role: "organization",
     });
 
     if (roleError) {
+      await serviceClient.from("organizations").delete().eq("id", organizationId);
       await serviceClient.auth.admin.deleteUser(userId);
       return new Response(JSON.stringify({ error: roleError.message }), {
         status: 500,
@@ -133,7 +154,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 4. Update request status to approved
+    // 5. Update request status
     await serviceClient
       .from("organization_requests")
       .update({
