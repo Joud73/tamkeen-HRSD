@@ -34,6 +34,7 @@ import AdminReviewerDetail from "./pages/AdminReviewerDetail";
 import AdminReports from "./pages/AdminReports";
 import AdminUsers from "./pages/AdminUsers";
 import AdminRoles from "./pages/AdminRoles";
+import AdminOrganizationRequests from "./pages/AdminOrganizationRequests";
 import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
@@ -85,6 +86,7 @@ const App = () => (
             <Route path="/admin/associations/:id" element={<ProtectedRoute allowedRoles={["admin"]}><AdminAssociationDetail /></ProtectedRoute>} />
             <Route path="/admin/reviewers" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReviewers /></ProtectedRoute>} />
             <Route path="/admin/reviewers/:id" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReviewerDetail /></ProtectedRoute>} />
+            <Route path="/admin/organization-requests" element={<ProtectedRoute allowedRoles={["admin"]}><AdminOrganizationRequests /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReports /></ProtectedRoute>} />
 
             {/* Evaluator routes */}
