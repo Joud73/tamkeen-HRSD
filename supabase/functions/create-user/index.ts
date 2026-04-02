@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
 
     // Parse body
     const body = await req.json();
-    const { email, role, organization_name } = body;
+    const { email, role, organization_name, registration_number } = body;
 
     if (!email || !role) {
       return new Response(
@@ -67,7 +67,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const validRoles = ["admin", "evaluator", "organization", "individual"];
+    // Only these roles can be created by admin — individuals self-register
+    const validRoles = ["admin", "evaluator", "organization"];
     if (!validRoles.includes(role)) {
       return new Response(
         JSON.stringify({ error: `Invalid role. Must be one of: ${validRoles.join(", ")}` }),
@@ -75,10 +76,19 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Role-specific validation
+    if (role === "organization" && !organization_name) {
+      return new Response(
+        JSON.stringify({ error: "organization_name is required for organization role" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // 1. Create auth user with default password
+    const defaultPassword = "Aa123456";
     const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
       email,
-      password: "Aa123456",
+      password: defaultPassword,
       email_confirm: true,
     });
 
@@ -91,16 +101,20 @@ Deno.serve(async (req) => {
 
     const userId = authData.user.id;
 
-    // 2. Insert profile
-    const { error: profileError } = await serviceClient.from("profiles").insert({
+    // 2. Insert profile with role-specific metadata
+    const profileData: Record<string, unknown> = {
       id: userId,
       email,
-      organization_name: organization_name || null,
       status: "active",
-    });
+    };
+    if (role === "organization") {
+      profileData.organization_name = organization_name;
+      if (registration_number) profileData.registration_number = registration_number;
+    }
+
+    const { error: profileError } = await serviceClient.from("profiles").insert(profileData);
 
     if (profileError) {
-      // Cleanup: delete auth user if profile insert fails
       await serviceClient.auth.admin.deleteUser(userId);
       return new Response(JSON.stringify({ error: profileError.message }), {
         status: 500,
@@ -123,7 +137,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ id: userId, email, role, organization_name }),
+      JSON.stringify({ id: userId, email, role, organization_name: organization_name || null }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

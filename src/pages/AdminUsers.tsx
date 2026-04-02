@@ -32,16 +32,15 @@ import {
   Pencil, Ban, CheckCircle2, KeyRound, Loader2,
 } from "lucide-react";
 
-type DbRole = "admin" | "evaluator" | "organization" | "individual";
+type DbRole = "admin" | "evaluator" | "organization";
 
 const roleOptions: { value: DbRole; label: string }[] = [
-  { value: "admin", label: "مدير النظام" },
   { value: "evaluator", label: "مقيم" },
   { value: "organization", label: "جمعية" },
-  { value: "individual", label: "أفراد" },
+  { value: "admin", label: "مدير النظام" },
 ];
 
-const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "" };
+const emptyForm = { email: "", role: "evaluator" as DbRole, organization_name: "", registration_number: "" };
 
 const AdminUsers = () => {
   const { toast } = useToast();
@@ -79,13 +78,18 @@ const AdminUsers = () => {
       toast({ title: "يرجى إدخال البريد الإلكتروني", variant: "destructive" });
       return;
     }
+    if (formFields.role === "organization" && !formFields.organization_name.trim()) {
+      toast({ title: "يرجى إدخال اسم الجهة", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-user", {
         body: {
           email: formFields.email,
           role: formFields.role,
-          organization_name: formFields.organization_name || null,
+          organization_name: formFields.role === "organization" ? formFields.organization_name || null : null,
+          registration_number: formFields.role === "organization" ? formFields.registration_number || null : null,
         },
       });
       if (error) throw error;
@@ -249,10 +253,18 @@ const AdminUsers = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-1.5">
-              <Label className="font-hrsd-medium text-sm">اسم الجهة (اختياري)</Label>
-              <Input className="font-hrsd text-sm" value={formFields.organization_name} onChange={(e) => setFormFields((p) => ({ ...p, organization_name: e.target.value }))} />
-            </div>
+            {formFields.role === "organization" && (
+              <>
+                <div className="grid gap-1.5">
+                  <Label className="font-hrsd-medium text-sm">اسم الجهة *</Label>
+                  <Input className="font-hrsd text-sm" value={formFields.organization_name} onChange={(e) => setFormFields((p) => ({ ...p, organization_name: e.target.value }))} />
+                </div>
+                <div className="grid gap-1.5">
+                  <Label className="font-hrsd-medium text-sm">رقم التسجيل (اختياري)</Label>
+                  <Input className="font-hrsd text-sm" value={formFields.registration_number} onChange={(e) => setFormFields((p) => ({ ...p, registration_number: e.target.value }))} />
+                </div>
+              </>
+            )}
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setFormOpen(false)} className="font-hrsd-medium">إلغاء</Button>
