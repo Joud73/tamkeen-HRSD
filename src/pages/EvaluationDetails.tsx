@@ -287,7 +287,7 @@ const EvaluationDetails = () => {
           <div>
             <span className="text-xs font-hrsd text-muted-foreground">رقم التسجيل</span>
             <p className="text-sm font-hrsd-medium mt-0.5">
-              {association?.registration_number || "—"}
+              {organization?.registration_number || "—"}
             </p>
           </div>
           <div>
