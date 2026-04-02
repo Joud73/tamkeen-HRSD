@@ -249,10 +249,18 @@ const AdminUsers = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-1.5">
-              <Label className="font-hrsd-medium text-sm">اسم الجهة (اختياري)</Label>
-              <Input className="font-hrsd text-sm" value={formFields.organization_name} onChange={(e) => setFormFields((p) => ({ ...p, organization_name: e.target.value }))} />
-            </div>
+            {formFields.role === "organization" && (
+              <>
+                <div className="grid gap-1.5">
+                  <Label className="font-hrsd-medium text-sm">اسم الجهة *</Label>
+                  <Input className="font-hrsd text-sm" value={formFields.organization_name} onChange={(e) => setFormFields((p) => ({ ...p, organization_name: e.target.value }))} />
+                </div>
+                <div className="grid gap-1.5">
+                  <Label className="font-hrsd-medium text-sm">رقم التسجيل (اختياري)</Label>
+                  <Input className="font-hrsd text-sm" value={formFields.registration_number} onChange={(e) => setFormFields((p) => ({ ...p, registration_number: e.target.value }))} />
+                </div>
+              </>
+            )}
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setFormOpen(false)} className="font-hrsd-medium">إلغاء</Button>
