@@ -32,8 +32,12 @@ import {
 const statusFilterOptions = [
   { value: "all", label: "الكل" },
   { value: "not_started", label: "لم تبدأ" },
-  { value: "in_progress", label: "قيد التقييم" },
-  { value: "waiting_response", label: "بانتظار رد الجمعية" },
+  { value: "draft", label: "مسودة" },
+  { value: "submitted", label: "تم التقديم" },
+  { value: "under_review", label: "قيد المراجعة" },
+  { value: "needs_revision", label: "يحتاج تعديل" },
+  { value: "resubmitted", label: "أعيد التقديم" },
+  { value: "approved", label: "معتمد" },
   { value: "completed", label: "مكتمل" },
 ];
 
