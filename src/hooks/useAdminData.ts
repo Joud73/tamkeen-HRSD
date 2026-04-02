@@ -15,7 +15,6 @@ export function useAdminEvaluators() {
   return useQuery({
     queryKey: ["admin-evaluators"],
     queryFn: async () => {
-      // 1. Get all users with evaluator role
       const { data: roles, error: rolesErr } = await supabase
         .from("user_roles")
         .select("user_id")
@@ -25,14 +24,12 @@ export function useAdminEvaluators() {
 
       const evaluatorIds = roles.map((r) => r.user_id);
 
-      // 2. Get profiles
       const { data: profiles, error: profErr } = await supabase
         .from("profiles")
         .select("id, email, organization_name")
         .in("id", evaluatorIds);
       if (profErr) throw profErr;
 
-      // 3. Get assignment counts
       const { data: assignments, error: assignErr } = await supabase
         .from("evaluator_assignments")
         .select("evaluator_id, status")
@@ -59,7 +56,7 @@ export function useAdminEvaluators() {
   });
 }
 
-/* ── Association (profiles with org name) + assignment data ── */
+/* ── Association (from organizations table) + assignment data ── */
 export interface AssociationRow {
   id: string;
   name: string;
@@ -77,25 +74,43 @@ export function useAdminAssociations() {
   return useQuery({
     queryKey: ["admin-associations"],
     queryFn: async () => {
-      // 1. All profiles with org name (associations)
-      const { data: profiles, error: profErr } = await supabase
+      // 1. Fetch all organizations
+      const { data: orgs, error: orgsErr } = await supabase
+        .from("organizations")
+        .select("id, name");
+      if (orgsErr) throw orgsErr;
+      if (!orgs || orgs.length === 0) return [];
+
+      // 2. Find profile user IDs linked to these organizations (for email + assignment lookup)
+      const orgIds = orgs.map((o) => o.id);
+      const { data: orgProfiles, error: opErr } = await supabase
         .from("profiles")
-        .select("id, email, organization_name")
-        .not("organization_name", "is", null);
-      if (profErr) throw profErr;
-      if (!profiles || profiles.length === 0) return [];
+        .select("id, email, organization_id")
+        .in("organization_id", orgIds);
+      if (opErr) throw opErr;
 
-      const assocIds = profiles.map((p) => p.id);
+      // Map org_id → profile for email lookup
+      const orgProfileMap: Record<string, { userId: string; email: string }> = {};
+      for (const p of orgProfiles || []) {
+        if (p.organization_id) {
+          orgProfileMap[p.organization_id] = { userId: p.id, email: p.email };
+        }
+      }
 
-      // 2. All assignments for these associations
-      const { data: assignments, error: assignErr } = await supabase
-        .from("evaluator_assignments")
-        .select("*")
-        .in("association_id", assocIds);
-      if (assignErr) throw assignErr;
+      // 3. All assignments for these organization user IDs
+      const userIds = (orgProfiles || []).map((p) => p.id);
+      let assignments: any[] = [];
+      if (userIds.length > 0) {
+        const { data: aData, error: assignErr } = await supabase
+          .from("evaluator_assignments")
+          .select("*")
+          .in("association_id", userIds);
+        if (assignErr) throw assignErr;
+        assignments = aData || [];
+      }
 
-      // 3. Get evaluator profiles for names
-      const evaluatorIds = [...new Set((assignments || []).map((a) => a.evaluator_id))];
+      // 4. Get evaluator profiles for names
+      const evaluatorIds = [...new Set(assignments.map((a) => a.evaluator_id))];
       let evalProfiles: Record<string, string> = {};
       if (evaluatorIds.length > 0) {
         const { data: eProf } = await supabase
@@ -107,26 +122,29 @@ export function useAdminAssociations() {
         }
       }
 
-      // Build rows: one per assignment, or one per association with no assignment
+      const statusMap: Record<string, string> = {
+        not_started: "لم تبدأ",
+        in_progress: "قيد التقييم",
+        waiting_response: "بانتظار الرد",
+        completed: "مكتمل",
+      };
+
+      // Build rows
       const rows: AssociationRow[] = [];
-      const assignedAssocIds = new Set<string>();
+      const assignedUserIds = new Set<string>();
 
-      for (const a of assignments || []) {
-        const profile = profiles.find((p) => p.id === a.association_id);
-        if (!profile) continue;
-        assignedAssocIds.add(a.association_id);
-
-        const statusMap: Record<string, string> = {
-          not_started: "لم تبدأ",
-          in_progress: "قيد التقييم",
-          waiting_response: "بانتظار الرد",
-          completed: "مكتمل",
-        };
+      for (const a of assignments) {
+        assignedUserIds.add(a.association_id);
+        // Find org name from the profile → org mapping
+        const profile = (orgProfiles || []).find((p) => p.id === a.association_id);
+        const org = profile?.organization_id
+          ? orgs.find((o) => o.id === profile.organization_id)
+          : null;
 
         rows.push({
-          id: profile.id,
-          name: profile.organization_name || "—",
-          email: profile.email,
+          id: a.association_id,
+          name: org?.name || "—",
+          email: profile?.email || "—",
           status: statusMap[a.status] || a.status,
           progress: a.completion_percentage,
           evaluator_name: evalProfiles[a.evaluator_id] || null,
@@ -137,13 +155,14 @@ export function useAdminAssociations() {
         });
       }
 
-      // Associations with no assignment
-      for (const p of profiles) {
-        if (!assignedAssocIds.has(p.id)) {
+      // Orgs with no assignment
+      for (const org of orgs) {
+        const profile = orgProfileMap[org.id];
+        if (profile && !assignedUserIds.has(profile.userId)) {
           rows.push({
-            id: p.id,
-            name: p.organization_name || "—",
-            email: p.email,
+            id: profile.userId,
+            name: org.name,
+            email: profile.email,
             status: "غير مُسندة",
             progress: 0,
             evaluator_name: null,
@@ -177,7 +196,6 @@ const roleArMap: Record<string, string> = {
   evaluator: "مقيم",
   organization: "جمعية",
   individual: "أفراد",
-  user: "مستخدم",
 };
 
 export function useAdminUsers() {
@@ -237,11 +255,10 @@ export function useAdminDashboardStats() {
   return useQuery({
     queryKey: ["admin-dashboard-stats"],
     queryFn: async () => {
-      // Count associations
+      // Count organizations from the dedicated table
       const { count: assocCount } = await supabase
-        .from("profiles")
-        .select("id", { count: "exact", head: true })
-        .not("organization_name", "is", null);
+        .from("organizations")
+        .select("id", { count: "exact", head: true });
 
       // Count evaluators
       const { count: evalCount } = await supabase
