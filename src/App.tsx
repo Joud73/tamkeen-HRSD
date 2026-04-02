@@ -34,6 +34,7 @@ import AdminReviewerDetail from "./pages/AdminReviewerDetail";
 import AdminReports from "./pages/AdminReports";
 import AdminUsers from "./pages/AdminUsers";
 import AdminRoles from "./pages/AdminRoles";
+import AdminOrganizationRequests from "./pages/AdminOrganizationRequests";
 import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
