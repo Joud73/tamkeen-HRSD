@@ -67,7 +67,7 @@ export function useEvaluatorAssignments() {
       return (assignments || []).map((a: any): AssignmentRow => ({
         id: a.id,
         association_id: a.association_id,
-        association_name: profilesMap[a.association_id] || "جمعية غير معروفة",
+        association_name: nameMap[a.association_id] || "جمعية غير معروفة",
         year: a.year,
         status: a.status,
         completion_percentage: a.completion_percentage,
