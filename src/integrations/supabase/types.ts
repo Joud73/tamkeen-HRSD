@@ -206,6 +206,7 @@ export type Database = {
           completion_percentage: number
           evaluator_id: string
           id: string
+          organization_id: string | null
           status: string
           updated_at: string
           year: number
@@ -216,6 +217,7 @@ export type Database = {
           completion_percentage?: number
           evaluator_id: string
           id?: string
+          organization_id?: string | null
           status?: string
           updated_at?: string
           year?: number
@@ -226,11 +228,20 @@ export type Database = {
           completion_percentage?: number
           evaluator_id?: string
           id?: string
+          organization_id?: string | null
           status?: string
           updated_at?: string
           year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "evaluator_assignments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organization_requests: {
         Row: {
