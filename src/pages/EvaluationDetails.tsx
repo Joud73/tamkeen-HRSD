@@ -62,15 +62,15 @@ const EvaluationDetails = () => {
     },
   });
 
-  /* ── Fetch association profile ── */
-  const { data: association } = useQuery({
-    queryKey: ["association-profile", assignment?.association_id],
-    enabled: !!assignment?.association_id,
+  /* ── Fetch organization details ── */
+  const { data: organization } = useQuery({
+    queryKey: ["organization-details", assignment?.organization_id],
+    enabled: !!assignment?.organization_id,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from("organizations")
         .select("*")
-        .eq("id", assignment!.association_id)
+        .eq("id", assignment!.organization_id!)
         .maybeSingle();
       if (error) throw error;
       return data;
@@ -269,7 +269,7 @@ const EvaluationDetails = () => {
         <div>
           <h1 className="text-xl font-hrsd-title text-foreground">تفاصيل التقييم</h1>
           <p className="text-sm font-hrsd text-muted-foreground mt-0.5">
-            {association?.organization_name || "جمعية غير معروفة"}
+            {organization?.name || "جمعية غير معروفة"}
           </p>
         </div>
       </div>
@@ -281,13 +281,13 @@ const EvaluationDetails = () => {
           <div>
             <span className="text-xs font-hrsd text-muted-foreground">اسم الجمعية</span>
             <p className="text-sm font-hrsd-medium mt-0.5">
-              {association?.organization_name || "—"}
+              {organization?.name || "—"}
             </p>
           </div>
           <div>
             <span className="text-xs font-hrsd text-muted-foreground">رقم التسجيل</span>
             <p className="text-sm font-hrsd-medium mt-0.5">
-              {association?.registration_number || "—"}
+              {organization?.registration_number || "—"}
             </p>
           </div>
           <div>
