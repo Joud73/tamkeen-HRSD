@@ -15,9 +15,15 @@ export interface AssignmentRow {
 
 export const statusLabelMap: Record<string, string> = {
   not_started: "لم تبدأ",
+  draft: "مسودة",
+  submitted: "تم التقديم",
+  under_review: "قيد المراجعة",
+  needs_revision: "يحتاج تعديل",
+  resubmitted: "أعيد التقديم",
+  approved: "معتمد",
+  completed: "مكتمل",
   in_progress: "قيد التقييم",
   waiting_response: "بانتظار رد الجمعية",
-  completed: "مكتمل",
 };
 
 export function useEvaluatorAssignments() {
