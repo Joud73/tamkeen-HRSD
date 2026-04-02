@@ -78,9 +78,16 @@ const AdminReviewers = () => {
       return;
     }
     setDistLoading(true);
+    // Look up organization_id from profile
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("organization_id")
+      .eq("id", distAssociation)
+      .single();
     const { error } = await supabase.from("evaluator_assignments").insert({
       evaluator_id: distEvaluator,
       association_id: distAssociation,
+      organization_id: prof?.organization_id || null,
       year: Number(distYear),
       status: "not_started",
       completion_percentage: 0,
