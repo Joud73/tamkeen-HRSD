@@ -15,9 +15,15 @@ export interface AssignmentRow {
 
 export const statusLabelMap: Record<string, string> = {
   not_started: "لم تبدأ",
+  draft: "مسودة",
+  submitted: "تم التقديم",
+  under_review: "قيد المراجعة",
+  needs_revision: "يحتاج تعديل",
+  resubmitted: "أعيد التقديم",
+  approved: "معتمد",
+  completed: "مكتمل",
   in_progress: "قيد التقييم",
   waiting_response: "بانتظار رد الجمعية",
-  completed: "مكتمل",
 };
 
 export function useEvaluatorAssignments() {
@@ -84,9 +90,15 @@ export function useEvaluatorStats() {
   const stats = {
     total: assignments?.length ?? 0,
     notStarted: assignments?.filter((a) => a.status === "not_started").length ?? 0,
-    inProgress: assignments?.filter((a) => a.status === "in_progress").length ?? 0,
-    waitingResponse: assignments?.filter((a) => a.status === "waiting_response").length ?? 0,
+    draft: assignments?.filter((a) => a.status === "draft").length ?? 0,
+    submitted: assignments?.filter((a) => a.status === "submitted").length ?? 0,
+    underReview: assignments?.filter((a) => a.status === "under_review").length ?? 0,
+    needsRevision: assignments?.filter((a) => a.status === "needs_revision").length ?? 0,
+    approved: assignments?.filter((a) => a.status === "approved").length ?? 0,
     completed: assignments?.filter((a) => a.status === "completed").length ?? 0,
+    // Legacy compat
+    inProgress: assignments?.filter((a) => ["draft", "in_progress", "submitted", "under_review", "resubmitted"].includes(a.status)).length ?? 0,
+    waitingResponse: assignments?.filter((a) => a.status === "needs_revision" || a.status === "waiting_response").length ?? 0,
     completionRate: 0,
   };
 

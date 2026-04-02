@@ -124,9 +124,15 @@ export function useAdminAssociations() {
 
       const statusMap: Record<string, string> = {
         not_started: "لم تبدأ",
+        draft: "مسودة",
+        submitted: "تم التقديم",
+        under_review: "قيد المراجعة",
+        needs_revision: "يحتاج تعديل",
+        resubmitted: "أعيد التقديم",
+        approved: "معتمد",
+        completed: "مكتمل",
         in_progress: "قيد التقييم",
         waiting_response: "بانتظار الرد",
-        completed: "مكتمل",
       };
 
       // Build rows
@@ -277,14 +283,23 @@ export function useAdminDashboardStats() {
         statusMap[a.status] = (statusMap[a.status] || 0) + 1;
       }
 
-      const ongoing = (statusMap["in_progress"] || 0) + (statusMap["waiting_response"] || 0);
-      const completed = statusMap["completed"] || 0;
+      const ongoing = (statusMap["draft"] || 0) + (statusMap["submitted"] || 0) +
+        (statusMap["under_review"] || 0) + (statusMap["resubmitted"] || 0) +
+        (statusMap["in_progress"] || 0) + (statusMap["waiting_response"] || 0) +
+        (statusMap["needs_revision"] || 0);
+      const completed = (statusMap["completed"] || 0) + (statusMap["approved"] || 0);
 
       const labelMap: Record<string, string> = {
         not_started: "لم تبدأ",
+        draft: "مسودة",
+        submitted: "تم التقديم",
+        under_review: "قيد المراجعة",
+        needs_revision: "يحتاج تعديل",
+        resubmitted: "أعيد التقديم",
+        approved: "معتمد",
+        completed: "مكتمل",
         in_progress: "قيد التقييم",
         waiting_response: "بانتظار الرد",
-        completed: "مكتمل",
       };
 
       const statusCounts = Object.entries(statusMap).map(([key, count]) => ({
