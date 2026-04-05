@@ -291,7 +291,6 @@ const Register = () => {
     <div className="min-h-screen flex flex-col">
       <AppHeader />
       <div className="h-20" />
-      <OrganizationJourney />
 
       <main
         className="flex-1 relative"
