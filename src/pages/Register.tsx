@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Headphones, Check } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
-import OrganizationJourney from "@/components/OrganizationJourney";
+
 import { supabase } from "@/integrations/supabase/client";
 import loginBg from "@/assets/hero-bg.png";
 
@@ -291,7 +291,6 @@ const Register = () => {
     <div className="min-h-screen flex flex-col">
       <AppHeader />
       <div className="h-20" />
-      <OrganizationJourney />
 
       <main
         className="flex-1 relative"
