@@ -39,6 +39,7 @@ import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
 import PendingApproval from "./pages/PendingApproval";
+import IndividualAuth from "./pages/IndividualAuth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/pending-approval" element={<PendingApproval />} />
+            <Route path="/individual-auth" element={<IndividualAuth />} />
             {/* Individual routes */}
             <Route path="/individuals-journey" element={<ProtectedRoute allowedRoles={["individual"]}><IndividualsJourney /></ProtectedRoute>} />
             <Route path="/individual-course/:courseId" element={<ProtectedRoute allowedRoles={["individual"]}><IndividualCourseDetail /></ProtectedRoute>} />
