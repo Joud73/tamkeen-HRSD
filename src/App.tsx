@@ -39,6 +39,8 @@ import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
 import PendingApproval from "./pages/PendingApproval";
+import AdminProfile from "./pages/AdminProfile";
+import EvaluatorProfile from "./pages/EvaluatorProfile";
 import IndividualAuth from "./pages/IndividualAuth";
 import NotFound from "./pages/NotFound";
 
