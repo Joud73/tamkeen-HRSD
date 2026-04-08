@@ -30,168 +30,140 @@ const Login = () => {
     navigate(`/login-local?type=${accountType}`, { replace: false });
   };
 
-  // Step A: Type Selection Screen
+  const pageShell = (children: React.ReactNode) => (
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: 'linear-gradient(160deg, #F4F9F7 0%, #E6F2EE 40%, #F9FAFB 100%)' }}
+    >
+      <AppHeader variant="main" />
+      <main className="flex-1 flex items-center justify-center px-4 py-20">
+        {children}
+      </main>
+      <GovFooter />
+    </div>
+  );
+
+  // Step A: Type Selection
   if (!accountType) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1D4D37' }}>
-        <AppHeader variant="main" />
+    return pageShell(
+      <div className="w-full max-w-xl">
+        <div className="bg-white rounded-3xl p-10 md:p-12 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] border border-gray-100/60">
+          <h1
+            className="text-2xl font-hrsd-title text-center mb-2"
+            style={{ color: '#1D4D37' }}
+          >
+            تسجيل الدخول
+          </h1>
+          <p className="text-center text-gray-400 font-hrsd-regular text-sm mb-10">
+            اختر نوع الحساب للمتابعة
+          </p>
 
-        <main className="flex-1 flex items-center justify-center px-4 py-16">
-          <div className="w-full max-w-2xl">
-            {/* Glassmorphism Card */}
-            <div
-              className="rounded-2xl p-10 shadow-2xl border border-white/10"
-              style={{
-                background: 'rgba(255, 255, 255, 0.07)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-              }}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Individuals */}
+            <button
+              type="button"
+              onClick={() => navigate("/individual-auth")}
+              className="group p-7 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col items-center gap-4"
             >
-              <h1 className="text-2xl font-hrsd-title text-center mb-3 text-white">
-                تسجيل الدخول
-              </h1>
-              <p className="text-center text-white/60 font-hrsd-regular text-sm mb-10">
-                اختر نوع الحساب للمتابعة
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Individuals Card */}
-                <button
-                  type="button"
-                  onClick={() => navigate("/individual-auth")}
-                  className="group p-8 rounded-xl border border-white/15 hover:border-white/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center gap-4"
-                  style={{ background: 'rgba(255, 255, 255, 0.06)' }}
-                >
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.12)' }}
-                  >
-                    <Users size={30} className="text-white" />
-                  </div>
-                  <span className="text-lg font-hrsd-semibold text-white">
-                    أفراد
-                  </span>
-                  <span className="text-sm text-white/50 font-hrsd-regular text-center">
-                    تسجيل الدخول كفرد للوصول إلى خدمات الأفراد
-                  </span>
-                </button>
-
-                {/* Organizations Card */}
-                <button
-                  type="button"
-                  onClick={() => handleSelectType("org")}
-                  className="group p-8 rounded-xl border border-white/15 hover:border-white/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center gap-4"
-                  style={{ background: 'rgba(255, 255, 255, 0.06)' }}
-                >
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.12)' }}
-                  >
-                    <Building2 size={30} className="text-white" />
-                  </div>
-                  <span className="text-lg font-hrsd-semibold text-white">
-                    منظمات
-                  </span>
-                  <span className="text-sm text-white/50 font-hrsd-regular text-center">
-                    تسجيل الدخول كمنظمة للوصول إلى خدمات المنظمات
-                  </span>
-                </button>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center bg-emerald-50 group-hover:scale-105 transition-transform duration-300">
+                <Users size={26} className="text-emerald-600/70" />
               </div>
-            </div>
-          </div>
-        </main>
+              <span className="text-base font-hrsd-semibold text-gray-800">أفراد</span>
+              <span className="text-xs text-gray-400 font-hrsd-regular text-center leading-relaxed">
+                تسجيل الدخول كفرد للوصول إلى خدمات الأفراد
+              </span>
+            </button>
 
-        <GovFooter />
+            {/* Organizations */}
+            <button
+              type="button"
+              onClick={() => handleSelectType("org")}
+              className="group p-7 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col items-center gap-4"
+            >
+              <div className="w-14 h-14 rounded-full flex items-center justify-center bg-amber-50 group-hover:scale-105 transition-transform duration-300">
+                <Building2 size={26} className="text-amber-600/70" />
+              </div>
+              <span className="text-base font-hrsd-semibold text-gray-800">منظمات</span>
+              <span className="text-xs text-gray-400 font-hrsd-regular text-center leading-relaxed">
+                تسجيل الدخول كمنظمة للوصول إلى خدمات المنظمات
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // Step B: Login Method Selection Screen
-  return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1D4D37' }}>
-      <AppHeader variant="main" />
+  // Step B: Login Method Selection
+  return pageShell(
+    <div className="w-full max-w-md">
+      <div className="bg-white rounded-3xl p-10 md:p-12 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] border border-gray-100/60">
+        <h1
+          className="text-2xl font-hrsd-title text-center mb-2"
+          style={{ color: '#1D4D37' }}
+        >
+          اختر طريقة تسجيل الدخول
+        </h1>
 
-      <main className="flex-1 flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md">
-          {/* Glassmorphism Card */}
-          <div
-            className="rounded-2xl p-10 shadow-2xl border border-white/10"
-            style={{
-              background: 'rgba(255, 255, 255, 0.07)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            }}
+        <div className="text-center mb-9">
+          <button
+            type="button"
+            onClick={handleClearType}
+            className="text-sm font-hrsd-medium text-gray-400 hover:text-emerald-700 transition-colors"
           >
-            <h1 className="text-2xl font-hrsd-title text-center mb-3 text-white">
-              اختر طريقة تسجيل الدخول
-            </h1>
-            
-            {/* Change type link */}
-            <div className="text-center mb-8">
-              <button
-                type="button"
-                onClick={handleClearType}
-                className="text-sm font-hrsd-medium hover:underline text-white/50 hover:text-white/80 transition-colors"
-              >
-                تغيير نوع الدخول
-              </button>
-            </div>
-
-            {/* Nafath Login Button - Primary */}
-            <button
-              type="button"
-              onClick={handleNafathLogin}
-              aria-label="تسجيل الدخول عبر نفاذ الوطني"
-              className="w-full py-4 rounded-xl text-white font-hrsd-medium text-lg transition-all duration-300 flex items-center justify-center gap-3 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30 mb-4"
-              style={{ backgroundColor: 'hsl(175, 75%, 30%)' }}
-            >
-              <NafathIcon size={24} className="text-white" />
-              <span>تسجيل الدخول عبر نفاذ</span>
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 h-px bg-white/15" />
-              <span className="text-white/40 text-sm font-hrsd-medium">أو</span>
-              <div className="flex-1 h-px bg-white/15" />
-            </div>
-
-            {/* Local Login Button - Secondary */}
-            <button
-              type="button"
-              onClick={handleLocalLogin}
-              aria-label="تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور"
-              className="w-full py-4 rounded-xl font-hrsd-medium text-lg transition-all duration-300 flex items-center justify-center gap-3 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 border border-white/20 text-white"
-            >
-              <User size={22} />
-              <span>اسم المستخدم وكلمة المرور</span>
-            </button>
-
-            {/* Individuals Journey Link */}
-            {accountType === "individual" && (
-              <div className="text-center mt-4">
-                <Link
-                  to="/individuals-journey"
-                  className="text-sm font-hrsd-medium hover:underline"
-                  style={{ color: 'hsl(35, 91%, 54%)' }}
-                >
-                  الدخول عبر رحلة الأفراد
-                </Link>
-              </div>
-            )}
-
-            {/* Links */}
-            <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-white/10">
-              <Link
-                to={`/register?type=${accountType}`}
-                className="text-sm font-hrsd-medium hover:underline text-white/60 hover:text-white transition-colors"
-              >
-                تسجيل جديد
-              </Link>
-            </div>
-          </div>
+            تغيير نوع الدخول
+          </button>
         </div>
-      </main>
 
-      <GovFooter />
+        {/* Nafath */}
+        <button
+          type="button"
+          onClick={handleNafathLogin}
+          className="w-full py-3.5 rounded-xl text-white font-hrsd-medium text-base transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-300 mb-4"
+          style={{ backgroundColor: '#1B8354' }}
+        >
+          <NafathIcon size={22} className="text-white" />
+          <span>تسجيل الدخول عبر نفاذ</span>
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-4 my-6">
+          <div className="flex-1 h-px bg-gray-100" />
+          <span className="text-gray-300 text-xs font-hrsd-medium">أو</span>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+
+        {/* Local Login */}
+        <button
+          type="button"
+          onClick={handleLocalLogin}
+          className="w-full py-3.5 rounded-xl font-hrsd-medium text-base transition-all duration-300 flex items-center justify-center gap-3 border border-gray-200 text-gray-600 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/40 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+        >
+          <User size={20} />
+          <span>اسم المستخدم وكلمة المرور</span>
+        </button>
+
+        {accountType === "individual" && (
+          <div className="text-center mt-5">
+            <Link
+              to="/individuals-journey"
+              className="text-sm font-hrsd-medium hover:underline"
+              style={{ color: 'hsl(35, 91%, 50%)' }}
+            >
+              الدخول عبر رحلة الأفراد
+            </Link>
+          </div>
+        )}
+
+        <div className="flex items-center justify-center pt-7 mt-7 border-t border-gray-100">
+          <Link
+            to={`/register?type=${accountType}`}
+            className="text-sm font-hrsd-medium text-gray-400 hover:text-emerald-700 transition-colors"
+          >
+            تسجيل جديد
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
