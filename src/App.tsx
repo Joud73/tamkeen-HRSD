@@ -39,6 +39,7 @@ import EvaluatorDashboard from "./pages/EvaluatorDashboard";
 import EvaluatorAssignments from "./pages/EvaluatorAssignments";
 import EvaluationDetails from "./pages/EvaluationDetails";
 import PendingApproval from "./pages/PendingApproval";
+import IndividualAuth from "./pages/IndividualAuth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
