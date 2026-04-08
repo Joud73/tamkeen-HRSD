@@ -1,15 +1,13 @@
 import { 
-  LogIn, 
   ClipboardCheck, 
   BookOpen, 
   GraduationCap 
 } from "lucide-react";
 
 const steps = [
-  { id: 1, title: "التسجيل / تسجيل الدخول", description: "تسجيل الدخول الفردي", icon: LogIn },
-  { id: 2, title: "التقييم الذاتي", description: "تحليل الوضع الحالي", icon: ClipboardCheck },
-  { id: 3, title: "الدورات المقترحة", description: "تحديد المسار التدريبي", icon: BookOpen },
-  { id: 4, title: "التدريب وإصدار الشهادة", description: "حضور الدورات والحصول على الشهادة", icon: GraduationCap },
+  { id: 1, title: "التقييم الذاتي", description: "تحليل الوضع الحالي", icon: ClipboardCheck },
+  { id: 2, title: "الدورات المقترحة", description: "تحديد المسار التدريبي", icon: BookOpen },
+  { id: 3, title: "التدريب وإصدار الشهادة", description: "حضور الدورات والحصول على الشهادة", icon: GraduationCap },
 ];
 
 interface IndividualJourneyProps {

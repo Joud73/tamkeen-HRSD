@@ -2,7 +2,6 @@ import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import IndividualJourney from "@/components/IndividualJourney";
-import LoginStep from "@/components/individual/LoginStep";
 import SelfAssessmentStep from "@/components/individual/SelfAssessmentStep";
 import SuggestedCoursesStep from "@/components/individual/SuggestedCoursesStep";
 import TrainingCertificateStep from "@/components/individual/TrainingCertificateStep";
@@ -12,17 +11,13 @@ const IndividualsJourneyPage = () => {
   const [assessmentScore, setAssessmentScore] = useState<number | undefined>();
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
 
-  const handleLoginComplete = () => {
+  const handleAssessmentComplete = (score: number) => {
+    setAssessmentScore(score);
     setCurrentStep(2);
   };
 
-  const handleAssessmentComplete = (score: number) => {
-    setAssessmentScore(score);
-    setCurrentStep(3);
-  };
-
   const handleAssessmentSkip = () => {
-    setCurrentStep(3);
+    setCurrentStep(2);
   };
 
   const handleCourseEnroll = (courseId: number) => {
@@ -32,7 +27,6 @@ const IndividualsJourneyPage = () => {
   };
 
   const handleStepClick = (stepId: number) => {
-    // Only allow navigating to completed steps or current step
     if (stepId <= currentStep) {
       setCurrentStep(stepId);
     }
@@ -41,22 +35,20 @@ const IndividualsJourneyPage = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <LoginStep onComplete={handleLoginComplete} />;
-      case 2:
         return (
           <SelfAssessmentStep 
             onComplete={handleAssessmentComplete}
             onSkip={handleAssessmentSkip}
           />
         );
-      case 3:
+      case 2:
         return (
           <SuggestedCoursesStep 
             assessmentScore={assessmentScore}
             onEnroll={handleCourseEnroll}
           />
         );
-      case 4:
+      case 3:
         return <TrainingCertificateStep />;
       default:
         return null;
@@ -84,10 +76,10 @@ const IndividualsJourneyPage = () => {
           </div>
           
           {/* Navigation to next step for courses step */}
-          {currentStep === 3 && enrolledCourses.length > 0 && (
+          {currentStep === 2 && enrolledCourses.length > 0 && (
             <div className="max-w-md mx-auto mt-8 text-center">
               <button
-                onClick={() => setCurrentStep(4)}
+                onClick={() => setCurrentStep(3)}
                 className="px-8 py-3 rounded-lg font-hrsd-semibold text-white transition-all"
                 style={{ backgroundColor: "hsl(175, 75%, 30%)" }}
               >
