@@ -92,11 +92,13 @@ const App = () => (
             <Route path="/admin/reviewers/:id" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReviewerDetail /></ProtectedRoute>} />
             <Route path="/admin/organization-requests" element={<ProtectedRoute allowedRoles={["admin"]}><AdminOrganizationRequests /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute allowedRoles={["admin"]}><AdminReports /></ProtectedRoute>} />
+            <Route path="/admin/profile" element={<ProtectedRoute allowedRoles={["admin"]}><AdminProfile /></ProtectedRoute>} />
 
             {/* Evaluator routes */}
             <Route path="/evaluator" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluatorDashboard /></ProtectedRoute>} />
             <Route path="/evaluator/assignments" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluatorAssignments /></ProtectedRoute>} />
             <Route path="/evaluator/assignment/:assignmentId" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluationDetails /></ProtectedRoute>} />
+            <Route path="/evaluator/profile" element={<ProtectedRoute allowedRoles={["evaluator"]}><EvaluatorProfile /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
