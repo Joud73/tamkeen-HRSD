@@ -5,7 +5,7 @@ import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 
 import { supabase } from "@/integrations/supabase/client";
-import loginBg from "@/assets/hero-bg.png";
+
 
 const Register = () => {
   const navigate = useNavigate();

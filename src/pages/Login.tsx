@@ -4,7 +4,7 @@ import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import NafathIcon from "@/components/icons/NafathIcon";
 import { User, Building2, Users } from "lucide-react";
-import loginBg from "@/assets/hero-bg.png";
+
 
 type AccountType = "individual" | "org";
 

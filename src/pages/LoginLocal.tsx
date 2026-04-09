@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchUserRole, getDefaultRouteForRole } from "@/lib/roles";
-import loginBg from "@/assets/hero-bg.png";
+
 
 const LoginLocal = () => {
   const navigate = useNavigate();
