@@ -72,12 +72,7 @@ const ForgotPassword = () => {
 
       <main
         className="flex-1 relative pt-20"
-        style={{
-          backgroundImage: `url(${loginBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
+        style={{ backgroundColor: "#0d3f29" }}
       >
         <div
           className="absolute inset-0"

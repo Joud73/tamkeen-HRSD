@@ -47,20 +47,8 @@ const Login = () => {
 
         <main
           className="flex-1 relative pt-20"
-          style={{
-            backgroundImage: `url(${loginBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
+          style={{ backgroundColor: "#0d3f29" }}
         >
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(20, 80, 85, 0.75) 0%, rgba(15, 60, 65, 0.85) 100%)",
-            }}
-          />
 
           <div className="relative z-10 container mx-auto px-4 py-8">
             {/* Breadcrumb */}
@@ -159,21 +147,9 @@ const Login = () => {
       <AppHeader variant="main" />
 
       <main
-        className="flex-1 relative pt-20"
-        style={{
-          backgroundImage: `url(${loginBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(20, 80, 85, 0.75) 0%, rgba(15, 60, 65, 0.85) 100%)",
-          }}
-        />
+          className="flex-1 relative pt-20"
+          style={{ backgroundColor: "#0d3f29" }}
+        >
 
         <div className="relative z-10 container mx-auto px-4 py-8">
           {/* Breadcrumb */}
